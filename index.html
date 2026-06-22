@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Вектор пола — напольные покрытия с подбором под ваш интерьер</title>
+
+	<style>
+	/* ===== Глобальные переменные (меняются в одном месте) ===== */
+	:root {
+		/* Палитра «Медовый янтарь» */
+		--accent: #F2A516;
+		--accent-dark: #D98E0B;
+		--accent-soft: #FBEFD6;
+		--on-accent: #5A3B0A;
+
+		/* Тёмная база (шапка/футер) */
+		--dark: #2B2F38;
+		--dark-2: #232730;
+		--dark-line: #3A3F4A;
+
+		/* Текст и фоны */
+		--ink: #2A2724;
+		--muted: #6E6A62;
+		--line: #E7DFD2;
+		--bg: #FFFFFF;
+		--bg-soft: #FBF7EF;
+		--bg-cream: #F6F1E8;
+
+		/* Геометрия */
+		--radius: 10px;
+		--radius-lg: 16px;
+		--maxw: 1280px;
+		--ff: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+	}
+
+	/* ===== База ===== */
+	* { margin: 0; padding: 0; box-sizing: border-box; }
+	html { scroll-behavior: smooth; }
+	body {
+		font-family: var(--ff);
+		color: var(--ink);
+		background: var(--bg);
+		line-height: 1.55;
+		font-size: 16px;
+	}
+	a { color: inherit; text-decoration: none; }
+	img { max-width: 100%; display: block; }
+	ul { list-style: none; }
+
+	.container { width: 100%; max-width: var(--maxw); margin: 0 auto; padding: 0 16px; }
+
+	/* ===== Кнопки ===== */
+	.btn {
+		display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+		padding: 12px 22px; border-radius: var(--radius);
+		font-weight: 600; font-size: 15px; cursor: pointer;
+		border: 2px solid transparent; transition: .18s ease; white-space: nowrap;
+	}
+	.btn--accent { background: var(--accent); color: var(--on-accent); }
+	.btn--accent:hover { background: var(--accent-dark); }
+	.btn--outline { background: transparent; color: var(--ink); border-color: var(--line); }
+	.btn--outline:hover { border-color: var(--accent); color: var(--accent-dark); }
+	.btn--ghost-light { background: transparent; color: #fff; border-color: rgba(255,255,255,.35); }
+	.btn--ghost-light:hover { border-color: var(--accent); color: var(--accent); }
+
+	/* ===== Заголовки секций (фирменное тире-акцент) ===== */
+	.section { padding: 56px 0; }
+	.section--soft { background: var(--bg-soft); }
+	.section-head { margin-bottom: 28px; }
+	.section-head h2 {
+		font-size: clamp(24px, 3vw, 34px); font-weight: 800; letter-spacing: -.5px;
+		display: inline-flex; align-items: center; gap: 14px;
+	}
+	.section-head h2::before {
+		content: ""; width: 26px; height: 4px; background: var(--accent); border-radius: 2px;
+	}
+	.section-head.center { text-align: center; }
+	.section-head.center h2 { justify-content: center; }
+	.section-head .lead { color: var(--muted); margin-top: 10px; max-width: 720px; }
+	.section-head.center .lead { margin-left: auto; margin-right: auto; }
+
+	/* ===== Верхняя строка шапки ===== */
+	.topbar { background: var(--bg-cream); border-bottom: 1px solid var(--line); font-size: 13px; }
+	.topbar .container { display: flex; align-items: center; justify-content: space-between; min-height: 40px; gap: 16px; flex-wrap: wrap; }
+	.topbar .addr { color: var(--muted); display: flex; gap: 18px; flex-wrap: wrap; }
+	.topbar nav ul { display: flex; gap: 20px; flex-wrap: wrap; }
+	.topbar nav a { color: var(--ink); }
+	.topbar nav a:hover { color: var(--accent-dark); }
+
+	/* ===== Основной ряд шапки ===== */
+	.header { background: var(--dark); color: #fff; position: sticky; top: 0; z-index: 40; }
+	.header .container { display: flex; align-items: center; gap: 18px; min-height: 78px; }
+
+	.logo { display: flex; flex-direction: column; line-height: 1; flex-shrink: 0; }
+	.logo b { font-size: 22px; font-weight: 800; color: #fff; }
+	.logo span { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-top: 4px; }
+
+	.catalog-btn {
+		display: inline-flex; align-items: center; gap: 10px;
+		background: var(--accent); color: var(--on-accent);
+		padding: 13px 20px; border-radius: var(--radius); font-weight: 700; flex-shrink: 0; cursor: pointer;
+	}
+	.catalog-btn:hover { background: var(--accent-dark); }
+	.burger { display: inline-flex; flex-direction: column; gap: 3px; }
+	.burger i { width: 18px; height: 2px; background: currentColor; display: block; }
+
+	.search { flex: 1; display: flex; min-width: 0; }
+	.search input {
+		flex: 1; min-width: 0; border: none; padding: 12px 16px; font-size: 15px;
+		border-radius: var(--radius) 0 0 var(--radius); outline: none; background: #fff; color: var(--ink);
+	}
+	.search button {
+		background: var(--dark-2); border: 1px solid var(--dark-line); color: #fff;
+		padding: 0 16px; border-radius: 0 var(--radius) var(--radius) 0; cursor: pointer;
+	}
+
+	.contacts { text-align: right; flex-shrink: 0; }
+	.contacts .phone { font-size: 19px; font-weight: 800; color: #fff; white-space: nowrap; }
+	.contacts .hours { font-size: 12px; color: #b9bcc4; }
+	.contacts .wa { font-size: 12px; color: var(--accent); }
+
+	.header-cta { flex-shrink: 0; }
+
+	.cart { display: flex; align-items: center; gap: 8px; flex-shrink: 0; font-weight: 700; font-size: 13px; }
+	.cart .ico {
+		width: 40px; height: 40px; border-radius: 50%; background: var(--dark-2);
+		display: flex; align-items: center; justify-content: center; position: relative;
+	}
+	.cart .count {
+		position: absolute; top: -4px; right: -4px; background: var(--accent); color: var(--on-accent);
+		width: 18px; height: 18px; border-radius: 50%; font-size: 11px; display: flex; align-items: center; justify-content: center;
+	}
+
+	/* ===== Первый экран (hero) ===== */
+	.hero { background: var(--bg-soft); padding: 48px 0; }
+	.hero .grid { display: grid; grid-template-columns: 1fr; gap: 32px; align-items: center; }
+	.hero h1 { font-size: clamp(28px, 4vw, 46px); font-weight: 800; letter-spacing: -1px; line-height: 1.1; }
+	.hero h1 .accent { color: var(--accent-dark); }
+	.hero .sub { color: var(--muted); font-size: 17px; margin: 18px 0 26px; max-width: 560px; }
+	.hero .actions { display: flex; flex-wrap: wrap; gap: 12px; }
+	.hero .perks { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+	.hero .perks span {
+		background: #fff; border: 1px solid var(--line); border-radius: 40px;
+		padding: 7px 14px; font-size: 13px; color: var(--ink);
+	}
+	/* Плейсхолдер визуала (фото подставим позже) */
+	.hero .visual {
+		background: var(--bg-cream); border: 2px dashed var(--line); border-radius: var(--radius-lg);
+		min-height: 320px; display: flex; align-items: center; justify-content: center;
+		color: var(--muted); text-align: center; padding: 24px;
+	}
+
+	/* ===== Поиск по каталогу + плитки категорий ===== */
+	.cat-search { display: flex; gap: 10px; margin-bottom: 28px; max-width: 760px; }
+	.cat-search input { flex: 1; padding: 13px 16px; border: 1px solid var(--line); border-radius: var(--radius); font-size: 15px; outline: none; }
+	.cat-search input:focus { border-color: var(--accent); }
+
+	.cat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+	.cat-tile {
+		display: flex; align-items: center; gap: 12px; padding: 16px;
+		background: #fff; border: 1px solid var(--line); border-radius: var(--radius); transition: .18s;
+	}
+	.cat-tile:hover { border-color: var(--accent); transform: translateY(-2px); }
+	.cat-tile .ic {
+		width: 44px; height: 44px; border-radius: var(--radius); background: var(--accent-soft);
+		display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--accent-dark);
+	}
+	.cat-tile b { font-weight: 600; font-size: 15px; }
+
+	/* ===== Подбор покрытия (сценарии) ===== */
+	.scenarios { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 28px; }
+	.scenario {
+		padding: 16px; background: #fff; border: 1px solid var(--line); border-radius: var(--radius);
+		font-weight: 600; font-size: 15px; transition: .18s; cursor: pointer; display: flex; align-items: center; gap: 10px;
+	}
+	.scenario:hover { background: var(--accent-soft); border-color: var(--accent); }
+	.scenario::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+
+	/* ===== Выездной шоурум ===== */
+	.showroom { background: var(--dark); color: #fff; border-radius: var(--radius-lg); padding: 36px; }
+	.showroom .grid { display: grid; grid-template-columns: 1fr; gap: 28px; }
+	.showroom h2 { font-size: 28px; font-weight: 800; margin-bottom: 16px; }
+	.showroom p { color: #c9ccd2; margin-bottom: 14px; }
+	.showroom .incl { background: var(--dark-2); border-radius: var(--radius); padding: 22px; }
+	.showroom .incl b { display: block; margin-bottom: 12px; color: var(--accent); }
+	.showroom .incl li { padding: 7px 0 7px 26px; position: relative; color: #e3e5e9; font-size: 15px; }
+	.showroom .incl li::before { content: "✓"; position: absolute; left: 0; color: var(--accent); font-weight: 700; }
+	.showroom .btn { margin-top: 18px; }
+
+	/* ===== Почему мы ===== */
+	.features { display: grid; grid-template-columns: repeat(1, 1fr); gap: 22px; }
+	.feature { display: flex; gap: 14px; align-items: flex-start; }
+	.feature .ic {
+		width: 48px; height: 48px; border-radius: var(--radius); background: var(--accent-soft);
+		display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--accent-dark);
+	}
+	.feature p { font-weight: 600; }
+
+	/* ===== О компании ===== */
+	.about .box { background: var(--bg-cream); border-radius: var(--radius-lg); padding: 36px; }
+	.about p { color: var(--ink); font-size: 17px; max-width: 880px; }
+	.about .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 22px; }
+
+	/* ===== Финальный CTA с формой ===== */
+	.final { background: var(--dark); color: #fff; }
+	.final .grid { display: grid; grid-template-columns: 1fr; gap: 28px; align-items: center; }
+	.final h2 { font-size: clamp(24px, 3vw, 32px); font-weight: 800; }
+	.final p { color: #c9ccd2; margin-top: 12px; }
+	.final form { display: grid; gap: 12px; background: var(--dark-2); padding: 24px; border-radius: var(--radius-lg); }
+	.final input, .final textarea {
+		width: 100%; padding: 13px 15px; border: 1px solid var(--dark-line); border-radius: var(--radius);
+		background: #2f3540; color: #fff; font-size: 15px; outline: none; font-family: inherit;
+	}
+	.final input::placeholder, .final textarea::placeholder { color: #9aa0aa; }
+	.final input:focus, .final textarea:focus { border-color: var(--accent); }
+	.final textarea { resize: vertical; min-height: 90px; }
+
+	/* ===== Футер ===== */
+	.footer { background: var(--dark-2); color: #cfd2d8; padding: 48px 0 28px; }
+	.footer .cols { display: grid; grid-template-columns: 1fr; gap: 32px; }
+	.footer h4 { color: #fff; font-size: 14px; letter-spacing: .5px; text-transform: uppercase; margin-bottom: 16px; }
+	.footer .desc { font-size: 14px; line-height: 1.7; }
+	.footer .logo b { color: #fff; }
+	.footer ul li { margin-bottom: 9px; }
+	.footer ul a:hover { color: var(--accent); }
+	.footer .contact-line { margin-top: 14px; font-size: 14px; line-height: 1.8; }
+	.footer .contact-line a { color: var(--accent); }
+	.footer .bottom {
+		border-top: 1px solid var(--dark-line); margin-top: 32px; padding-top: 18px;
+		font-size: 13px; color: #8b9099; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+	}
+
+	/* ===== Кнопка «наверх» ===== */
+	.to-top {
+		position: fixed; left: 20px; bottom: 20px; width: 48px; height: 48px; border-radius: 50%;
+		background: var(--accent); color: var(--on-accent); border: none; cursor: pointer;
+		display: none; align-items: center; justify-content: center; z-index: 50; font-size: 20px;
+	}
+	.to-top.show { display: flex; }
+	.to-top:hover { background: var(--accent-dark); }
+
+	/* ===== Адаптив: планшет ===== */
+	@media (min-width: 768px) {
+		.cat-grid { grid-template-columns: repeat(3, 1fr); }
+		.scenarios { grid-template-columns: repeat(3, 1fr); }
+		.features { grid-template-columns: repeat(2, 1fr); }
+		.showroom .grid { grid-template-columns: 1.2fr 1fr; }
+		.about .actions { margin-top: 22px; }
+		.final .grid { grid-template-columns: 1fr 1fr; }
+		.footer .cols { grid-template-columns: 1.4fr 1fr 1fr; }
+	}
+
+	/* ===== Адаптив: десктоп ===== */
+	@media (min-width: 1024px) {
+		.hero .grid { grid-template-columns: 1.1fr .9fr; }
+		.cat-grid { grid-template-columns: repeat(3, 1fr); }
+		.features { grid-template-columns: repeat(3, 1fr); }
+		.footer .cols { grid-template-columns: 1.6fr 1fr 1fr 1fr; }
+	}
+
+	/* ===== Адаптив: прячем тяжёлые элементы шапки на мобиле ===== */
+	@media (max-width: 1100px) {
+		.header-cta { display: none; }
+	}
+	@media (max-width: 900px) {
+		.search { order: 5; flex-basis: 100%; }
+		.header .container { flex-wrap: wrap; padding-top: 12px; padding-bottom: 12px; }
+		.contacts .hours, .contacts .wa { display: none; }
+	}
+	@media (max-width: 640px) {
+		.catalog-btn span { display: none; }
+		.cart span:not(.count) { display: none; }
+		.contacts .phone { font-size: 16px; }
+	}
+	</style>
+</head>
+<body>
+
+	<!-- ============ ШАПКА: верхняя строка ============ -->
+	<div class="topbar">
+		<div class="container">
+			<div class="addr">
+				<span>Ежедневно с 10:00 до 20:00</span>
+				<span>Москва, Волоколамское шоссе 71/13</span>
+				<span>Красногорск, Ильинское шоссе 1А</span>
+			</div>
+			<nav id="topnav">
+				<ul>
+					<li><a href="#">Бренды</a></li>
+					<li><a href="#">Доставка и оплата</a></li>
+					<li><a href="#">Возврат и гарантия</a></li>
+					<li><a href="#">О компании</a></li>
+					<li><a href="#">Контакты</a></li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+
+	<!-- ============ ШАПКА: основной ряд ============ -->
+	<header class="header">
+		<div class="container">
+			<!-- Логотип (временно текст, лого подставим позже) -->
+			<a href="/" class="logo">
+				<b>Вектор пола</b>
+				<span>напольные покрытия</span>
+			</a>
+
+			<!-- Кнопка каталога -->
+			<a href="#catalog" class="catalog-btn">
+				<span class="burger"><i></i><i></i><i></i></span>
+				<span>Каталог</span>
+			</a>
+
+			<!-- Поиск по сайту -->
+			<form class="search" onsubmit="return false">
+				<input type="text" placeholder="Поиск напольных покрытий">
+				<button type="button" aria-label="Найти">
+					<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+				</button>
+			</form>
+
+			<!-- Контакты -->
+			<div class="contacts">
+				<div class="phone">+7 (925) 821-17-44</div>
+				<div class="hours">Ежедневно с 10:00 до 20:00</div>
+				<div class="wa">WhatsApp · zakaz@vectorpola.ru</div>
+			</div>
+
+			<!-- Кнопка расчёта -->
+			<a href="#final" class="btn btn--accent header-cta">Получить расчёт</a>
+
+			<!-- Корзина -->
+			<a href="#" class="cart">
+				<span>Корзина</span>
+				<span class="ico">
+					<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+					<span class="count">0</span>
+				</span>
+			</a>
+		</div>
+	</header>
+
+	<!-- ============ ПЕРВЫЙ ЭКРАН ============ -->
+	<section class="hero">
+		<div class="container grid">
+			<div>
+				<h1>Напольные покрытия <span class="accent">с подбором</span> под ваш интерьер</h1>
+				<p class="sub">Ламинат, кварцвинил, SPC, инженерная и паркетная доска. Поможем подобрать покрытие под бюджет, стиль, нагрузку и способ укладки.</p>
+				<div class="actions">
+					<a href="#picker" class="btn btn--accent">Подобрать покрытие</a>
+					<a href="#final" class="btn btn--outline">Получить расчёт</a>
+					<a href="#" class="btn btn--outline">Проложить маршрут в салон</a>
+				</div>
+				<!-- Преимущества первого экрана -->
+				<div class="perks">
+					<span>Подбор по образцам</span>
+					<span>Расчёт материалов</span>
+					<span>Доставка</span>
+					<span>Укладка</span>
+					<span>Два салона</span>
+				</div>
+			</div>
+			<!-- Плейсхолдер под фото интерьера / образцов -->
+			<div class="visual">Фото интерьера, напольного покрытия,<br>салона или образцов</div>
+		</div>
+	</section>
+
+	<!-- ============ КАТЕГОРИИ КАТАЛОГА ============ -->
+	<section class="section" id="catalog">
+		<div class="container">
+			<div class="section-head"><h2>Каталог покрытий</h2></div>
+
+			<!-- Поиск по каталогу -->
+			<form class="cat-search" onsubmit="return false">
+				<input type="text" placeholder="Найти покрытие в каталоге">
+				<button type="button" class="btn btn--accent">Найти</button>
+			</form>
+
+			<!-- Плитки категорий -->
+			<div class="cat-grid">
+				<a href="#" class="cat-tile"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="4"/><rect x="3" y="10" width="18" height="4"/><rect x="3" y="16" width="18" height="4"/></svg></span><b>Ламинат</b></a>
+				<a href="#" class="cat-tile"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="4"/><rect x="3" y="10" width="18" height="4"/><rect x="3" y="16" width="18" height="4"/></svg></span><b>Кварцвинил / SPC</b></a>
+				<a href="#" class="cat-tile"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="4"/><rect x="3" y="10" width="18" height="4"/><rect x="3" y="16" width="18" height="4"/></svg></span><b>Виниловые полы</b></a>
+				<a href="#" class="cat-tile"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="4"/><rect x="3" y="10" width="18" height="4"/><rect x="3" y="16" width="18" height="4"/></svg></span><b>Инженерная доска</b></a>
+				<a href="#" class="cat-tile"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="4"/><rect x="3" y="10" width="18" height="4"/><rect x="3" y="16" width="18" height="4"/></svg></span><b>Паркетная доска</b></a>
+				<a href="#" class="cat-tile"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="4"/><rect x="3" y="10" width="18" height="4"/><rect x="3" y="16" width="18" height="4"/></svg></span><b>Массивная доска</b></a>
+				<a href="#" class="cat-tile"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg></span><b>Пробковые покрытия</b></a>
+				<a href="#" class="cat-tile"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V8l8-4 8 4v12"/><path d="M4 14h16"/></svg></span><b>Плинтусы и подложка</b></a>
+				<a href="#" class="cat-tile"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 002 1.6h9.7a2 2 0 002-1.6L23 6H6"/></svg></span><b>Сопутствующие товары</b></a>
+			</div>
+		</div>
+	</section>
+
+	<!-- ============ ПОДБОР ПОКРЫТИЯ (сценарии) ============ -->
+	<section class="section section--soft" id="picker">
+		<div class="container">
+			<div class="section-head"><h2>Поможем выбрать покрытие под вашу задачу</h2></div>
+
+			<!-- Быстрые сценарии выбора -->
+			<div class="scenarios">
+				<div class="scenario">Для кухни</div>
+				<div class="scenario">Для спальни</div>
+				<div class="scenario">Для квартиры с детьми</div>
+				<div class="scenario">Для квартиры с животными</div>
+				<div class="scenario">Под тёплый пол</div>
+				<div class="scenario">Водостойкое покрытие</div>
+				<div class="scenario">Покрытие под ёлочку</div>
+				<div class="scenario">Бюджетное решение</div>
+				<div class="scenario">Премиальное покрытие</div>
+			</div>
+
+			<a href="#final" class="btn btn--accent">Получить консультацию</a>
+		</div>
+	</section>
+
+	<!-- ============ ВЫЕЗДНОЙ ШОУРУМ ============ -->
+	<section class="section">
+		<div class="container">
+			<div class="showroom">
+				<div class="grid">
+					<div>
+						<h2>Выездной шоурум</h2>
+						<p>Если вам неудобно приезжать в салон, мы можем привезти образцы напольных покрытий к вам домой, в офис или на объект.</p>
+						<p>Специалист покажет подходящие варианты, поможет сравнить оттенки, фактуры и материалы, а также подберёт покрытие под интерьер, бюджет и условия эксплуатации.</p>
+						<a href="#final" class="btn btn--accent">Заказать выездной шоурум</a>
+					</div>
+					<!-- Что входит -->
+					<div class="incl">
+						<b>Что входит:</b>
+						<ul>
+							<li>Выезд специалиста с образцами</li>
+							<li>Консультация на объекте</li>
+							<li>Подбор покрытия под помещение</li>
+							<li>Сравнение цветов и фактур при вашем освещении</li>
+							<li>Расчёт нужного количества материала</li>
+							<li>Рекомендации по укладке и сопутствующим товарам</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- ============ ПОЧЕМУ МЫ ============ -->
+	<section class="section section--soft">
+		<div class="container">
+			<div class="section-head"><h2>Почему мы?</h2></div>
+			<div class="features">
+				<div class="feature">
+					<span class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></span>
+					<p>Подбор покрытия по образцам</p>
+				</div>
+				<div class="feature">
+					<span class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 10h2M14 10h2M8 14h2M14 14h2M8 18h2M14 18h2"/></svg></span>
+					<p>Помощь с расчётом количества материала</p>
+				</div>
+				<div class="feature">
+					<span class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="6" width="14" height="11"/><path d="M15 9h4l3 3v5h-7"/><circle cx="6" cy="19" r="2"/><circle cx="18" cy="19" r="2"/></svg></span>
+					<p>Доставка и самовывоз</p>
+				</div>
+				<div class="feature">
+					<span class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 7l3 3-9 9-3 .5.5-3z"/><path d="M3 21h18"/></svg></span>
+					<p>Возможность укладки</p>
+				</div>
+				<div class="feature">
+					<span class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20a6 6 0 0112 0M14 20a5 5 0 017 0"/></svg></span>
+					<p>Работа с дизайнерами и поставщиками</p>
+				</div>
+				<div class="feature">
+					<span class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6.3-7-11a7 7 0 0114 0c0 4.7-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></span>
+					<p>Два салона: Москва и Красногорск</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- ============ О КОМПАНИИ ============ -->
+	<section class="section about">
+		<div class="container">
+			<div class="box">
+				<div class="section-head"><h2>О компании</h2></div>
+				<p>«Вектор пола» — магазин напольных покрытий, где помогают выбрать пол под реальные задачи: интерьер, бюджет, нагрузку, влажность помещения и способ укладки. Мы работаем с ламинатом, кварцвинилом, SPC, инженерной и паркетной доской, плинтусами и сопутствующими материалами. В салоне можно посмотреть образцы, сравнить оттенки и фактуры, получить консультацию специалиста и рассчитать нужный объём покрытия.</p>
+				<div class="actions">
+					<a href="#" class="btn btn--accent">Подробнее о компании</a>
+					<a href="#" class="btn btn--outline">Приехать в салон</a>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- ============ ФИНАЛЬНЫЙ CTA + ФОРМА ============ -->
+	<section class="section final" id="final">
+		<div class="container grid">
+			<div>
+				<h2>Не знаете, какое покрытие выбрать?</h2>
+				<p>Оставьте заявку — специалист поможет подобрать пол под помещение, бюджет и стиль интерьера.</p>
+			</div>
+			<!-- Форма (без обработки, бэкенд позже) -->
+			<form onsubmit="return false">
+				<input type="text" placeholder="Имя">
+				<input type="tel" placeholder="Телефон">
+				<textarea placeholder="Комментарий"></textarea>
+				<button type="button" class="btn btn--accent">Получить консультацию</button>
+			</form>
+		</div>
+	</section>
+
+	<!-- ============ ФУТЕР ============ -->
+	<footer class="footer">
+		<div class="container">
+			<div class="cols">
+				<!-- Колонка 1: о магазине + контакты -->
+				<div>
+					<a href="/" class="logo"><b>Вектор пола</b><span>напольные покрытия</span></a>
+					<p class="desc" style="margin-top:14px">Магазин напольных покрытий: ламинат, кварцвинил, SPC, инженерная и паркетная доска, плинтусы и сопутствующие материалы.</p>
+					<div class="contact-line">
+						Москва, Волоколамское шоссе 71/13, к. 1, пом. 30Н<br>
+						Красногорск, Ильинское шоссе, дом 1А, пом. 6<br>
+						<a href="tel:+79258211744">+7 (925) 821-17-44</a><br>
+						<a href="mailto:zakaz@vectorpola.ru">zakaz@vectorpola.ru</a><br>
+						Ежедневно с 10:00 до 20:00
+					</div>
+				</div>
+				<!-- Колонка 2: каталог -->
+				<div>
+					<h4>Каталог</h4>
+					<ul>
+						<li><a href="#">Ламинат</a></li>
+						<li><a href="#">Кварцвинил / SPC</a></li>
+						<li><a href="#">Виниловые полы</a></li>
+						<li><a href="#">Инженерная доска</a></li>
+						<li><a href="#">Паркетная доска</a></li>
+						<li><a href="#">Массивная доска</a></li>
+					</ul>
+				</div>
+				<!-- Колонка 3: каталог (продолжение) -->
+				<div>
+					<h4>&nbsp;</h4>
+					<ul>
+						<li><a href="#">Пробковые покрытия</a></li>
+						<li><a href="#">Плинтусы и подложка</a></li>
+						<li><a href="#">Сопутствующие товары</a></li>
+						<li><a href="#">Бренды</a></li>
+					</ul>
+				</div>
+				<!-- Колонка 4: информация -->
+				<div>
+					<h4>Информация</h4>
+					<ul>
+						<li><a href="#">О компании</a></li>
+						<li><a href="#">Доставка и оплата</a></li>
+						<li><a href="#">Возврат и гарантия</a></li>
+						<li><a href="#">Контакты</a></li>
+					</ul>
+				</div>
+			</div>
+			<div class="bottom">
+				<span>© 2025 Вектор пола</span>
+				<span>ИП Катанова В. Е. · ИНН 213013757388</span>
+			</div>
+		</div>
+	</footer>
+
+	<!-- Кнопка «наверх» -->
+	<button class="to-top" id="toTop" aria-label="Наверх">↑</button>
+
+	<script>
+	/* Кнопка «наверх»: показ при прокрутке + плавный скролл */
+	const toTop = document.getElementById('toTop');
+	window.addEventListener('scroll', () => {
+		toTop.classList.toggle('show', window.scrollY > 400);
+	});
+	toTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+	</script>
+
+</body>
+</html>
