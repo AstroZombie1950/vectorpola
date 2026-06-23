@@ -4,3 +4,15 @@ Options -Indexes
     Order Allow,Deny
     Deny from all
 </Files>
+
+# Закрываем прямой доступ к data/
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^data/ - [F,L]
+</IfModule>
+
+# Альтернатива если mod_rewrite недоступен
+<FilesMatch "\.json$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>

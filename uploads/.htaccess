@@ -1,0 +1,13 @@
+Options -Indexes
+
+# Только картинки, PHP не выполняется
+<FilesMatch "\.php$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Разрешаем только изображения
+<FilesMatch "\.(webp|jpg|jpeg|png|gif|svg)$">
+    Order Allow,Deny
+    Allow from all
+</FilesMatch>

@@ -1,0 +1,7 @@
+Options -Indexes
+
+# Закрываем прямой доступ к вспомогательным PHP-файлам
+<FilesMatch "^(auth|layout-top|layout-bottom|admin-config|products-data|upload|xlsx-writer|xlsx-reader)\.php$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
