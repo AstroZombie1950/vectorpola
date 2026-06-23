@@ -63,3 +63,101 @@ mmenu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu))
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && mmenu.classList.contains('open')) closeMenu(); });
 /* авто-закрытие при переходе на десктоп */
 window.addEventListener('resize', () => { if (window.innerWidth > 900 && mmenu.classList.contains('open')) closeMenu(); });
+/* ===== Телефонная маска ===== */
+function applyPhoneMask(input) {
+	input.addEventListener('input', function () {
+		let val = this.value.replace(/\D/g, '');
+		/* нормализуем: 8 → 7, добавляем 7 если нет */
+		if (val.startsWith('8')) val = '7' + val.slice(1);
+		if (!val.startsWith('7') && val.length > 0) val = '7' + val;
+		val = val.slice(0, 11);
+
+		let out = '';
+		if (val.length > 0)  out = '+7';
+		if (val.length > 1)  out += ' (' + val.slice(1, 4);
+		if (val.length >= 4) out += ') ' + val.slice(4, 7);
+		if (val.length >= 7) out += '-' + val.slice(7, 9);
+		if (val.length >= 9) out += '-' + val.slice(9, 11);
+		this.value = out;
+	});
+	/* при фокусе ставим +7 если пусто */
+	input.addEventListener('focus', function () {
+		if (this.value === '') this.value = '+7 ';
+	});
+	/* если только +7 — очищаем при уходе */
+	input.addEventListener('blur', function () {
+		if (this.value.trim() === '+7') this.value = '';
+	});
+}
+
+/* ===== Валидация одного поля ===== */
+function validateField(input) {
+	const errorEl = input.parentElement.querySelector('.field-error');
+	let msg = '';
+
+	if (input.dataset.required !== undefined && input.value.trim() === '') {
+		msg = input.dataset.errorEmpty || 'Заполните поле';
+	} else if (input.type === 'tel') {
+		const digits = input.value.replace(/\D/g, '');
+		if (digits.length < 11) msg = 'Введите полный номер телефона';
+	} else if (input.dataset.minlen) {
+		if (input.value.trim().length < +input.dataset.minlen) {
+			msg = input.dataset.errorShort || 'Слишком коротко';
+		}
+	}
+
+	input.classList.toggle('error', msg !== '');
+	if (errorEl) errorEl.textContent = msg;
+	return msg === '';
+}
+
+/* ===== Инициализация CTA-формы ===== */
+function initCtaForm(formEl) {
+	if (!formEl) return;
+
+	const phoneInput = formEl.querySelector('input[type="tel"]');
+	if (phoneInput) applyPhoneMask(phoneInput);
+
+	/* Валидация по blur для каждого поля */
+	formEl.querySelectorAll('input, textarea').forEach(field => {
+		field.addEventListener('blur', () => validateField(field));
+	});
+
+	/* Отправка */
+	const btn = formEl.querySelector('button[type="button"]');
+	const status = formEl.querySelector('.form-status');
+
+	btn.addEventListener('click', async () => {
+		/* Валидируем все поля */
+		const fields = [...formEl.querySelectorAll('input, textarea')];
+		const valid = fields.map(validateField).every(Boolean);
+		if (!valid) return;
+
+		btn.disabled = true;
+		const origText = btn.textContent;
+		btn.textContent = 'Отправляем…';
+		if (status) { status.textContent = ''; status.className = 'form-status'; }
+
+		const data = new FormData(formEl);
+
+		try {
+			const res = await fetch('/source/php/send.php', { method: 'POST', body: data });
+			const json = await res.json();
+			if (json.ok) {
+				if (status) { status.textContent = 'Заявка отправлена! Мы перезвоним вам.'; status.classList.add('ok'); }
+				formEl.reset();
+			} else {
+				const msg = json.errors ? json.errors.join(', ') : 'Ошибка. Попробуйте ещё раз.';
+				if (status) { status.textContent = msg; status.classList.add('err'); }
+			}
+		} catch {
+			if (status) { status.textContent = 'Ошибка соединения. Попробуйте ещё раз.'; status.classList.add('err'); }
+		} finally {
+			btn.disabled = false;
+			btn.textContent = origText;
+		}
+	});
+}
+
+/* Инициализируем все формы на странице */
+document.querySelectorAll('.cta-form').forEach(initCtaForm);
