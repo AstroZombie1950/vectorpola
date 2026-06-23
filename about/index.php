@@ -109,15 +109,34 @@ $canonical = 'https://vectorpola.ru/about/';
 	<!-- ============ ДИЗАЙНЕРАМ И ПОСТАВЩИКАМ ============ -->
 	<section class="section section--soft">
 		<div class="container">
+			<div class="section-head"><h2>Дизайнерам и поставщикам</h2></div>
+
 			<div class="collab-block">
 				<div>
-					<div class="section-head"><h2>Дизайнерам и поставщикам</h2></div>
-					<p>Работаем с дизайнерами, подрядчиками и поставщиками. Поможем с подбором покрытий под проект, предоставим образцы, рассчитаем материалы и сопроводим клиента на всех этапах. Готовы обсудить индивидуальные условия сотрудничества.</p>
+					<!-- Кому подходит -->
+					<div class="collab-audience">
+						<span>Дизайнерам</span>
+						<span>Подрядчикам</span>
+						<span>Поставщикам</span>
+					</div>
+
+					<!-- Что предлагаем -->
+					<ul class="check-list" style="margin-top: 24px;">
+						<li>Помощь с подбором покрытий под проект</li>
+						<li>Образцы для демонстрации клиентам</li>
+						<li>Расчёт материалов под объект</li>
+						<li>Сопровождение клиента на всех этапах</li>
+						<li>Индивидуальные условия сотрудничества</li>
+					</ul>
+
+					<!-- Прямые контакты -->
 					<div class="collab-contacts">
 						<a href="tel:+79258211744" class="btn btn--accent">Позвонить</a>
 						<a href="mailto:zakaz@vectorpola.ru" class="btn btn--outline">zakaz@vectorpola.ru</a>
 					</div>
 				</div>
+
+				<!-- Форма -->
 				<form class="cta-form" autocomplete="off">
 					<input type="hidden" name="source" value="О компании — Дизайнерам">
 					<p class="cta-form__title">Обсудить сотрудничество</p>
@@ -132,6 +151,11 @@ $canonical = 'https://vectorpola.ru/about/';
 						<span class="field-error"></span>
 					</div>
 					<div>
+						<input type="email" name="email" placeholder="E-mail" aria-label="E-mail"
+							data-required data-error-empty="Введите e-mail">
+						<span class="field-error"></span>
+					</div>
+					<div>
 						<textarea name="comment" placeholder="Расскажите о проекте" aria-label="Комментарий"></textarea>
 						<span class="field-error"></span>
 					</div>
@@ -141,8 +165,8 @@ $canonical = 'https://vectorpola.ru/about/';
 			</div>
 		</div>
 	</section>
-    
-    <?php include $_SERVER['DOCUMENT_ROOT'] . '/source/include/footer.php'; ?>
+
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/source/include/footer.php'; ?>
 
 	<script src="/source/js/main.js"></script>
 </body>

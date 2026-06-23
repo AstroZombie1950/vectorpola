@@ -13,9 +13,10 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 /* ===== Читаем и чистим поля ===== */
 $name    = trim(strip_tags($_POST['name']    ?? ''));
 $phone   = trim(strip_tags($_POST['phone']   ?? ''));
+$email   = trim(strip_tags($_POST['email']   ?? ''));  // необязательное (только форма дизайнерам)
 $address = trim(strip_tags($_POST['address'] ?? ''));  // только форма доставки
 $comment = trim(strip_tags($_POST['comment'] ?? ''));
-$source  = trim(strip_tags($_POST['source']  ?? 'Сайт'));  // откуда пришла заявка
+$source  = trim(strip_tags($_POST['source']  ?? 'Сайт'));
 
 /* ===== Валидация ===== */
 $errors = [];
@@ -24,10 +25,14 @@ if ($name === '' || mb_strlen($name) < 2) {
 	$errors[] = 'Укажите имя';
 }
 
-// Телефон: убираем всё кроме цифр, проверяем длину
 $phoneDigits = preg_replace('/\D/', '', $phone);
 if ($phone === '' || strlen($phoneDigits) < 10 || strlen($phoneDigits) > 12) {
 	$errors[] = 'Укажите корректный номер телефона';
+}
+
+/* E-mail валидируем только если поле пришло непустым */
+if ($email !== '' && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+	$errors[] = 'Укажите корректный e-mail';
 }
 
 if (!empty($errors)) {
@@ -42,6 +47,9 @@ $lines[] = "📋 <b>Новая заявка</b> · {$source}";
 $lines[] = "👤 <b>Имя:</b> {$name}";
 $lines[] = "📞 <b>Телефон:</b> {$phone}";
 
+if ($email !== '') {
+	$lines[] = "✉️ <b>E-mail:</b> {$email}";
+}
 if ($address !== '') {
 	$lines[] = "📍 <b>Адрес доставки:</b> {$address}";
 }

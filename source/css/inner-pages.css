@@ -1,0 +1,102 @@
+/* ===================================================
+   Стили внутренних страниц
+   Подключать после main.css
+   =================================================== */
+
+/* ===== Hero страницы (не главная) ===== */
+.page-hero { background: var(--bg-cream); border-bottom: 1px solid var(--line); padding: 32px 0 36px; }
+.page-hero h1 { font-size: clamp(26px, 4vw, 40px); font-weight: var(--fw-h1); margin-top: 12px; }
+.page-hero__sub { color: var(--muted); font-size: 17px; max-width: 680px; margin-top: 12px; }
+.page-hero__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 20px; }
+
+/* ===== Хлебные крошки ===== */
+.breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); flex-wrap: wrap; }
+.breadcrumb a { color: var(--muted); }
+.breadcrumb a:hover { color: var(--accent-dark); }
+.breadcrumb span::before { content: "→"; margin-right: 8px; }
+
+/* ===== Контентная колонка (читаемая ширина) ===== */
+.inner-content { max-width: 860px; }
+
+/* ===== Вводный абзац ===== */
+.lead-text { font-size: 18px; color: var(--ink); margin-bottom: 32px; line-height: 1.65; }
+
+/* ===== Блок с подзаголовком ===== */
+.info-block { margin-bottom: 36px; }
+.info-block h2 { font-size: 20px; font-weight: var(--fw-semibold); margin-bottom: 10px; }
+.info-block p + p { margin-top: 10px; }
+
+/* ===== Информационная сетка (О компании) ===== */
+.info-grid { display: grid; gap: 0; }
+.info-grid .info-block { border-top: 1px solid var(--line); padding-top: 28px; }
+
+/* ===== Уведомление/важно ===== */
+.notice {
+	background: var(--accent-soft); border-left: 3px solid var(--accent);
+	padding: 12px 16px; border-radius: 0 var(--radius) var(--radius) 0;
+	font-size: 15px; margin-top: 14px;
+}
+
+/* ===== Список с галочками ===== */
+.check-list { list-style: none; margin-top: 14px; display: flex; flex-direction: column; gap: 8px; }
+.check-list li { padding-left: 24px; position: relative; }
+.check-list li::before { content: "✓"; position: absolute; left: 0; color: var(--accent-dark); font-weight: 700; }
+
+/* ===== Таблица условий ===== */
+.info-table { width: 100%; border-collapse: collapse; margin-top: 14px; }
+.info-table td { padding: 12px 14px; border: 1px solid var(--line); font-size: 15px; vertical-align: top; }
+.info-table td:first-child { color: var(--muted); white-space: nowrap; width: 40%; }
+.info-table--compact td:first-child { width: 30%; }
+
+@media (max-width: 600px) {
+	.info-table td:first-child { white-space: normal; width: auto; }
+	.info-table tr { display: grid; }
+	.info-table td { border-bottom: none; }
+	.info-table tr:not(:last-child) td:last-child { border-bottom: 1px solid var(--line); }
+}
+
+/* ===== Страница контактов ===== */
+.contacts-top { display: flex; flex-wrap: wrap; gap: 28px; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; }
+.contacts-info { display: flex; flex-direction: column; gap: 16px; }
+.contact-item { display: flex; gap: 12px; align-items: flex-start; }
+.contact-item svg { flex-shrink: 0; margin-top: 2px; color: var(--accent-dark); }
+.contact-item b { display: block; font-size: 13px; color: var(--muted); margin-bottom: 2px; font-weight: var(--fw-medium); }
+.contact-item a, .contact-item span { font-size: 16px; font-weight: var(--fw-medium); }
+.contact-item a:hover { color: var(--accent-dark); }
+.contacts-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+
+/* Карточки салонов */
+.salons-grid { display: grid; grid-template-columns: 1fr; gap: 16px; margin-bottom: 32px; }
+.salon-card { background: var(--bg-cream); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 24px; }
+.salon-card__badge { display: inline-block; background: var(--accent); color: var(--on-accent); font-size: 12px; font-weight: var(--fw-bold); padding: 3px 10px; border-radius: 20px; margin-bottom: 10px; }
+.salon-card h2 { font-size: 20px; font-weight: var(--fw-semibold); margin-bottom: 6px; }
+.salon-card p { color: var(--muted); font-size: 15px; margin-bottom: 16px; }
+
+/* Карта */
+.map-wrap { border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--line); }
+.map-wrap iframe { display: block; width: 100%; height: 400px; border: none; }
+.map-placeholder { height: 400px; background: var(--bg-cream); display: flex; align-items: center; justify-content: center; color: var(--muted); }
+
+/* ===== Страница О компании: блок дизайнерам ===== */
+.collab-block { display: grid; grid-template-columns: 1fr; gap: 36px; }
+.collab-block p { font-size: 16px; margin-top: 12px; }
+.collab-contacts { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 20px; }
+.cta-form__title { font-weight: var(--fw-semibold); font-size: 16px; color: #fff; }
+
+/* ===== Адаптив внутренних страниц ===== */
+@media (min-width: 768px) {
+	.salons-grid { grid-template-columns: 1fr 1fr; }
+	.collab-block { grid-template-columns: 1fr 1fr; }
+	.info-grid { grid-template-columns: 1fr 1fr; }
+}
+
+/* Теги аудитории (дизайнерам / подрядчикам / поставщикам) */
+.collab-audience { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 8px; }
+.collab-audience span {
+	background: var(--accent-soft); border: 1px solid var(--accent);
+	color: var(--on-accent); font-weight: var(--fw-semibold); font-size: 14px;
+	padding: 6px 16px; border-radius: 40px;
+}
+
+/* Якорный сдвиг — компенсируем высоту sticky-шапки */
+[id] { scroll-margin-top: calc(78px + 12px); }

@@ -346,3 +346,6 @@ body.menu-open { position: fixed; width: 100%; overflow: hidden; }
 	.cart span:not(.count) { display: none; }
 	.contacts .phone { font-size: 16px; }
 }
+
+/* Якорный сдвиг — компенсируем высоту sticky-шапки (~78px + зазор) */
+[id] { scroll-margin-top: 90px; }

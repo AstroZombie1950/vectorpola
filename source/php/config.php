@@ -5,5 +5,5 @@ if (basename(__FILE__) === basename($_SERVER['SCRIPT_FILENAME'])) {
 }
 
 /* ===== Telegram ===== */
-define('TG_TOKEN',   '8776087593:AAFNFQ5Arf_znKFtfEMRZbzSGsVxEWCARzs');
-define('TG_CHAT_ID', '-1003799035992');
+define('TG_TOKEN',   'TG_TOKEN-hid');
+define('TG_CHAT_ID', 'TG_CHAT_ID-hid');

@@ -89,25 +89,22 @@ $canonical = 'https://vectorpola.ru/contacts/';
 			<!-- Два адреса -->
 			<div class="salons-grid">
 				<div class="salon-card">
-					<div class="salon-card__badge">Салон 1</div>
+					<div class="salon-card__badge">Адрес 1</div>
 					<h2>Москва</h2>
 					<p>Волоколамское шоссе 71/13, к. 1, пом. 30Н</p>
-					<a href="https://yandex.ru/maps/?pt=37.3638,55.8198&z=17&l=map" target="_blank" rel="noopener" class="btn btn--outline">Построить маршрут</a>
+					<a href="https://yandex.ru/maps/?pt=37.426132,55.815418&z=17&l=map" target="_blank" rel="noopener" class="btn btn--outline">Построить маршрут</a>
 				</div>
 				<div class="salon-card">
-					<div class="salon-card__badge">Салон 2</div>
+					<div class="salon-card__badge">Адрес 2</div>
 					<h2>Красногорск</h2>
 					<p>Ильинское шоссе, дом 1А, пом. 6</p>
-					<a href="https://yandex.ru/maps/?pt=37.3341,55.8218&z=17&l=map" target="_blank" rel="noopener" class="btn btn--outline">Построить маршрут</a>
+					<a href="https://yandex.ru/maps/?pt=37.352983,55.815200&z=17&l=map" target="_blank" rel="noopener" class="btn btn--outline">Построить маршрут</a>
 				</div>
 			</div>
 
-			<!-- Яндекс.Карта — вставить embed-код от Яндекс.Карт с двумя точками -->
+			<!-- Яндекс.Карта -->
 			<div class="map-wrap">
-				<!-- ВСТАВИТЬ: iframe от Яндекс.Карты (Конструктор карт → две метки → получить код) -->
-				<div class="map-placeholder">
-					<p>Карта загружается</p>
-				</div>
+				<iframe src="https://yandex.ru/map-widget/v1/?um=constructor%3A76a70049cc5ffd8067a258241277fd3850e67857ad8b8eabeb0c47ee031968cb&amp;source=constructor" width="100%" height="400" frameborder="0"></iframe>
 			</div>
 
 		</div>

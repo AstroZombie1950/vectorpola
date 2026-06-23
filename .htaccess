@@ -1,23 +1,6 @@
 Options -Indexes
 
-# Запрещаем прямой доступ к конфигу
 <Files "config.php">
     Order Allow,Deny
     Deny from all
 </Files>
-
-# Запрещаем листинг и прямой доступ к папке с PHP
-<IfModule mod_authz_core.c>
-    <Directory "/source/php">
-        Require all denied
-    </Directory>
-</IfModule>
-
-# Чистые URL — папки с index.php подхватываются автоматически
-# Дополнительные правила добавляются по мере появления новых разделов
-<IfModule mod_rewrite.c>
-    RewriteEngine On
-    RewriteBase /
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
-</IfModule>
