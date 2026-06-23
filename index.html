@@ -3,406 +3,35 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- ===== SEO ===== -->
 	<title>Вектор пола — напольные покрытия с подбором под ваш интерьер</title>
+	<meta name="description" content="Магазин напольных покрытий в Москве и Красногорске. Ламинат, кварцвинил, SPC, инженерная и паркетная доска. Подбор по образцам, расчёт материалов, доставка и укладка.">
+	<meta name="keywords" content="напольные покрытия, ламинат, кварцвинил, SPC, инженерная доска, паркетная доска, Москва, Красногорск">
+	<meta name="author" content="Вектор пола">
+	<link rel="canonical" href="https://vectorpola.ru/">
 
-	<style>
-	/* ===== Глобальные переменные (меняются в одном месте) ===== */
-	:root {
-		/* Палитра «Медовый янтарь» */
-		--accent: #F2A516;
-		--accent-dark: #D98E0B;
-		--accent-soft: #FBEFD6;
-		--on-accent: #5A3B0A;
+	<!-- ===== Open Graph ===== -->
+	<meta property="og:type" content="website">
+	<meta property="og:url" content="https://vectorpola.ru/">
+	<meta property="og:title" content="Вектор пола — напольные покрытия с подбором под ваш интерьер">
+	<meta property="og:description" content="Магазин напольных покрытий в Москве и Красногорске. Ламинат, кварцвинил, SPC, инженерная и паркетная доска. Подбор по образцам, расчёт материалов, доставка и укладка.">
+	<meta property="og:image" content="https://vectorpola.ru/og-image.jpg">
+	<meta property="og:locale" content="ru_RU">
+	<meta property="og:site_name" content="Вектор пола">
 
-		/* Тёмная база (шапка/футер) */
-		--dark: #2B2F38;
-		--dark-2: #232730;
-		--dark-line: #3A3F4A;
+	<!-- ===== Twitter Card ===== -->
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:title" content="Вектор пола — напольные покрытия">
+	<meta name="twitter:description" content="Магазин напольных покрытий в Москве и Красногорске. Ламинат, кварцвинил, SPC, инженерная и паркетная доска.">
+	<meta name="twitter:image" content="https://vectorpola.ru/og-image.jpg">
 
-		/* Текст и фоны */
-		--ink: #2A2724;
-		--muted: #6E6A62;
-		--line: #E7DFD2;
-		--bg: #FFFFFF;
-		--bg-soft: #FBF7EF;
-		--bg-cream: #F6F1E8;
+	<!-- ===== Фавикон (SVG — паркетная доска / вектор пола) ===== -->
+	<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+	<link rel="alternate icon" href="/favicon.ico">
+	<meta name="theme-color" content="#2B2F38">
 
-		/* Толщина шрифтов (preset «ближе к донору») */
-		--fw-body: 400;
-		--fw-medium: 500;
-		--fw-semibold: 600;
-		--fw-bold: 700;
-		--fw-h1: 700;
-		--fw-h2: 600;
-		--fw-btn: 600;
-
-		/* Геометрия */
-		--radius: 10px;
-		--radius-lg: 16px;
-		--maxw: 1280px;
-		--ff: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-	}
-
-	/* ===== База ===== */
-	* { margin: 0; padding: 0; box-sizing: border-box; }
-	html { scroll-behavior: smooth; }
-	body {
-		font-family: var(--ff);
-		color: var(--ink);
-		background: var(--bg);
-		line-height: 1.55;
-		font-size: 16px;
-		font-weight: var(--fw-body);
-	}
-	a { color: inherit; text-decoration: none; }
-	img { max-width: 100%; display: block; }
-	ul { list-style: none; }
-
-	.container { width: 100%; max-width: var(--maxw); margin: 0 auto; padding: 0 16px; }
-
-	/* ===== Кнопки ===== */
-	.btn {
-		display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-		padding: 12px 22px; border-radius: var(--radius);
-		font-weight: var(--fw-btn); font-size: 15px; cursor: pointer;
-		border: 2px solid transparent; transition: .18s ease; white-space: nowrap;
-	}
-	.btn--accent { background: var(--accent); color: var(--on-accent); }
-	.btn--accent:hover { background: var(--accent-dark); }
-	.btn--outline { background: transparent; color: var(--ink); border-color: var(--line); }
-	.btn--outline:hover { border-color: var(--accent); color: var(--accent-dark); }
-
-	/* ===== Заголовки секций (фирменное тире-акцент) ===== */
-	.section { padding: 56px 0; }
-	.section--soft { background: var(--bg-soft); }
-	.section-head { margin-bottom: 28px; }
-	.section-head h2 {
-		font-size: clamp(24px, 3vw, 34px); font-weight: var(--fw-h2); letter-spacing: -.3px;
-		display: inline-flex; align-items: center; gap: 14px;
-	}
-	.section-head h2::before {
-		content: ""; width: 26px; height: 4px; background: var(--accent); border-radius: 2px;
-	}
-	.section-head.center { text-align: center; }
-	.section-head.center h2 { justify-content: center; }
-	.section-head .lead { color: var(--muted); margin-top: 10px; max-width: 720px; }
-	.section-head.center .lead { margin-left: auto; margin-right: auto; }
-
-	/* ===== Верхняя строка шапки ===== */
-	.topbar { background: var(--bg-cream); border-bottom: 1px solid var(--line); font-size: 13px; }
-	.topbar .container { display: flex; align-items: center; justify-content: space-between; min-height: 40px; gap: 16px; flex-wrap: wrap; }
-	.topbar .addr { color: var(--muted); display: flex; gap: 18px; flex-wrap: wrap; }
-	.topbar nav ul { display: flex; gap: 20px; flex-wrap: wrap; }
-	.topbar nav a { color: var(--ink); }
-	.topbar nav a:hover { color: var(--accent-dark); }
-
-	/* ===== Основной ряд шапки ===== */
-	.header { background: var(--dark); color: #fff; position: sticky; top: 0; z-index: 40; }
-	.header .container { display: flex; align-items: center; gap: 16px; min-height: 78px; }
-
-	.logo { display: flex; flex-direction: column; line-height: 1; flex-shrink: 0; }
-	.logo b { font-size: 22px; font-weight: var(--fw-bold); color: #fff; }
-	.logo span { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-top: 4px; }
-	/* Бейдж-логотип (тёмный SVG на белой подложке) */
-	.logo--badge { flex-direction: row; align-items: center; background: #fff; border-radius: 12px; padding: 6px 12px; }
-	.logo--badge svg { height: 46px; width: auto; display: block; }
-
-	.catalog-btn {
-		display: inline-flex; align-items: center; gap: 10px;
-		background: var(--accent); color: var(--on-accent);
-		padding: 13px 20px; border-radius: var(--radius); font-weight: var(--fw-bold); flex-shrink: 0; cursor: pointer;
-	}
-	.catalog-btn:hover { background: var(--accent-dark); }
-	.burger { display: inline-flex; flex-direction: column; gap: 3px; }
-	.burger i { width: 18px; height: 2px; background: currentColor; display: block; }
-
-	.search { flex: 1; display: flex; min-width: 0; }
-	.search input {
-		flex: 1; min-width: 0; border: none; padding: 12px 16px; font-size: 15px;
-		border-radius: var(--radius) 0 0 var(--radius); outline: none; background: #fff; color: var(--ink);
-	}
-	.search button {
-		background: var(--dark-2); border: 1px solid var(--dark-line); color: #fff;
-		padding: 0 16px; border-radius: 0 var(--radius) var(--radius) 0; cursor: pointer;
-	}
-
-	.contacts { text-align: right; flex-shrink: 0; }
-	.contacts .phone { font-size: 19px; font-weight: var(--fw-bold); color: #fff; white-space: nowrap; display: block; }
-	.contacts .phone:hover { color: var(--accent); }
-	.contacts .hours { font-size: 12px; color: #b9bcc4; }
-
-	/* Иконки-ссылки WhatsApp / e-mail */
-	.hicons { display: flex; gap: 8px; flex-shrink: 0; }
-	.hicon {
-		width: 40px; height: 40px; border-radius: 50%; background: var(--dark-2);
-		display: flex; align-items: center; justify-content: center; color: #fff;
-	}
-	.hicon:hover { color: var(--accent); }
-
-	.header-cta { flex-shrink: 0; }
-
-	.cart { display: flex; align-items: center; gap: 8px; flex-shrink: 0; font-weight: var(--fw-bold); font-size: 13px; }
-	.cart .ico {
-		width: 40px; height: 40px; border-radius: 50%; background: var(--dark-2);
-		display: flex; align-items: center; justify-content: center; position: relative;
-	}
-	.cart .count {
-		position: absolute; top: -4px; right: -4px; background: var(--accent); color: var(--on-accent);
-		width: 18px; height: 18px; border-radius: 50%; font-size: 11px; display: flex; align-items: center; justify-content: center;
-	}
-
-	/* ===== Первый экран (hero) ===== */
-	.hero { background: var(--bg-soft); padding: 40px 0; }
-	.hero-layout { display: grid; grid-template-columns: 1fr; gap: 24px; }
-
-	/* Каталог слева (только десктоп) */
-	.hero-catalog { display: none; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; align-self: start; }
-	.hc-head { background: var(--bg-cream); padding: 14px 16px; font-weight: var(--fw-bold); display: flex; align-items: center; gap: 10px; }
-	.hero-catalog li a {
-		display: flex; align-items: center; justify-content: space-between; gap: 8px;
-		padding: 11px 16px; border-top: 1px solid var(--line); font-size: 14px; color: var(--ink);
-	}
-	.hero-catalog li a:hover { background: var(--accent-soft); color: var(--accent-dark); }
-	.hero-catalog li a svg { color: var(--muted); }
-	.hero-catalog .more a { color: var(--muted); }
-
-	/* Промо-баннер справа */
-	.hero-promo { background: #fff; border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 32px; display: grid; grid-template-columns: 1fr; gap: 24px; align-items: center; }
-	.hero-promo h1 { font-size: clamp(28px, 4vw, 44px); font-weight: var(--fw-h1); letter-spacing: -.5px; line-height: 1.12; }
-	.hero-promo h1 .accent { color: var(--accent-dark); }
-	.hero-promo .sub { color: var(--muted); font-size: 17px; margin: 16px 0 24px; max-width: 520px; }
-	.hero-promo .actions { display: flex; flex-wrap: wrap; gap: 12px; }
-	.hero-promo .perks { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
-	.hero-promo .perks span {
-		background: var(--bg-soft); border: 1px solid var(--line); border-radius: 40px;
-		padding: 7px 14px; font-size: 13px; color: var(--ink);
-	}
-	/* Фото на первом экране: 4:3 */
-	.hp-visual { aspect-ratio: 4 / 3; background: var(--bg-cream); border-radius: var(--radius-lg); overflow: hidden; }
-	.hp-visual img { width: 100%; height: 100%; object-fit: cover; display: block; }
-
-	/* ===== Поиск по каталогу + плитки категорий ===== */
-	.cat-search { display: flex; gap: 10px; margin-bottom: 28px; max-width: 760px; }
-	.cat-search input { flex: 1; padding: 13px 16px; border: 1px solid var(--line); border-radius: var(--radius); font-size: 15px; outline: none; }
-	.cat-search input:focus { border-color: var(--accent); }
-
-	.cat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
-	.cat-tile {
-		display: flex; align-items: center; gap: 12px; padding: 16px;
-		background: #fff; border: 1px solid var(--line); border-radius: var(--radius); transition: .18s;
-	}
-	.cat-tile:hover { border-color: var(--accent); transform: translateY(-2px); }
-	.cat-tile .ic {
-		width: 44px; height: 44px; border-radius: var(--radius); background: var(--accent-soft);
-		display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--accent-dark);
-	}
-	.cat-tile b { font-weight: var(--fw-medium); font-size: 15px; }
-
-	/* ===== Карусель-заголовок (стрелки) ===== */
-	.head-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 28px; }
-	.head-row .section-head { margin-bottom: 0; }
-	.arrows { display: flex; gap: 8px; }
-	.arrows button {
-		width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line);
-		background: #fff; color: var(--accent-dark); cursor: pointer; display: flex; align-items: center; justify-content: center;
-	}
-	.arrows button:hover { border-color: var(--accent); }
-
-	/* ===== Популярные продукты ===== */
-	.products { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
-	.product { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; transition: .18s; }
-	.product:hover { border-color: var(--accent); }
-	.product .img { aspect-ratio: 1 / 1; background: var(--bg-cream); overflow: hidden; }
-	.product .img img { width: 100%; height: 100%; object-fit: cover; display: block; }
-	.product .body { padding: 14px; }
-	.product .name { font-weight: var(--fw-medium); font-size: 14px; min-height: 40px; }
-	.product .price { font-weight: var(--fw-bold); margin-top: 8px; font-size: 16px; }
-	.product .price small { font-weight: var(--fw-body); color: var(--muted); }
-
-	/* ===== Подбор покрытия (сценарии) ===== */
-	.scenarios { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 28px; }
-	.scenario {
-		padding: 16px; background: #fff; border: 1px solid var(--line); border-radius: var(--radius);
-		font-weight: var(--fw-medium); font-size: 15px; transition: .18s; cursor: pointer; display: flex; align-items: center; gap: 10px;
-	}
-	.scenario:hover { background: var(--accent-soft); border-color: var(--accent); }
-	.scenario::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
-
-	/* ===== Выездной шоурум ===== */
-	.showroom { background: var(--dark); color: #fff; border-radius: var(--radius-lg); padding: 36px; }
-	.showroom .grid { display: grid; grid-template-columns: 1fr; gap: 28px; }
-	.showroom h2 { font-size: 28px; font-weight: var(--fw-h2); margin-bottom: 16px; }
-	.showroom p { color: #c9ccd2; margin-bottom: 14px; }
-	.showroom .incl { background: var(--dark-2); border-radius: var(--radius); padding: 22px; }
-	.showroom .incl b { display: block; margin-bottom: 12px; color: var(--accent); font-weight: var(--fw-semibold); }
-	.showroom .incl li { padding: 7px 0 7px 26px; position: relative; color: #e3e5e9; font-size: 15px; }
-	.showroom .incl li::before { content: "✓"; position: absolute; left: 0; color: var(--accent); font-weight: 700; }
-	.showroom .btn { margin-top: 18px; }
-
-	/* ===== Почему мы ===== */
-	.features { display: grid; grid-template-columns: repeat(1, 1fr); gap: 22px; }
-	.feature { display: flex; gap: 14px; align-items: center; }
-	.feature .ic {
-		width: 48px; height: 48px; border-radius: var(--radius); background: var(--accent-soft);
-		display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--accent-dark);
-	}
-	.feature p { font-weight: var(--fw-medium); }
-
-	/* ===== Бренды ===== */
-	.brands { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
-	.brand {
-		aspect-ratio: 2 / 1; background: #fff; border: 1px solid var(--line); border-radius: var(--radius);
-		display: flex; align-items: center; justify-content: center; padding: 14px;
-	}
-	.brand img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
-
-	/* ===== О компании ===== */
-	.about .box { background: var(--bg-cream); border-radius: var(--radius-lg); padding: 36px; }
-	.about p { color: var(--ink); font-size: 17px; max-width: 880px; }
-	.about .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 22px; }
-
-	/* ===== Новости ===== */
-	.news { display: grid; grid-template-columns: repeat(1, 1fr); gap: 16px; }
-	.news-card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; transition: .18s; }
-	.news-card:hover { border-color: var(--accent); }
-	.news-card .img { aspect-ratio: 4 / 3; background: var(--bg-cream); overflow: hidden; }
-	.news-card .img img { width: 100%; height: 100%; object-fit: cover; display: block; }
-	.news-card .body { padding: 16px; }
-	.news-card .title { font-weight: var(--fw-medium); }
-	.news-card .date { color: var(--muted); font-size: 13px; margin-top: 8px; }
-
-	/* ===== FAQ ===== */
-	.faq details { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); margin-bottom: 10px; }
-	.faq summary { padding: 16px 18px; font-weight: var(--fw-medium); cursor: pointer; list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-	.faq summary::-webkit-details-marker { display: none; }
-	.faq summary .chev { transition: .2s; color: var(--accent-dark); }
-	.faq details[open] summary .chev { transform: rotate(180deg); }
-	/* Плавное сворачивание ответа (высота + внутренние отступы во вложенном блоке) */
-	.faq .ans { height: 0; overflow: hidden; transition: height .28s ease; }
-	.faq details[open] .ans { height: auto; }
-	.faq .ans-in { padding: 0 18px 18px; color: var(--muted); }
-
-	/* ===== Финальный CTA + форма ===== */
-	.final { background: var(--dark); color: #fff; }
-	.final .grid { display: grid; grid-template-columns: 1fr; gap: 28px; align-items: center; }
-	.final h2 { font-size: clamp(24px, 3vw, 32px); font-weight: var(--fw-h2); }
-	.final p { color: #c9ccd2; margin-top: 12px; }
-	.final form { display: grid; gap: 12px; background: var(--dark-2); padding: 24px; border-radius: var(--radius-lg); }
-	.final input, .final textarea {
-		width: 100%; padding: 13px 15px; border: 1px solid var(--dark-line); border-radius: var(--radius);
-		background: #2f3540; color: #fff; font-size: 15px; outline: none; font-family: inherit;
-	}
-	.final input::placeholder, .final textarea::placeholder { color: #9aa0aa; }
-	.final input:focus, .final textarea:focus { border-color: var(--accent); }
-	/* Поле комментария фиксированное, без растягивания */
-	.final textarea { resize: none; height: 96px; }
-
-	/* ===== Футер ===== */
-	.footer { background: var(--dark-2); color: #cfd2d8; padding: 48px 0 28px; }
-	.footer .cols { display: grid; grid-template-columns: 1fr; gap: 32px; }
-	.footer h4 { color: #fff; font-size: 14px; letter-spacing: .5px; text-transform: uppercase; margin-bottom: 16px; font-weight: var(--fw-semibold); }
-	.footer .desc { font-size: 14px; line-height: 1.7; }
-	.footer .logo b { color: #fff; }
-	.footer ul li { margin-bottom: 9px; }
-	.footer ul a:hover { color: var(--accent); }
-	.footer .contact-line { margin-top: 14px; font-size: 14px; line-height: 1.8; }
-	.footer .contact-line a { color: var(--accent); }
-	.footer .bottom {
-		border-top: 1px solid var(--dark-line); margin-top: 32px; padding-top: 18px;
-		font-size: 13px; color: #8b9099; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;
-	}
-
-	/* ===== Кнопка «наверх» ===== */
-	.to-top {
-		position: fixed; left: 20px; bottom: 20px; width: 48px; height: 48px; border-radius: 50%;
-		background: var(--accent); color: var(--on-accent); border: none; cursor: pointer;
-		display: none; align-items: center; justify-content: center; z-index: 50; font-size: 20px;
-	}
-	.to-top.show { display: flex; }
-	.to-top:hover { background: var(--accent-dark); }
-
-	/* ===== Адаптив: планшет ===== */
-	@media (min-width: 768px) {
-		.cat-grid { grid-template-columns: repeat(3, 1fr); }
-		.products { grid-template-columns: repeat(2, 1fr); }
-		.scenarios { grid-template-columns: repeat(3, 1fr); }
-		.features { grid-template-columns: repeat(2, 1fr); }
-		.brands { grid-template-columns: repeat(3, 1fr); }
-		.news { grid-template-columns: repeat(2, 1fr); }
-		.showroom .grid { grid-template-columns: 1.2fr 1fr; }
-		.final .grid { grid-template-columns: 1fr 1fr; }
-		.footer .cols { grid-template-columns: 1.4fr 1fr 1fr; }
-	}
-
-	/* ===== Адаптив: десктоп ===== */
-	@media (min-width: 1024px) {
-		.hero-layout { grid-template-columns: 280px 1fr; }
-		.hero-catalog { display: block; }
-		.hero-promo { grid-template-columns: 1.1fr .9fr; }
-		.cat-grid { grid-template-columns: repeat(3, 1fr); }
-		.products { grid-template-columns: repeat(4, 1fr); }
-		.features { grid-template-columns: repeat(3, 1fr); }
-		.brands { grid-template-columns: repeat(4, 1fr); }
-		.news { grid-template-columns: repeat(4, 1fr); }
-		.footer .cols { grid-template-columns: 1.6fr 1fr 1fr 1fr; }
-	}
-
-	/* ===== Адаптив: прячем тяжёлые элементы шапки на узких экранах ===== */
-	@media (max-width: 1100px) {
-		.header-cta { display: none; }
-	}
-	@media (max-width: 900px) {
-		.search { order: 5; flex-basis: 100%; }
-		.header .container { flex-wrap: wrap; padding-top: 12px; padding-bottom: 12px; }
-		.contacts .hours { display: none; }
-	}
-	@media (max-width: 640px) {
-		.catalog-btn span { display: none; }
-		.cart span:not(.count) { display: none; }
-		.contacts .phone { font-size: 16px; }
-	}
-
-	/* ===== Бургер и мобильное меню ===== */
-	.mobile-burger { display: none; align-items: center; justify-content: center; background: transparent; border: none; color: #fff; cursor: pointer; padding: 8px; margin-left: auto; }
-
-	.mobile-menu {
-		position: fixed; inset: 0; z-index: 100; background: #fff;
-		display: flex; flex-direction: column; overflow-y: auto;
-		opacity: 0; visibility: hidden; transition: opacity .25s ease, visibility .25s ease;
-	}
-	.mobile-menu.open { opacity: 1; visibility: visible; }
-	/* Шапка меню (тёмная, прилипает сверху) */
-	.mm-head { background: var(--dark); color: #fff; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; }
-	.mm-close { background: transparent; border: none; color: #fff; cursor: pointer; padding: 8px; }
-	.mm-body { padding: 20px 18px 48px; display: flex; flex-direction: column; gap: 24px; }
-	.mm-search { display: flex; gap: 8px; }
-	.mm-search input { flex: 1; padding: 12px 14px; border: 1px solid var(--line); border-radius: var(--radius); font-size: 15px; outline: none; }
-	.mm-search input:focus { border-color: var(--accent); }
-	.mm-search .btn { padding: 12px 16px; }
-	.mm-actions { display: grid; gap: 10px; }
-	.mm-actions .btn { width: 100%; }
-	.mm-section { font-size: 12px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); font-weight: var(--fw-semibold); padding-bottom: 8px; border-bottom: 1px solid var(--line); margin-bottom: 4px; }
-	.mm-nav { display: flex; flex-direction: column; }
-	.mm-nav a { padding: 12px 2px; border-bottom: 1px solid var(--line); font-size: 16px; }
-	.mm-nav a:hover { color: var(--accent-dark); }
-	.mm-contacts { display: flex; flex-direction: column; gap: 10px; }
-	.mm-contacts .phone { font-size: 20px; font-weight: var(--fw-bold); }
-	.mm-contacts a:hover { color: var(--accent-dark); }
-	.mm-addr { color: var(--muted); font-size: 14px; line-height: 1.7; }
-
-	@media (max-width: 900px) {
-		/* Прячем десктопную навигацию, показываем бургер */
-		.topbar { display: none; }
-		.header .catalog-btn,
-		.header .search,
-		.header .contacts,
-		.header .hicons,
-		.header .header-cta,
-		.header .cart { display: none; }
-		.mobile-burger { display: inline-flex; }
-		.header .container { flex-wrap: nowrap; min-height: 64px; }
-	}
-	</style>
+	<link rel="stylesheet" href="/source/css/main.css">
 </head>
 <body>
 
@@ -414,13 +43,13 @@
 				<span>Москва, Волоколамское шоссе 71/13</span>
 				<span>Красногорск, Ильинское шоссе 1А</span>
 			</div>
-			<nav>
+			<nav aria-label="Дополнительное меню">
 				<ul>
-					<li><a href="#">Бренды</a></li>
-					<li><a href="#">Доставка и оплата</a></li>
-					<li><a href="#">Возврат и гарантия</a></li>
-					<li><a href="#">О компании</a></li>
-					<li><a href="#">Контакты</a></li>
+					<li><a href="/brands/">Бренды</a></li>
+					<li><a href="/delivery/">Доставка и оплата</a></li>
+					<li><a href="/returns/">Возврат и гарантия</a></li>
+					<li><a href="/about/">О компании</a></li>
+					<li><a href="/contacts/">Контакты</a></li>
 				</ul>
 			</nav>
 		</div>
@@ -429,8 +58,8 @@
 	<!-- ============ ШАПКА: основной ряд ============ -->
 	<header class="header">
 		<div class="container">
-			<!-- Логотип (временный SVG-плейсхолдер) -->
-			<a href="/" class="logo logo--badge" aria-label="Вектор пола">
+			<!-- Логотип -->
+			<a href="/" class="logo logo--badge" aria-label="Вектор пола — главная">
 				<svg width="240" height="120" viewBox="0 0 240 120" fill="none" xmlns="http://www.w3.org/2000/svg">
 					<rect x="1" y="1" width="238" height="118" rx="16" stroke="#E7DFD2" stroke-width="2"/>
 					<text x="120" y="58" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="32" font-weight="700" fill="#2B2F38">VP</text>
@@ -438,32 +67,43 @@
 				</svg>
 			</a>
 
-			<!-- Бургер (только мобайл) -->
+			<!-- Мобильные иконки: WA + корзина (только ≤900px) -->
+			<div class="mob-icons">
+				<a href="https://wa.me/79258211744" target="_blank" rel="noopener" class="mob-icon" aria-label="Написать в WhatsApp">
+					<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19.05 4.91A9.82 9.82 0 0012.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 004.78 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.02zm-7.01 15.16a8.2 8.2 0 01-4.18-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.18 8.18 0 01-1.26-4.38c0-4.54 3.7-8.23 8.24-8.23 2.2 0 4.27.86 5.82 2.42a8.18 8.18 0 012.41 5.82c0 4.54-3.7 8.23-8.23 8.23zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.12-.17.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.5.11-.11.25-.29.37-.43.12-.14.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.23.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.14-1.18-.06-.11-.22-.17-.47-.29z"/></svg>
+				</a>
+				<a href="#" class="mob-icon" aria-label="Корзина">
+					<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+					<span class="count">0</span>
+				</a>
+			</div>
+
+			<!-- Бургер -->
 			<button class="mobile-burger" id="mobileBurger" aria-label="Открыть меню">
 				<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
 			</button>
 
-			<!-- Кнопка каталога -->
-			<a href="#catalog" class="catalog-btn">
+			<!-- Кнопка каталога (десктоп) -->
+			<a href="#catalog" class="catalog-btn" aria-label="Каталог покрытий">
 				<span class="burger"><i></i><i></i><i></i></span>
 				<span>Каталог</span>
 			</a>
 
-			<!-- Поиск по сайту -->
-			<form class="search" onsubmit="return false">
-				<input type="text" placeholder="Поиск напольных покрытий">
+			<!-- Поиск -->
+			<form class="search" role="search" onsubmit="return false">
+				<input type="search" placeholder="Поиск напольных покрытий" aria-label="Поиск по сайту">
 				<button type="button" aria-label="Найти">
 					<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
 				</button>
 			</form>
 
-			<!-- Телефон (tel:) + график -->
+			<!-- Телефон -->
 			<div class="contacts">
 				<a href="tel:+79258211744" class="phone">+7 (925) 821-17-44</a>
 				<div class="hours">Ежедневно с 10:00 до 20:00</div>
 			</div>
 
-			<!-- WhatsApp (wa.me) + e-mail (mailto) -->
+			<!-- WhatsApp + e-mail (десктоп) -->
 			<div class="hicons">
 				<a href="https://wa.me/79258211744" target="_blank" rel="noopener" class="hicon" aria-label="Написать в WhatsApp">
 					<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19.05 4.91A9.82 9.82 0 0012.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 004.78 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.02zm-7.01 15.16a8.2 8.2 0 01-4.18-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.18 8.18 0 01-1.26-4.38c0-4.54 3.7-8.23 8.24-8.23 2.2 0 4.27.86 5.82 2.42a8.18 8.18 0 012.41 5.82c0 4.54-3.7 8.23-8.23 8.23zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.12-.17.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.5.11-.11.25-.29.37-.43.12-.14.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.23.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.14-1.18-.06-.11-.22-.17-.47-.29z"/></svg>
@@ -476,8 +116,8 @@
 			<!-- Кнопка расчёта -->
 			<a href="#final" class="btn btn--accent header-cta">Получить расчёт</a>
 
-			<!-- Корзина -->
-			<a href="#" class="cart">
+			<!-- Корзина (десктоп) -->
+			<a href="#" class="cart" aria-label="Корзина">
 				<span>Корзина</span>
 				<span class="ico">
 					<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 01-8 0"/></svg>
@@ -488,10 +128,9 @@
 	</header>
 
 	<!-- ============ МОБИЛЬНОЕ МЕНЮ ============ -->
-	<div class="mobile-menu" id="mobileMenu" aria-hidden="true">
-		<!-- Шапка меню: логотип + крестик -->
+	<div class="mobile-menu" id="mobileMenu" aria-hidden="true" role="dialog" aria-label="Меню сайта">
 		<div class="mm-head">
-			<a href="/" class="logo logo--badge" aria-label="Вектор пола">
+			<a href="/" class="logo logo--badge" aria-label="Вектор пола — главная">
 				<svg width="240" height="120" viewBox="0 0 240 120" fill="none" xmlns="http://www.w3.org/2000/svg">
 					<rect x="1" y="1" width="238" height="118" rx="16" stroke="#E7DFD2" stroke-width="2"/>
 					<text x="120" y="58" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="32" font-weight="700" fill="#2B2F38">VP</text>
@@ -504,24 +143,21 @@
 		</div>
 
 		<div class="mm-body">
-			<!-- Поиск -->
-			<form class="mm-search" onsubmit="return false">
-				<input type="text" placeholder="Поиск напольных покрытий">
+			<form class="mm-search" role="search" onsubmit="return false">
+				<input type="search" placeholder="Поиск напольных покрытий" aria-label="Поиск по сайту">
 				<button type="button" class="btn btn--accent" aria-label="Найти">
 					<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
 				</button>
 			</form>
 
-			<!-- Действия -->
 			<div class="mm-actions">
 				<a href="#final" class="btn btn--accent">Получить расчёт</a>
 				<a href="#" class="btn btn--outline">Корзина (0)</a>
 			</div>
 
-			<!-- Каталог -->
 			<div>
 				<div class="mm-section">Каталог</div>
-				<nav class="mm-nav">
+				<nav class="mm-nav" aria-label="Каталог">
 					<a href="#">Ламинат</a>
 					<a href="#">Кварцвинил / SPC</a>
 					<a href="#">Виниловые полы</a>
@@ -535,19 +171,17 @@
 				</nav>
 			</div>
 
-			<!-- Информация -->
 			<div>
 				<div class="mm-section">Информация</div>
-				<nav class="mm-nav">
-					<a href="#">Бренды</a>
-					<a href="#">Доставка и оплата</a>
-					<a href="#">Возврат и гарантия</a>
-					<a href="#">О компании</a>
-					<a href="#">Контакты</a>
+				<nav class="mm-nav" aria-label="Информация">
+					<a href="/brands/">Бренды</a>
+					<a href="/delivery/">Доставка и оплата</a>
+					<a href="/returns/">Возврат и гарантия</a>
+					<a href="/about/">О компании</a>
+					<a href="/contacts/">Контакты</a>
 				</nav>
 			</div>
 
-			<!-- Контакты -->
 			<div class="mm-contacts">
 				<a href="tel:+79258211744" class="phone">+7 (925) 821-17-44</a>
 				<a href="https://wa.me/79258211744" target="_blank" rel="noopener">Написать в WhatsApp</a>
@@ -555,7 +189,6 @@
 				<span class="mm-addr">Ежедневно с 10:00 до 20:00</span>
 			</div>
 
-			<!-- Салоны -->
 			<div>
 				<div class="mm-section">Салоны</div>
 				<div class="mm-addr">
@@ -567,11 +200,11 @@
 	</div>
 
 	<!-- ============ ПЕРВЫЙ ЭКРАН ============ -->
-	<section class="hero">
+	<section class="hero" aria-label="Главный баннер">
 		<div class="container">
 			<div class="hero-layout">
 				<!-- Каталог слева (десктоп) -->
-				<aside class="hero-catalog">
+				<aside class="hero-catalog" aria-label="Разделы каталога">
 					<div class="hc-head"><span class="burger"><i></i><i></i><i></i></span> Каталог</div>
 					<ul>
 						<li><a href="#">Ламинат <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></a></li>
@@ -605,8 +238,7 @@
 							<span>Два салона</span>
 						</div>
 					</div>
-					<!-- Фото 4:3 -->
-					<div class="hp-visual"><img src="/hero.webp" alt="Интерьер с напольным покрытием"></div>
+					<div class="hp-visual"><img src="/source/img/hero.webp" alt="Интерьер с напольным покрытием" loading="eager"></div>
 				</div>
 			</div>
 		</div>
@@ -617,13 +249,11 @@
 		<div class="container">
 			<div class="section-head"><h2>Каталог покрытий</h2></div>
 
-			<!-- Поиск по каталогу -->
-			<form class="cat-search" onsubmit="return false">
-				<input type="text" placeholder="Найти покрытие в каталоге">
+			<form class="cat-search" role="search" onsubmit="return false">
+				<input type="search" placeholder="Найти покрытие в каталоге" aria-label="Поиск в каталоге">
 				<button type="button" class="btn btn--accent">Найти</button>
 			</form>
 
-			<!-- Плитки категорий -->
 			<div class="cat-grid">
 				<a href="#" class="cat-tile"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="4"/><rect x="3" y="10" width="18" height="4"/><rect x="3" y="16" width="18" height="4"/></svg></span><b>Ламинат</b></a>
 				<a href="#" class="cat-tile"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="4"/><rect x="3" y="10" width="18" height="4"/><rect x="3" y="16" width="18" height="4"/></svg></span><b>Кварцвинил / SPC</b></a>
@@ -638,7 +268,7 @@
 		</div>
 	</section>
 
-	<!-- ============ ПОПУЛЯРНЫЕ ПРОДУКТЫ (заглушка) ============ -->
+	<!-- ============ ПОПУЛЯРНЫЕ ПРОДУКТЫ ============ -->
 	<section class="section section--soft">
 		<div class="container">
 			<div class="head-row">
@@ -649,10 +279,10 @@
 				</div>
 			</div>
 			<div class="products">
-				<div class="product"><div class="img"><img src="/popular.webp" alt="Популярное покрытие"></div><div class="body"><div class="name">Название покрытия — пример карточки</div><div class="price">0 000 ₽ <small>/ м²</small></div></div></div>
-				<div class="product"><div class="img"><img src="/popular.webp" alt="Популярное покрытие"></div><div class="body"><div class="name">Название покрытия — пример карточки</div><div class="price">0 000 ₽ <small>/ м²</small></div></div></div>
-				<div class="product"><div class="img"><img src="/popular.webp" alt="Популярное покрытие"></div><div class="body"><div class="name">Название покрытия — пример карточки</div><div class="price">0 000 ₽ <small>/ м²</small></div></div></div>
-				<div class="product"><div class="img"><img src="/popular.webp" alt="Популярное покрытие"></div><div class="body"><div class="name">Название покрытия — пример карточки</div><div class="price">0 000 ₽ <small>/ м²</small></div></div></div>
+				<div class="product"><div class="img"><img src="/source/img/popular.webp" alt="Популярное покрытие" loading="lazy"></div><div class="body"><div class="name">Название покрытия — пример карточки</div><div class="price">0 000 ₽ <small>/ м²</small></div></div></div>
+				<div class="product"><div class="img"><img src="/source/img/popular.webp" alt="Популярное покрытие" loading="lazy"></div><div class="body"><div class="name">Название покрытия — пример карточки</div><div class="price">0 000 ₽ <small>/ м²</small></div></div></div>
+				<div class="product"><div class="img"><img src="/source/img/popular.webp" alt="Популярное покрытие" loading="lazy"></div><div class="body"><div class="name">Название покрытия — пример карточки</div><div class="price">0 000 ₽ <small>/ м²</small></div></div></div>
+				<div class="product"><div class="img"><img src="/source/img/popular.webp" alt="Популярное покрытие" loading="lazy"></div><div class="body"><div class="name">Название покрытия — пример карточки</div><div class="price">0 000 ₽ <small>/ м²</small></div></div></div>
 			</div>
 		</div>
 	</section>
@@ -677,7 +307,7 @@
 	</section>
 
 	<!-- ============ ВЫЕЗДНОЙ ШОУРУМ ============ -->
-	<section class="section section--soft">
+	<section class="section section--soft" id="showroom">
 		<div class="container">
 			<div class="showroom">
 				<div class="grid">
@@ -704,7 +334,7 @@
 	</section>
 
 	<!-- ============ ПОЧЕМУ МЫ ============ -->
-	<section class="section">
+	<section class="section" id="why">
 		<div class="container">
 			<div class="section-head"><h2>Почему мы?</h2></div>
 			<div class="features">
@@ -736,42 +366,42 @@
 		</div>
 	</section>
 
-	<!-- ============ БРЕНДЫ (заглушка) ============ -->
-	<section class="section section--soft">
+	<!-- ============ БРЕНДЫ ============ -->
+	<section class="section section--soft" id="brands">
 		<div class="container">
 			<div class="section-head">
 				<h2>Бренды</h2>
 				<p class="lead">Работаем с проверенными производителями напольных покрытий.</p>
 			</div>
 			<div class="brands">
-				<div class="brand"><img src="/brand.webp" alt="Логотип бренда"></div>
-				<div class="brand"><img src="/brand.webp" alt="Логотип бренда"></div>
-				<div class="brand"><img src="/brand.webp" alt="Логотип бренда"></div>
-				<div class="brand"><img src="/brand.webp" alt="Логотип бренда"></div>
-				<div class="brand"><img src="/brand.webp" alt="Логотип бренда"></div>
-				<div class="brand"><img src="/brand.webp" alt="Логотип бренда"></div>
-				<div class="brand"><img src="/brand.webp" alt="Логотип бренда"></div>
-				<div class="brand"><img src="/brand.webp" alt="Логотип бренда"></div>
+				<div class="brand"><img src="/source/img/brand.webp" alt="Логотип бренда" loading="lazy"></div>
+				<div class="brand"><img src="/source/img/brand.webp" alt="Логотип бренда" loading="lazy"></div>
+				<div class="brand"><img src="/source/img/brand.webp" alt="Логотип бренда" loading="lazy"></div>
+				<div class="brand"><img src="/source/img/brand.webp" alt="Логотип бренда" loading="lazy"></div>
+				<div class="brand"><img src="/source/img/brand.webp" alt="Логотип бренда" loading="lazy"></div>
+				<div class="brand"><img src="/source/img/brand.webp" alt="Логотип бренда" loading="lazy"></div>
+				<div class="brand"><img src="/source/img/brand.webp" alt="Логотип бренда" loading="lazy"></div>
+				<div class="brand"><img src="/source/img/brand.webp" alt="Логотип бренда" loading="lazy"></div>
 			</div>
 		</div>
 	</section>
 
 	<!-- ============ О КОМПАНИИ ============ -->
-	<section class="section about">
+	<section class="section about" id="about">
 		<div class="container">
 			<div class="box">
 				<div class="section-head"><h2>О компании</h2></div>
 				<p>«Вектор пола» — магазин напольных покрытий, где помогают выбрать пол под реальные задачи: интерьер, бюджет, нагрузку, влажность помещения и способ укладки. Мы работаем с ламинатом, кварцвинилом, SPC, инженерной и паркетной доской, плинтусами и сопутствующими материалами. В салоне можно посмотреть образцы, сравнить оттенки и фактуры, получить консультацию специалиста и рассчитать нужный объём покрытия.</p>
 				<div class="actions">
-					<a href="#" class="btn btn--accent">Подробнее о компании</a>
-					<a href="#" class="btn btn--outline">Приехать в салон</a>
+					<a href="/about/" class="btn btn--accent">Подробнее о компании</a>
+					<a href="/contacts/" class="btn btn--outline">Приехать в салон</a>
 				</div>
 			</div>
 		</div>
 	</section>
 
-	<!-- ============ НОВОСТИ (заглушка) ============ -->
-	<section class="section section--soft">
+	<!-- ============ НОВОСТИ ============ -->
+	<section class="section section--soft" id="news">
 		<div class="container">
 			<div class="head-row">
 				<div class="section-head"><h2>Новости</h2></div>
@@ -781,16 +411,16 @@
 				</div>
 			</div>
 			<div class="news">
-				<div class="news-card"><div class="img"><img src="/news.webp" alt="Новость"></div><div class="body"><div class="title">Заголовок новости — пример карточки</div><div class="date">00.00.2025</div></div></div>
-				<div class="news-card"><div class="img"><img src="/news.webp" alt="Новость"></div><div class="body"><div class="title">Заголовок новости — пример карточки</div><div class="date">00.00.2025</div></div></div>
-				<div class="news-card"><div class="img"><img src="/news.webp" alt="Новость"></div><div class="body"><div class="title">Заголовок новости — пример карточки</div><div class="date">00.00.2025</div></div></div>
-				<div class="news-card"><div class="img"><img src="/news.webp" alt="Новость"></div><div class="body"><div class="title">Заголовок новости — пример карточки</div><div class="date">00.00.2025</div></div></div>
+				<div class="news-card"><div class="img"><img src="/source/img/news.webp" alt="Новость" loading="lazy"></div><div class="body"><div class="title">Заголовок новости — пример карточки</div><div class="date">00.00.2025</div></div></div>
+				<div class="news-card"><div class="img"><img src="/source/img/news.webp" alt="Новость" loading="lazy"></div><div class="body"><div class="title">Заголовок новости — пример карточки</div><div class="date">00.00.2025</div></div></div>
+				<div class="news-card"><div class="img"><img src="/source/img/news.webp" alt="Новость" loading="lazy"></div><div class="body"><div class="title">Заголовок новости — пример карточки</div><div class="date">00.00.2025</div></div></div>
+				<div class="news-card"><div class="img"><img src="/source/img/news.webp" alt="Новость" loading="lazy"></div><div class="body"><div class="title">Заголовок новости — пример карточки</div><div class="date">00.00.2025</div></div></div>
 			</div>
 		</div>
 	</section>
 
-	<!-- ============ FAQ (нативный аккордеон, без JS) ============ -->
-	<section class="section faq">
+	<!-- ============ FAQ ============ -->
+	<section class="section faq" id="faq">
 		<div class="container">
 			<div class="section-head center"><h2>Остались вопросы?</h2><p class="lead">Собрали ответы на частые вопросы.</p></div>
 			<details>
@@ -819,11 +449,10 @@
 				<h2>Не знаете, какое покрытие выбрать?</h2>
 				<p>Оставьте заявку — специалист поможет подобрать пол под помещение, бюджет и стиль интерьера.</p>
 			</div>
-			<!-- Форма (без обработки, бэкенд позже) -->
 			<form onsubmit="return false">
-				<input type="text" placeholder="Имя">
-				<input type="tel" placeholder="Телефон">
-				<textarea placeholder="Комментарий"></textarea>
+				<input type="text" placeholder="Имя" aria-label="Ваше имя">
+				<input type="tel" placeholder="Телефон" aria-label="Телефон для связи">
+				<textarea placeholder="Комментарий" aria-label="Комментарий"></textarea>
 				<button type="button" class="btn btn--accent">Получить консультацию</button>
 			</form>
 		</div>
@@ -833,7 +462,6 @@
 	<footer class="footer">
 		<div class="container">
 			<div class="cols">
-				<!-- Колонка 1: о магазине + контакты -->
 				<div>
 					<a href="/" class="logo"><b>Вектор пола</b><span>напольные покрытия</span></a>
 					<p class="desc" style="margin-top:14px">Магазин напольных покрытий: ламинат, кварцвинил, SPC, инженерная и паркетная доска, плинтусы и сопутствующие материалы.</p>
@@ -845,7 +473,6 @@
 						Ежедневно с 10:00 до 20:00
 					</div>
 				</div>
-				<!-- Колонка 2: каталог -->
 				<div>
 					<h4>Каталог</h4>
 					<ul>
@@ -857,29 +484,27 @@
 						<li><a href="#">Массивная доска</a></li>
 					</ul>
 				</div>
-				<!-- Колонка 3: каталог (продолжение) -->
 				<div>
 					<h4>&nbsp;</h4>
 					<ul>
 						<li><a href="#">Пробковые покрытия</a></li>
 						<li><a href="#">Плинтусы и подложка</a></li>
 						<li><a href="#">Сопутствующие товары</a></li>
-						<li><a href="#">Бренды</a></li>
+						<li><a href="/brands/">Бренды</a></li>
 					</ul>
 				</div>
-				<!-- Колонка 4: информация -->
 				<div>
 					<h4>Информация</h4>
 					<ul>
-						<li><a href="#">О компании</a></li>
-						<li><a href="#">Доставка и оплата</a></li>
-						<li><a href="#">Возврат и гарантия</a></li>
-						<li><a href="#">Контакты</a></li>
+						<li><a href="/about/">О компании</a></li>
+						<li><a href="/delivery/">Доставка и оплата</a></li>
+						<li><a href="/returns/">Возврат и гарантия</a></li>
+						<li><a href="/contacts/">Контакты</a></li>
 					</ul>
 				</div>
 			</div>
 			<div class="bottom">
-				<span>© 2025 Вектор пола</span>
+				<span>© <span id="currentYear">2025</span> Вектор пола</span>
 				<span>ИП Катанова В. Е. · ИНН 213013757388</span>
 			</div>
 		</div>
@@ -888,54 +513,6 @@
 	<!-- Кнопка «наверх» -->
 	<button class="to-top" id="toTop" aria-label="Наверх">↑</button>
 
-	<script>
-	/* Кнопка «наверх»: показ при прокрутке + плавный скролл */
-	const toTop = document.getElementById('toTop');
-	window.addEventListener('scroll', () => {
-		toTop.classList.toggle('show', window.scrollY > 400);
-	});
-	toTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
-
-	/* FAQ: плавная анимация высоты ответа */
-	document.querySelectorAll('.faq details').forEach(d => {
-		const summary = d.querySelector('summary');
-		const ans = d.querySelector('.ans');
-		summary.addEventListener('click', e => {
-			e.preventDefault();
-			if (d.open) {
-				/* закрытие: из текущей высоты в 0 */
-				ans.style.height = ans.scrollHeight + 'px';
-				requestAnimationFrame(() => { ans.style.height = '0'; });
-				ans.addEventListener('transitionend', function end() {
-					d.open = false; ans.style.height = ''; ans.removeEventListener('transitionend', end);
-				}, { once: true });
-			} else {
-				/* открытие: из 0 в реальную высоту, затем снимаем inline-стиль */
-				d.open = true;
-				ans.style.height = '0';
-				requestAnimationFrame(() => { ans.style.height = ans.scrollHeight + 'px'; });
-				ans.addEventListener('transitionend', function end() {
-					ans.style.height = ''; ans.removeEventListener('transitionend', end);
-				}, { once: true });
-			}
-		});
-	});
-
-	/* Мобильное меню: открытие/закрытие, скролл-лок, Escape */
-	const burger = document.getElementById('mobileBurger');
-	const mmenu = document.getElementById('mobileMenu');
-	const mmClose = mmenu.querySelector('.mm-close');
-	const openMenu = () => { mmenu.classList.add('open'); mmenu.setAttribute('aria-hidden', 'false'); document.body.style.overflow = 'hidden'; };
-	const closeMenu = () => { mmenu.classList.remove('open'); mmenu.setAttribute('aria-hidden', 'true'); document.body.style.overflow = ''; };
-	burger.addEventListener('click', openMenu);
-	mmClose.addEventListener('click', closeMenu);
-	/* закрытие по клику на любую ссылку меню */
-	mmenu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
-	/* закрытие по Escape */
-	document.addEventListener('keydown', e => { if (e.key === 'Escape' && mmenu.classList.contains('open')) closeMenu(); });
-	/* авто-закрытие при переходе на десктоп */
-	window.addEventListener('resize', () => { if (window.innerWidth > 900 && mmenu.classList.contains('open')) closeMenu(); });
-	</script>
-
+	<script src="/source/js/main.js"></script>
 </body>
 </html>

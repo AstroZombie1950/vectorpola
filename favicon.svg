@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Фон — тёмный круг -->
+  <circle cx="16" cy="16" r="16" fill="#2B2F38"/>
+  <!-- Три полосы паркетной доски (янтарный акцент) -->
+  <rect x="5" y="7"  width="22" height="5" rx="1.5" fill="#F2A516"/>
+  <rect x="5" y="13.5" width="22" height="5" rx="1.5" fill="#D98E0B"/>
+  <rect x="5" y="20" width="22" height="5" rx="1.5" fill="#F2A516"/>
+  <!-- Стык досок на средней полосе -->
+  <line x1="16" y1="13.5" x2="16" y2="18.5" stroke="#2B2F38" stroke-width="1.5"/>
+</svg>
