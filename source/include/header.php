@@ -42,7 +42,7 @@
 		</div>
 
 		<!-- Бургер -->
-		<button class="mobile-burger" id="mobileBurger" aria-label="Открыть меню">
+		<button class="mobile-burger" id="mobileBurger" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobileMenu">
 			<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
 		</button>
 

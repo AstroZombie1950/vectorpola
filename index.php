@@ -73,7 +73,7 @@ $canonical = 'https://vectorpola.ru/';
 						<div class="actions">
 							<a href="#picker" class="btn btn--accent">Подобрать покрытие</a>
 							<a href="#final" class="btn btn--outline">Получить расчёт</a>
-							<a href="#" class="btn btn--outline">Проложить маршрут в салон</a>
+							<a href="/contacts/" class="btn btn--outline">Проложить маршрут в салон</a>
 						</div>
 						<div class="perks">
 							<span>Подбор по образцам</span>
@@ -83,7 +83,7 @@ $canonical = 'https://vectorpola.ru/';
 							<span>Два салона</span>
 						</div>
 					</div>
-					<div class="hp-visual"><img src="/source/img/hero.webp" alt="Интерьер с напольным покрытием" loading="eager"></div>
+					<div class="hp-visual"><img src="/source/img/hero.webp" alt="Интерьер с напольным покрытием" width="1200" height="900" loading="eager"></div>
 				</div>
 			</div>
 		</div>
@@ -124,10 +124,10 @@ $canonical = 'https://vectorpola.ru/';
 				</div>
 			</div>
 			<div class="products">
-				<div class="product"><div class="img"><img src="/source/img/popular.webp" alt="Популярное покрытие" loading="lazy"></div><div class="body"><div class="name">Название покрытия — пример карточки</div><div class="price">0 000 ₽ <small>/ м²</small></div></div></div>
-				<div class="product"><div class="img"><img src="/source/img/popular.webp" alt="Популярное покрытие" loading="lazy"></div><div class="body"><div class="name">Название покрытия — пример карточки</div><div class="price">0 000 ₽ <small>/ м²</small></div></div></div>
-				<div class="product"><div class="img"><img src="/source/img/popular.webp" alt="Популярное покрытие" loading="lazy"></div><div class="body"><div class="name">Название покрытия — пример карточки</div><div class="price">0 000 ₽ <small>/ м²</small></div></div></div>
-				<div class="product"><div class="img"><img src="/source/img/popular.webp" alt="Популярное покрытие" loading="lazy"></div><div class="body"><div class="name">Название покрытия — пример карточки</div><div class="price">0 000 ₽ <small>/ м²</small></div></div></div>
+				<div class="product"><div class="img"><img src="/source/img/popular.webp" alt="Популярное покрытие" width="800" height="800" loading="lazy"></div><div class="body"><div class="name">Название покрытия — пример карточки</div><div class="price">0 000 ₽ <small>/ м²</small></div></div></div>
+				<div class="product"><div class="img"><img src="/source/img/popular.webp" alt="Популярное покрытие" width="800" height="800" loading="lazy"></div><div class="body"><div class="name">Название покрытия — пример карточки</div><div class="price">0 000 ₽ <small>/ м²</small></div></div></div>
+				<div class="product"><div class="img"><img src="/source/img/popular.webp" alt="Популярное покрытие" width="800" height="800" loading="lazy"></div><div class="body"><div class="name">Название покрытия — пример карточки</div><div class="price">0 000 ₽ <small>/ м²</small></div></div></div>
+				<div class="product"><div class="img"><img src="/source/img/popular.webp" alt="Популярное покрытие" width="800" height="800" loading="lazy"></div><div class="body"><div class="name">Название покрытия — пример карточки</div><div class="price">0 000 ₽ <small>/ м²</small></div></div></div>
 			</div>
 		</div>
 	</section>
@@ -219,14 +219,14 @@ $canonical = 'https://vectorpola.ru/';
 				<p class="lead">Работаем с проверенными производителями напольных покрытий.</p>
 			</div>
 			<div class="brands">
-				<div class="brand"><img src="/source/img/brand.webp" alt="Логотип бренда" loading="lazy"></div>
-				<div class="brand"><img src="/source/img/brand.webp" alt="Логотип бренда" loading="lazy"></div>
-				<div class="brand"><img src="/source/img/brand.webp" alt="Логотип бренда" loading="lazy"></div>
-				<div class="brand"><img src="/source/img/brand.webp" alt="Логотип бренда" loading="lazy"></div>
-				<div class="brand"><img src="/source/img/brand.webp" alt="Логотип бренда" loading="lazy"></div>
-				<div class="brand"><img src="/source/img/brand.webp" alt="Логотип бренда" loading="lazy"></div>
-				<div class="brand"><img src="/source/img/brand.webp" alt="Логотип бренда" loading="lazy"></div>
-				<div class="brand"><img src="/source/img/brand.webp" alt="Логотип бренда" loading="lazy"></div>
+				<div class="brand"><img src="/source/img/brand.webp" alt="Логотип бренда" width="500" height="250" loading="lazy"></div>
+				<div class="brand"><img src="/source/img/brand.webp" alt="Логотип бренда" width="500" height="250" loading="lazy"></div>
+				<div class="brand"><img src="/source/img/brand.webp" alt="Логотип бренда" width="500" height="250" loading="lazy"></div>
+				<div class="brand"><img src="/source/img/brand.webp" alt="Логотип бренда" width="500" height="250" loading="lazy"></div>
+				<div class="brand"><img src="/source/img/brand.webp" alt="Логотип бренда" width="500" height="250" loading="lazy"></div>
+				<div class="brand"><img src="/source/img/brand.webp" alt="Логотип бренда" width="500" height="250" loading="lazy"></div>
+				<div class="brand"><img src="/source/img/brand.webp" alt="Логотип бренда" width="500" height="250" loading="lazy"></div>
+				<div class="brand"><img src="/source/img/brand.webp" alt="Логотип бренда" width="500" height="250" loading="lazy"></div>
 			</div>
 		</div>
 	</section>
@@ -256,10 +256,10 @@ $canonical = 'https://vectorpola.ru/';
 				</div>
 			</div>
 			<div class="news">
-				<div class="news-card"><div class="img"><img src="/source/img/news.webp" alt="Новость" loading="lazy"></div><div class="body"><div class="title">Заголовок новости — пример карточки</div><div class="date">00.00.2025</div></div></div>
-				<div class="news-card"><div class="img"><img src="/source/img/news.webp" alt="Новость" loading="lazy"></div><div class="body"><div class="title">Заголовок новости — пример карточки</div><div class="date">00.00.2025</div></div></div>
-				<div class="news-card"><div class="img"><img src="/source/img/news.webp" alt="Новость" loading="lazy"></div><div class="body"><div class="title">Заголовок новости — пример карточки</div><div class="date">00.00.2025</div></div></div>
-				<div class="news-card"><div class="img"><img src="/source/img/news.webp" alt="Новость" loading="lazy"></div><div class="body"><div class="title">Заголовок новости — пример карточки</div><div class="date">00.00.2025</div></div></div>
+				<div class="news-card"><div class="img"><img src="/source/img/news.webp" alt="Новость" width="800" height="600" loading="lazy"></div><div class="body"><div class="title">Заголовок новости — пример карточки</div><div class="date">00.00.2025</div></div></div>
+				<div class="news-card"><div class="img"><img src="/source/img/news.webp" alt="Новость" width="800" height="600" loading="lazy"></div><div class="body"><div class="title">Заголовок новости — пример карточки</div><div class="date">00.00.2025</div></div></div>
+				<div class="news-card"><div class="img"><img src="/source/img/news.webp" alt="Новость" width="800" height="600" loading="lazy"></div><div class="body"><div class="title">Заголовок новости — пример карточки</div><div class="date">00.00.2025</div></div></div>
+				<div class="news-card"><div class="img"><img src="/source/img/news.webp" alt="Новость" width="800" height="600" loading="lazy"></div><div class="body"><div class="title">Заголовок новости — пример карточки</div><div class="date">00.00.2025</div></div></div>
 			</div>
 		</div>
 	</section>

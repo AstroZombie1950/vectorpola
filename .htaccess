@@ -1,18 +1,40 @@
+# ===== Базовая защита =====
 Options -Indexes
 
+# Закрываем конфиг с доступами от прямого обращения
 <Files "config.php">
-    Order Allow,Deny
-    Deny from all
+	Order Allow,Deny
+	Deny from all
 </Files>
 
-# Закрываем прямой доступ к data/
+# ===== Принудительный HTTPS + склейка www → без-www =====
 <IfModule mod_rewrite.c>
-    RewriteEngine On
-    RewriteRule ^data/ - [F,L]
+	RewriteEngine On
+
+	# На https (если хостинг за прокси и зациклится — заменить условие на X-Forwarded-Proto, см. заметку)
+	# RewriteCond %{HTTPS} off
+	# RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+	# Убираем www
+	RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+	RewriteRule ^ https://%1%{REQUEST_URI} [L,R=301]
 </IfModule>
 
-# Альтернатива если mod_rewrite недоступен
-<FilesMatch "\.json$">
-    Order Allow,Deny
-    Deny from all
-</FilesMatch>
+# ===== Gzip-сжатие текстовых ресурсов =====
+<IfModule mod_deflate.c>
+	AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml \
+		application/javascript application/json application/xml image/svg+xml
+</IfModule>
+
+# ===== Кэширование статики в браузере =====
+<IfModule mod_expires.c>
+	ExpiresActive On
+	ExpiresByType text/css              "access plus 30 days"
+	ExpiresByType application/javascript "access plus 30 days"
+	ExpiresByType image/webp            "access plus 180 days"
+	ExpiresByType image/jpeg            "access plus 180 days"
+	ExpiresByType image/png             "access plus 180 days"
+	ExpiresByType image/svg+xml         "access plus 180 days"
+	ExpiresByType image/x-icon          "access plus 365 days"
+	ExpiresByType font/woff2            "access plus 365 days"
+</IfModule>

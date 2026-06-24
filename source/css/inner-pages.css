@@ -7,7 +7,8 @@
 .page-hero { background: var(--bg-cream); border-bottom: 1px solid var(--line); padding: 32px 0 36px; }
 .page-hero h1 { font-size: clamp(26px, 4vw, 40px); font-weight: var(--fw-h1); margin-top: 12px; }
 .page-hero__sub { color: var(--muted); font-size: 17px; max-width: 680px; margin-top: 12px; }
-.page-hero__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 20px; }
+.page-hero__actions { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; } /* моб: в столбик на всю ширину */
+.page-hero__actions .btn { width: 100%; }
 
 /* ===== Хлебные крошки ===== */
 .breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); flex-wrap: wrap; }
@@ -20,15 +21,16 @@
 
 /* ===== Вводный абзац ===== */
 .lead-text { font-size: 18px; color: var(--ink); margin-bottom: 32px; line-height: 1.65; }
+.inner-content > p:not(.lead-text) { margin-bottom: 16px; } /* воздух между вводными абзацами */
 
 /* ===== Блок с подзаголовком ===== */
-.info-block { margin-bottom: 36px; }
+.info-block { margin-top: 32px; } /* единый ритм: отступы схлопываются → ровно 32px между блоками */
 .info-block h2 { font-size: 20px; font-weight: var(--fw-semibold); margin-bottom: 10px; }
 .info-block p + p { margin-top: 10px; }
 
 /* ===== Информационная сетка (О компании) ===== */
-.info-grid { display: grid; gap: 0; }
-.info-grid .info-block { border-top: 1px solid var(--line); padding-top: 28px; }
+.info-grid { display: grid; gap: 0; margin-top: 28px; } /* воздух перед сеткой особенностей */
+.info-grid .info-block { margin-top: 0; border-top: 1px solid var(--line); padding-top: 28px; padding-bottom: 28px; } /* симметрично над/под линией */
 
 /* ===== Уведомление/важно ===== */
 .notice {
@@ -63,7 +65,8 @@
 .contact-item b { display: block; font-size: 13px; color: var(--muted); margin-bottom: 2px; font-weight: var(--fw-medium); }
 .contact-item a, .contact-item span { font-size: 16px; font-weight: var(--fw-medium); }
 .contact-item a:hover { color: var(--accent-dark); }
-.contacts-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.contacts-actions { display: flex; flex-direction: column; gap: 12px; } /* моб: в столбик на всю ширину */
+.contacts-actions .btn { width: 100%; }
 
 /* Карточки салонов */
 .salons-grid { display: grid; grid-template-columns: 1fr; gap: 16px; margin-bottom: 32px; }
@@ -84,6 +87,16 @@
 .cta-form__title { font-weight: var(--fw-semibold); font-size: 16px; color: #fff; }
 
 /* ===== Адаптив внутренних страниц ===== */
+@media (min-width: 600px) {
+	/* Кнопки связи на контактах — в ряд от планшета */
+	.contacts-actions { flex-direction: row; flex-wrap: wrap; }
+	.contacts-actions .btn { width: auto; }
+
+	/* Кнопки в hero внутренних страниц — в ряд от планшета */
+	.page-hero__actions { flex-direction: row; flex-wrap: wrap; }
+	.page-hero__actions .btn { width: auto; }
+}
+
 @media (min-width: 768px) {
 	.salons-grid { grid-template-columns: 1fr 1fr; }
 	.collab-block { grid-template-columns: 1fr 1fr; }
@@ -97,6 +110,3 @@
 	color: var(--on-accent); font-weight: var(--fw-semibold); font-size: 14px;
 	padding: 6px 16px; border-radius: 40px;
 }
-
-/* Якорный сдвиг — компенсируем высоту sticky-шапки */
-[id] { scroll-margin-top: calc(78px + 12px); }

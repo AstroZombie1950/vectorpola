@@ -21,23 +21,43 @@ document.addEventListener('click', e => {
 	if (!target) return;
 	e.preventDefault();
 	const header = document.querySelector('.header');
-	const offset = header ? header.offsetHeight + 12 : 80;
+	const offset = header ? header.offsetHeight + 4 : 72;
 	const top = target.getBoundingClientRect().top + window.scrollY - offset;
 	window.scrollTo({ top, behavior: 'smooth' });
 });
 
-/* ===== FAQ: плавное открытие ===== */
+/* ===== FAQ: плавное открытие и закрытие ===== */
 document.querySelectorAll('.faq details').forEach(details => {
-	const ans = details.querySelector('.ans');
-	const ansIn = details.querySelector('.ans-in');
-	if (!ans || !ansIn) return;
+	const summary = details.querySelector('summary');
+	const ans     = details.querySelector('.ans');
+	const ansIn   = details.querySelector('.ans-in');
+	if (!summary || !ans || !ansIn) return;
 
-	details.addEventListener('toggle', () => {
+	let animating = false; // защита от кликов во время анимации
+
+	summary.addEventListener('click', e => {
+		e.preventDefault();          // открытием/закрытием управляем сами
+		if (animating) return;
+		animating = true;
+
 		if (details.open) {
-			ans.style.height = ansIn.offsetHeight + 'px';
-		} else {
-			ans.style.height = ans.scrollHeight + 'px';
+			/* Закрытие: от текущей высоты к нулю, потом снимаем open */
+			ans.style.height = ans.offsetHeight + 'px';
 			requestAnimationFrame(() => { ans.style.height = '0'; });
+			ans.addEventListener('transitionend', function done() {
+				details.open = false;
+				ans.style.height = '';
+				animating = false;
+			}, { once: true });
+		} else {
+			/* Открытие: open сразу, затем анимируем высоту от 0 к контенту */
+			details.open = true;
+			ans.style.height = '0';
+			requestAnimationFrame(() => { ans.style.height = ansIn.offsetHeight + 'px'; });
+			ans.addEventListener('transitionend', function done() {
+				ans.style.height = 'auto'; // чтобы контент не обрезался при ресайзе
+				animating = false;
+			}, { once: true });
 		}
 	});
 });
@@ -47,15 +67,27 @@ const burger = document.getElementById('mobileBurger');
 const menu   = document.getElementById('mobileMenu');
 const close  = menu?.querySelector('.mm-close');
 
+/* Видимые фокусируемые элементы внутри меню */
+function getFocusable() {
+	if (!menu) return [];
+	const sel = 'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])';
+	return [...menu.querySelectorAll(sel)].filter(el => !el.disabled && el.getClientRects().length);
+}
+
 function openMenu() {
 	menu.classList.add('open');
 	menu.setAttribute('aria-hidden', 'false');
+	if (burger) burger.setAttribute('aria-expanded', 'true');
 	document.body.classList.add('menu-open');
+	(close || getFocusable()[0])?.focus(); // переносим фокус внутрь меню
 }
 function closeMenu() {
+	if (!menu.classList.contains('open')) return; // уже закрыто
 	menu.classList.remove('open');
 	menu.setAttribute('aria-hidden', 'true');
+	if (burger) burger.setAttribute('aria-expanded', 'false');
 	document.body.classList.remove('menu-open');
+	if (burger) burger.focus(); // возвращаем фокус на бургер
 }
 
 if (burger) burger.addEventListener('click', openMenu);
@@ -64,8 +96,26 @@ if (close)  close.addEventListener('click', closeMenu);
 /* Закрытие по клику на ссылку внутри меню */
 menu?.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
 
-/* Закрытие по Escape */
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
+/* Escape + запирание фокуса (Tab) внутри открытого меню */
+document.addEventListener('keydown', e => {
+	if (!menu || !menu.classList.contains('open')) return;
+
+	if (e.key === 'Escape') { closeMenu(); return; }
+
+	if (e.key === 'Tab') {
+		const items = getFocusable();
+		if (!items.length) return;
+		const first = items[0];
+		const last  = items[items.length - 1];
+
+		/* Зацикливаем фокус: с последнего → на первый и наоборот */
+		if (e.shiftKey && document.activeElement === first) {
+			e.preventDefault(); last.focus();
+		} else if (!e.shiftKey && document.activeElement === last) {
+			e.preventDefault(); first.focus();
+		}
+	}
+});
 
 /* Закрытие при расширении окна выше мобильной точки */
 window.addEventListener('resize', () => { if (window.innerWidth > 900) closeMenu(); });
