@@ -52,6 +52,10 @@ input, textarea, select, button { font-family: inherit; font-size: inherit; }
 	margin-bottom: 28px;
 }
 .login-logo span { font-size: 13px; color: var(--muted); letter-spacing: .5px; }
+.login-logo img { width: 150px; height: auto; display: block; }
+/* в сайдбаре фон тёмный — кладём лого на белую плашку */
+.sidebar-logo .logo-plate { display: inline-block; background: #fff; border-radius: 10px; padding: 8px 12px; }
+.sidebar-logo .logo-plate img { width: 130px; height: auto; display: block; }
 .login-recover { margin-top: 16px; text-align: center; }
 .recover-hint { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
 

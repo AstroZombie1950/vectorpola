@@ -219,14 +219,15 @@ $canonical = 'https://vectorpola.ru/';
 				<p class="lead">Работаем с проверенными производителями напольных покрытий.</p>
 			</div>
 			<div class="brands">
-				<div class="brand"><img src="/source/img/brand.webp" alt="Логотип бренда" width="500" height="250" loading="lazy"></div>
-				<div class="brand"><img src="/source/img/brand.webp" alt="Логотип бренда" width="500" height="250" loading="lazy"></div>
-				<div class="brand"><img src="/source/img/brand.webp" alt="Логотип бренда" width="500" height="250" loading="lazy"></div>
-				<div class="brand"><img src="/source/img/brand.webp" alt="Логотип бренда" width="500" height="250" loading="lazy"></div>
-				<div class="brand"><img src="/source/img/brand.webp" alt="Логотип бренда" width="500" height="250" loading="lazy"></div>
-				<div class="brand"><img src="/source/img/brand.webp" alt="Логотип бренда" width="500" height="250" loading="lazy"></div>
-				<div class="brand"><img src="/source/img/brand.webp" alt="Логотип бренда" width="500" height="250" loading="lazy"></div>
-				<div class="brand"><img src="/source/img/brand.webp" alt="Логотип бренда" width="500" height="250" loading="lazy"></div>
+				<div class="brand"><img src="/source/img/brands/bonkeel.webp" alt="BONKEEL" width="320" height="180" loading="lazy"></div>
+				<div class="brand"><img src="/source/img/brands/alpine-floor.webp" alt="Alpine Floor" width="320" height="180" loading="lazy"></div>
+				<div class="brand"><img src="/source/img/brands/tarkett.webp" alt="Tarkett" width="320" height="180" loading="lazy"></div>
+				<div class="brand"><img src="/source/img/brands/tarkett-text.webp" alt="Tarkett" width="320" height="180" loading="lazy"></div>
+				<div class="brand"><img src="/source/img/brands/agt.webp" alt="AGT" width="320" height="180" loading="lazy"></div>
+				<div class="brand"><img src="/source/img/brands/fargo.webp" alt="Fargo" width="320" height="180" loading="lazy"></div>
+				<div class="brand"><img src="/source/img/brands/uhd.webp" alt="UHD Polymer" width="320" height="180" loading="lazy"></div>
+				<div class="brand"><img src="/source/img/brands/luka.webp" alt="Лука" width="320" height="180" loading="lazy"></div>
+				<div class="brand"><img src="/source/img/brands/pedross.webp" alt="Pedross" width="320" height="180" loading="lazy"></div>
 			</div>
 		</div>
 	</section>

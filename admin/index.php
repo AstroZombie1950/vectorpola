@@ -20,11 +20,7 @@ if (isLoggedIn()) {
 
 <div class="login-wrap">
 	<div class="login-logo">
-		<svg width="160" height="80" viewBox="0 0 240 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-			<rect x="1" y="1" width="238" height="118" rx="16" stroke="#E7DFD2" stroke-width="2"/>
-			<text x="120" y="58" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="32" font-weight="700" fill="#2B2F38">VP</text>
-			<text x="120" y="82" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="11" letter-spacing="3" fill="#6E6A62">vectorpola</text>
-		</svg>
+		<img src="/source/img/logo.webp" alt="Вектор пола" width="830" height="440">
 		<span>Панель управления</span>
 	</div>
 

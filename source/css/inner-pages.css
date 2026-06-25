@@ -101,6 +101,9 @@
 	.salons-grid { grid-template-columns: 1fr 1fr; }
 	.collab-block { grid-template-columns: 1fr 1fr; }
 	.info-grid { grid-template-columns: 1fr 1fr; }
+	/* центральный отступ между колонками (линии-разделители остаются сплошными) */
+	.info-grid .info-block:nth-child(odd) { padding-right: 24px; }
+	.info-grid .info-block:nth-child(even) { padding-left: 24px; }
 }
 
 /* Теги аудитории (дизайнерам / подрядчикам / поставщикам) */
