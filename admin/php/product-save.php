@@ -84,16 +84,22 @@ if ($action === 'save') {
 	}
 
 	$product = productNormalize([
-		'name'        => $_POST['name']        ?? '',
-		'sku'         => $_POST['sku']         ?? '',
-		'category'    => $_POST['category']    ?? '',
-		'brand'       => $_POST['brand']       ?? '',
-		'price'       => $_POST['price']       ?? 0,
-		'unit'        => $_POST['unit']        ?? 'м²',
-		'description' => $_POST['description'] ?? '',
-		'images'      => $images,
-		'specs'       => $specs,
-		'active'      => !empty($_POST['active']),
+		'name'            => $_POST['name']            ?? '',
+		'slug'            => $_POST['slug']            ?? '',
+		'sku'             => $_POST['sku']             ?? '',
+		'category'        => $_POST['category']        ?? '',
+		'brand'           => $_POST['brand']           ?? '',
+		'price'           => $_POST['price']           ?? 0,
+		'old_price'       => $_POST['old_price']       ?? '',
+		'unit'            => $_POST['unit']            ?? 'м²',
+		'pack_area'       => $_POST['pack_area']       ?? 0,
+		'in_stock'        => !empty($_POST['in_stock']),
+		'description'     => $_POST['description']     ?? '',
+		'images'          => $images,
+		'specs'           => $specs,
+		'seo_title'       => $_POST['seo_title']       ?? '',
+		'seo_description' => $_POST['seo_description'] ?? '',
+		'active'          => !empty($_POST['active']),
 	], $existing ? $existing['id'] : null);
 
 	if (productUpsert($product)) {

@@ -177,8 +177,8 @@ function initCtaForm(formEl) {
 	const phoneInput = formEl.querySelector('input[type="tel"]');
 	if (phoneInput) applyPhoneMask(phoneInput);
 
-	/* Валидация по blur */
-	formEl.querySelectorAll('input, textarea').forEach(field => {
+	/* Валидация по blur (скрытые поля не трогаем) */
+	formEl.querySelectorAll('input:not([type=hidden]), textarea').forEach(field => {
 		field.addEventListener('blur', () => validateField(field));
 	});
 
@@ -186,7 +186,7 @@ function initCtaForm(formEl) {
 	const status = formEl.querySelector('.form-status');
 
 	btn.addEventListener('click', async () => {
-		const fields = [...formEl.querySelectorAll('input, textarea')];
+		const fields = [...formEl.querySelectorAll('input:not([type=hidden]), textarea')];
 		const valid  = fields.map(validateField).every(Boolean);
 		if (!valid) return;
 
@@ -215,3 +215,44 @@ function initCtaForm(formEl) {
 }
 
 document.querySelectorAll('.cta-form').forEach(initCtaForm);
+
+/* ===== Каталог категории: фильтры (моб. шторка) + сортировка ===== */
+(function () {
+	const panel   = document.getElementById('filtersPanel');
+	const toggle  = document.getElementById('filtersToggle');
+	const overlay = document.getElementById('filtersOverlay');
+	const closeBtn = panel ? panel.querySelector('.filters__close') : null;
+	if (!panel) return; // не на странице категории
+
+	function openFilters() {
+		panel.classList.add('is-open');
+		if (overlay) overlay.hidden = false;
+		document.body.style.overflow = 'hidden';
+	}
+	function closeFilters() {
+		panel.classList.remove('is-open');
+		if (overlay) overlay.hidden = true;
+		document.body.style.overflow = '';
+	}
+
+	toggle?.addEventListener('click', openFilters);
+	closeBtn?.addEventListener('click', closeFilters);
+	overlay?.addEventListener('click', closeFilters);
+	document.addEventListener('keydown', e => { if (e.key === 'Escape') closeFilters(); });
+	// при возврате на десктоп — сбрасываем мобильное состояние
+	window.addEventListener('resize', () => { if (window.innerWidth >= 1024) closeFilters(); });
+
+	// Сортировка — отправляем форму сразу при выборе
+	const sortSelect = document.getElementById('sortSelect');
+	const form = document.getElementById('catalogFilters');
+	sortSelect?.addEventListener('change', () => form?.submit());
+})();
+
+
+/* ===== Бейдж корзины (на всех страницах; полная логика — в cart.js) ===== */
+(function cartBadge() {
+	let n = 0;
+	try { n = (JSON.parse(localStorage.getItem('vp_cart')) || []).length; } catch {}
+	document.querySelectorAll('.cart .count, .mob-icon .count').forEach(el => { el.textContent = n; });
+	document.querySelectorAll('.js-cart-link').forEach(el => { el.textContent = 'Корзина (' + n + ')'; });
+})();

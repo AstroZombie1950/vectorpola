@@ -14,7 +14,7 @@
 .breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); flex-wrap: wrap; }
 .breadcrumb a { color: var(--muted); }
 .breadcrumb a:hover { color: var(--accent-dark); }
-.breadcrumb span::before { content: "→"; margin-right: 8px; }
+.breadcrumb > *:not(:first-child)::before { content: "→"; margin-right: 8px; }
 
 /* ===== Контентная колонка (читаемая ширина) ===== */
 .inner-content { max-width: 860px; }

@@ -16,20 +16,20 @@
 			<div>
 				<h4>Каталог</h4>
 				<ul>
-					<li><a href="#">Ламинат</a></li>
-					<li><a href="#">Кварцвинил / SPC</a></li>
-					<li><a href="#">Виниловые полы</a></li>
-					<li><a href="#">Инженерная доска</a></li>
-					<li><a href="#">Паркетная доска</a></li>
-					<li><a href="#">Массивная доска</a></li>
+					<li><a href="/catalog/laminat/">Ламинат</a></li>
+					<li><a href="/catalog/kvarcvinil/">Кварцвинил / SPC</a></li>
+					<li><a href="/catalog/vinil/">Виниловые полы</a></li>
+					<li><a href="/catalog/inzhenernaya-doska/">Инженерная доска</a></li>
+					<li><a href="/catalog/parketnaya-doska/">Паркетная доска</a></li>
+					<li><a href="/catalog/massivnaya-doska/">Массивная доска</a></li>
 				</ul>
 			</div>
 			<div>
 				<h4>&nbsp;</h4>
 				<ul>
-					<li><a href="#">Пробковые покрытия</a></li>
-					<li><a href="#">Плинтусы и подложка</a></li>
-					<li><a href="#">Сопутствующие товары</a></li>
+					<li><a href="/catalog/probka/">Пробковые покрытия</a></li>
+					<li><a href="/catalog/plintus-podlozhka/">Плинтусы и подложка</a></li>
+					<li><a href="/catalog/soputstvuyushchie/">Сопутствующие товары</a></li>
 					<li><a href="/brands/">Бренды</a></li>
 				</ul>
 			</div>

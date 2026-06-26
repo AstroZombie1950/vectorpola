@@ -1,13 +1,13 @@
 <?php
 require_once __DIR__ . '/php/auth.php';
+require_once __DIR__ . '/php/products-data.php';
 requireLogin();
 
 $pageTitle  = 'Главная';
 $activePage = 'dashboard';
 
-// Считаем товары
-$productsFile = $_SERVER['DOCUMENT_ROOT'] . '/data/products.json';
-$products     = file_exists($productsFile) ? json_decode(file_get_contents($productsFile), true) : [];
+// Считаем товары (через productsLoad — учитывает формат {"products":[...]})
+$products       = productsLoad();
 $totalProducts  = count($products);
 $activeProducts = count(array_filter($products, fn($p) => !empty($p['active'])));
 

@@ -38,3 +38,28 @@ Options -Indexes
 	ExpiresByType image/x-icon          "access plus 365 days"
 	ExpiresByType font/woff2            "access plus 365 days"
 </IfModule>
+
+# ===== Роутинг каталога =====
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+
+	# Карточка товара: /catalog/{категория}/{slug}/
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteRule ^catalog/([a-z0-9-]+)/([a-z0-9-]+)/?$ product.php?cat=$1&slug=$2 [L,QSA]
+
+	# Страница категории: /catalog/{категория}/
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteRule ^catalog/([a-z0-9-]+)/?$ category.php?cat=$1 [L,QSA]
+
+	# Индекс каталога: /catalog/
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteRule ^catalog/?$ catalog-index.php [L,QSA]
+</IfModule>
+
+# Корзина: /cart/
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^cart/?$ cart.php [L,QSA]

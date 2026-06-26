@@ -1,0 +1,138 @@
+/* ===================================================
+   Карточка товара
+   Подключать после main.css и inner-pages.css
+   =================================================== */
+
+/* Крошки 2+ уровня: стрелка перед каждым пунктом, кроме первого */
+.breadcrumb a:not(:first-child)::before { content: "→"; margin-right: 8px; color: var(--muted); }
+
+.page-hero--product h1 { font-size: clamp(22px, 3vw, 32px); }
+
+/* ===== Сетка: галерея + калькулятор ===== */
+.product-grid { display: grid; grid-template-columns: 1fr; gap: 28px; }
+
+/* ===== Галерея ===== */
+.pg-main { background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius-lg); overflow: hidden; }
+.pg-main img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; display: block; }
+.pg-thumbs { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+.pg-thumb { width: 72px; height: 72px; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; padding: 0; background: var(--bg); cursor: pointer; }
+.pg-thumb.is-active { border-color: var(--accent); }
+.pg-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* ===== Калькулятор ===== */
+.product-calc { border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 20px; background: var(--bg-soft); }
+.calc-head { display: flex; align-items: center; gap: 10px; padding-bottom: 16px; border-bottom: 1px solid var(--line); }
+.calc-head .calc-ic { color: var(--accent-dark); display: flex; }
+.calc-head b { font-size: 16px; font-weight: var(--fw-semibold); }
+
+/* Степпер */
+.calc-stepper { display: grid; grid-template-columns: 48px 1fr 48px; gap: 8px; margin: 18px 0; }
+.calc-stepper button { height: 48px; border: 1px solid var(--line); background: var(--bg); border-radius: var(--radius); font-size: 22px; line-height: 1; cursor: pointer; color: var(--ink); }
+.calc-stepper button:hover { border-color: var(--accent); color: var(--accent-dark); }
+.calc-qty { display: flex; align-items: center; justify-content: center; border: 1px solid var(--line); border-radius: var(--radius); background: var(--bg); font-weight: var(--fw-semibold); font-size: 17px; }
+
+/* Разбивка */
+.calc-rows { display: flex; flex-direction: column; gap: 16px; }
+.calc-row .calc-val { font-size: 18px; color: var(--ink); }
+.calc-row .calc-val b { font-weight: var(--fw-bold); }
+.calc-row .calc-val s { color: #C0392B; font-weight: var(--fw-body); margin-right: 6px; }
+.calc-row .calc-label { font-size: 13px; color: var(--muted); margin-top: 2px; }
+.calc-row--split { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+/* Наличие */
+.calc-stock { margin-top: 16px; font-size: 13px; font-weight: var(--fw-semibold); }
+.calc-stock.is-in { color: var(--accent-dark); }
+.calc-stock.is-pre { color: var(--muted); }
+
+/* Итого */
+.calc-total { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-top: 14px; padding-top: 16px; border-top: 1px solid var(--line); }
+.calc-total span { font-size: 13px; color: var(--muted); }
+.calc-total b { font-size: 26px; font-weight: var(--fw-bold); color: var(--ink); }
+
+/* Форма заявки внутри калькулятора — светлый вариант (карточка светлая) */
+.calc-form { margin-top: 18px; background: transparent; padding: 0; }
+.calc-form input { background: var(--bg); color: var(--ink); border-color: var(--line); }
+.calc-form input::placeholder { color: var(--muted); }
+.calc-form .form-status.ok { color: var(--accent-dark); }
+.calc-form .btn { width: 100%; }
+.calc-note { font-size: 12px; color: var(--muted); margin-top: 10px; line-height: 1.5; }
+
+/* ===== Описание + характеристики ===== */
+.product-info { margin-top: 40px; }
+.product-block { margin-top: 32px; }
+.product-block h2 { font-size: 20px; font-weight: var(--fw-semibold); margin-bottom: 14px; }
+.product-block p { max-width: 760px; line-height: 1.7; color: var(--ink); }
+
+/* Таблица характеристик */
+.specs { width: 100%; border-collapse: collapse; max-width: 920px; }
+.specs th, .specs td { text-align: left; vertical-align: top; padding: 12px 0; border-bottom: 1px solid var(--line); font-size: 15px; }
+.specs th { width: 320px; font-weight: var(--fw-body); color: var(--muted); padding-right: 24px; }
+.specs td { color: var(--ink); font-weight: var(--fw-medium); }
+
+/* ===== Поделиться ===== */
+.product-share { display: flex; align-items: center; gap: 10px; margin-top: 32px; flex-wrap: wrap; }
+.product-share > span { font-size: 14px; color: var(--muted); }
+.sh-btn { width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--line); background: var(--bg); display: flex; align-items: center; justify-content: center; color: var(--ink); cursor: pointer; }
+.sh-btn:hover { border-color: var(--accent); color: var(--accent-dark); }
+.sh-copied { font-size: 13px; color: var(--accent-dark); }
+
+/* ===== Планшет ===== */
+@media (min-width: 768px) {
+	.specs th, .specs td { display: table-cell; }
+}
+
+/* ===== Десктоп: две колонки, калькулятор «липкий» ===== */
+@media (min-width: 1024px) {
+	.product-grid { grid-template-columns: 1.5fr 1fr; gap: 36px; align-items: start; }
+	.product-calc { position: sticky; top: 92px; }
+}
+
+/* ===== Мобайл: характеристики в столбик ===== */
+@media (max-width: 600px) {
+	.specs tr { display: block; border-bottom: 1px solid var(--line); padding: 12px 0; }
+	.specs th, .specs td { display: block; width: auto; border: none; padding: 0; }
+	.specs th { color: var(--muted); margin-bottom: 2px; }
+}
+/* ===== Действия: корзина + в один клик ===== */
+.calc-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 18px; }
+.calc-actions .btn { width: 100%; }
+.calc-added {
+	margin-top: 10px; padding: 10px 12px; border-radius: var(--radius);
+	background: var(--accent-soft); color: var(--on-accent); font-size: 13px;
+}
+.calc-added a { color: var(--accent-dark); font-weight: var(--fw-semibold); white-space: nowrap; }
+.form-status { font-size: 13px; margin-top: 8px; }
+.form-status.ok  { color: var(--accent-dark); }
+.form-status.err { color: #C0392B; }
+
+/* ===== Попап «Купить в один клик» ===== */
+.modal { position: fixed; inset: 0; z-index: 200; display: flex; align-items: center; justify-content: center; padding: 16px; }
+.modal[hidden] { display: none; }
+.modal__overlay { position: absolute; inset: 0; background: rgba(0,0,0,.5); }
+.modal__box {
+	position: relative; z-index: 1; width: 100%; max-width: 420px;
+	background: #fff; border-radius: var(--radius-lg); padding: 24px;
+	box-shadow: 0 20px 60px rgba(0,0,0,.25); max-height: 92vh; overflow-y: auto;
+}
+.modal__close {
+	position: absolute; top: 12px; right: 14px; width: 32px; height: 32px;
+	border: none; background: none; font-size: 26px; line-height: 1; color: var(--muted); cursor: pointer;
+}
+.modal__close:hover { color: var(--ink); }
+.modal__box h3 { font-size: 20px; font-weight: var(--fw-h2); margin-bottom: 16px; padding-right: 28px; }
+
+.qb-summary { background: var(--bg-soft); border-radius: var(--radius); padding: 14px; margin-bottom: 16px; }
+.qb-prod { font-weight: var(--fw-semibold); margin-bottom: 8px; line-height: 1.35; }
+.qb-line { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: 14px; padding: 3px 0; }
+.qb-line span { color: var(--muted); }
+.qb-line b { font-weight: var(--fw-semibold); }
+
+.qb-form { display: flex; flex-direction: column; gap: 10px; }
+.qb-form input, .qb-form textarea {
+	width: 100%; padding: 11px 12px; border: 1.5px solid var(--line);
+	border-radius: var(--radius); font: inherit; font-size: 15px; background: #fff; color: var(--ink);
+}
+.qb-form input:focus, .qb-form textarea:focus { outline: none; border-color: var(--accent); }
+.qb-form textarea { resize: vertical; min-height: 56px; }
+.qb-form .btn { width: 100%; }
+.qb-note { font-size: 12px; color: var(--muted); margin: 0; }

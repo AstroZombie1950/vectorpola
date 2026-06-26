@@ -43,15 +43,21 @@ $categories = productCategories();
 
 // Фиксированные столбцы по имени
 $fixedMap  = [
-	'Название'      => 'name',
-	'Артикул'       => 'sku',
-	'Категория'     => 'category',
-	'Бренд'         => 'brand',
-	'Цена'          => 'price',
-	'Единица'       => 'unit',
-	'Описание'      => 'description',
-	'Изображение'   => 'image',
-	'Активен (1/0)' => 'active',
+	'Название'        => 'name',
+	'URL (slug)'      => 'slug',
+	'Артикул'         => 'sku',
+	'Категория'       => 'category',
+	'Бренд'           => 'brand',
+	'Цена'            => 'price',
+	'Старая цена'     => 'old_price',
+	'Единица'         => 'unit',
+	'м² в упаковке'   => 'pack_area',
+	'В наличии (1/0)' => 'in_stock',
+	'Описание'        => 'description',
+	'Изображение'     => 'image',
+	'Активен (1/0)'   => 'active',
+	'SEO title'       => 'seo_title',
+	'SEO description' => 'seo_description',
 ];
 
 // Определяем какие столбцы фиксированные, какие — specs
@@ -75,12 +81,14 @@ function skuNormalize(string $sku): string {
 	return $sku;
 }
 
-// ===== Существующие товары (для upsert по артикулу) =====
+// ===== Существующие товары (для upsert по slug, затем по артикулу) =====
 $existing  = productsLoad();
 $bySku     = [];
+$bySlug    = [];
 foreach ($existing as $p) {
 	$skuKey = skuNormalize($p['sku'] ?? '');
 	if ($skuKey !== '') $bySku[$skuKey] = $p;
+	if (!empty($p['slug'])) $bySlug[$p['slug']] = $p;
 }
 
 $created = 0;
@@ -112,22 +120,35 @@ foreach ($dataRows as $rowIdx => $row) {
 		}
 	}
 
-	// Upsert по артикулу — trim + нормализация числового формата (1.0 → 1)
-	$sku = trim($fixed['sku'] ?? '');
-	$sku = skuNormalize($sku);
-	$existing_p = $sku !== '' ? ($bySku[$sku] ?? null) : null;
+	// Upsert: сначала по slug, потом по артикулу (sku → 1.0 нормализуем)
+	$slugCol = trim($fixed['slug'] ?? '');
+	$sku     = skuNormalize(trim($fixed['sku'] ?? ''));
+	$existing_p = null;
+	if ($slugCol !== '' && isset($bySlug[$slugCol]))      $existing_p = $bySlug[$slugCol];
+	elseif ($sku !== '' && isset($bySku[$sku]))           $existing_p = $bySku[$sku];
+
+	// in_stock: если колонки нет — наследуем (или true для нового)
+	$inStock = array_key_exists('in_stock', $fixed)
+		? ($fixed['in_stock'] !== '0' && $fixed['in_stock'] !== '')
+		: (isset($existing_p) ? !empty($existing_p['in_stock']) : true);
 
 	$product = productNormalize([
-		'name'        => $fixed['name']   ?? '',
-		'sku'         => $sku,
-		'category'    => $catKey,
-		'brand'       => $fixed['brand']  ?? '',
-		'price'       => $fixed['price']  ?? 0,
-		'unit'        => $fixed['unit']   ?? 'м²',
-		'description' => $fixed['description'] ?? '',
-		'images'      => $existing_p['images'] ?? [],
-		'specs'       => $specs,
-		'active'      => ($fixed['active'] ?? '1') !== '0',
+		'name'            => $fixed['name']            ?? '',
+		'slug'            => $slugCol,
+		'sku'             => $sku,
+		'category'        => $catKey,
+		'brand'           => $fixed['brand']           ?? '',
+		'price'           => $fixed['price']           ?? 0,
+		'old_price'       => $fixed['old_price']       ?? '',
+		'unit'            => $fixed['unit']            ?? 'м²',
+		'pack_area'       => $fixed['pack_area']        ?? 0,
+		'in_stock'        => $inStock,
+		'description'     => $fixed['description']     ?? '',
+		'images'          => $existing_p['images']     ?? [],
+		'specs'           => $specs,
+		'seo_title'       => $fixed['seo_title']       ?? '',
+		'seo_description' => $fixed['seo_description'] ?? '',
+		'active'          => ($fixed['active'] ?? '1') !== '0',
 	], $existing_p['id'] ?? null);
 
 	// Изображение по ссылке

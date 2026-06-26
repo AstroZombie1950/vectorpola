@@ -132,6 +132,11 @@ include __DIR__ . '/php/layout-top.php';
 						<input type="text" name="name" value="<?= htmlspecialchars($editProduct['name'] ?? '') ?>" required>
 					</div>
 					<div class="field">
+						<label>URL-адрес (slug)</label>
+						<input type="text" name="slug" value="<?= htmlspecialchars($editProduct['slug'] ?? '') ?>" placeholder="генерируется из названия">
+						<p class="text-muted text-small" style="margin-top:4px">Латиница и дефисы. Пусто — создастся автоматически из названия. Участвует в ссылке товара.</p>
+					</div>
+					<div class="field">
 						<label>Артикул</label>
 						<input type="text" name="sku" value="<?= htmlspecialchars($editProduct['sku'] ?? '') ?>">
 					</div>
@@ -155,6 +160,16 @@ include __DIR__ . '/php/layout-top.php';
 							<label>Цена, ₽ <span class="req">*</span></label>
 							<input type="number" name="price" min="0" step="0.01" value="<?= htmlspecialchars($editProduct['price'] ?? '') ?>" required>
 						</div>
+						<div class="field">
+							<label>Старая цена, ₽</label>
+							<input type="number" name="old_price" min="0" step="0.01" value="<?= htmlspecialchars($editProduct['old_price'] ?? '') ?>" placeholder="если есть скидка">
+						</div>
+					</div>
+					<div class="field-row">
+						<div class="field">
+							<label>м² в упаковке</label>
+							<input type="number" name="pack_area" min="0" step="0.001" value="<?= htmlspecialchars($editProduct['pack_area'] ?? '') ?>" placeholder="напр. 2.22">
+						</div>
 						<div class="field" style="max-width:110px">
 							<label>Ед. изм.</label>
 							<select name="unit">
@@ -169,12 +184,31 @@ include __DIR__ . '/php/layout-top.php';
 						<textarea name="description" rows="4"><?= htmlspecialchars($editProduct['description'] ?? '') ?></textarea>
 					</div>
 
-					<!-- Активен -->
+					<!-- Активен / в наличии -->
 					<label class="toggle-label">
 						<input type="checkbox" name="active" id="activeCheck" <?= !empty($editProduct['active']) ? 'checked' : '' ?>>
 						<span class="toggle"></span>
 						Показывать на сайте
 					</label>
+					<label class="toggle-label" style="margin-top:10px">
+						<input type="checkbox" name="in_stock" id="inStockCheck" <?= !empty($editProduct['in_stock']) ? 'checked' : '' ?>>
+						<span class="toggle"></span>
+						В наличии на складе
+					</label>
+				</div>
+
+				<!-- SEO -->
+				<div class="card mt-16">
+					<h2 class="card-title">SEO (необязательно)</h2>
+					<p class="text-muted text-small" style="margin-bottom:12px">Пусто — соберётся автоматически из названия и описания.</p>
+					<div class="field">
+						<label>SEO title</label>
+						<input type="text" name="seo_title" value="<?= htmlspecialchars($editProduct['seo_title'] ?? '') ?>" placeholder="Заголовок вкладки/выдачи">
+					</div>
+					<div class="field">
+						<label>SEO description</label>
+						<textarea name="seo_description" rows="3" placeholder="Краткое описание для поисковой выдачи"><?= htmlspecialchars($editProduct['seo_description'] ?? '') ?></textarea>
+					</div>
 				</div>
 			</div>
 
