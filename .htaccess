@@ -57,9 +57,9 @@ Options -Indexes
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
 	RewriteRule ^catalog/?$ catalog-index.php [L,QSA]
-</IfModule>
 
-# Корзина: /cart/
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^cart/?$ cart.php [L,QSA]
+	# Корзина: /cart/
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteRule ^cart/?$ cart.php [L,QSA]
+</IfModule>

@@ -198,7 +198,7 @@ $pageDesc  = mb_substr(trim($descSrc), 0, 200);
 					<div class="calc-rows">
 						<div class="calc-row">
 							<div class="calc-val">
-								<?php if ($oldPrice > 0): ?><s><?= vp_money($oldPrice) ?></s> <?php endif; ?><b><?= vp_money($price) ?></b>
+								<?php if ($oldPrice > $price): ?><s><?= vp_money($oldPrice) ?></s> <?php endif; ?><b><?= vp_money($price) ?></b>
 							</div>
 							<div class="calc-label">Цена за квадратный метр</div>
 						</div>

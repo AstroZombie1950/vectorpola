@@ -21,37 +21,34 @@ const VP_CATEGORIES = [
 ];
 
 /* Конфиг фильтров по категориям.
-   key   — поле фасета: 'brand' (берётся из product.brand) или имя ключа в specs.
-   param — короткое имя GET-параметра (латиница, без пробелов).
-   type  — checkbox (мультивыбор) | range (диапазон, только цена — она отдельно).
-   Набор ключей specs финализируется после интеграции спарсенных данных. */
+   key   — поле фасета: 'brand' (из product.brand) или имя ключа в specs.
+   param — короткое имя GET-параметра (латиница).
+   type  — checkbox (мультивыбор). Цена и наличие — отдельно.
+   Финализировано под реальные спарсенные данные (чистые фасеты-корзины из нормализатора). */
 const VP_FILTERS = [
 	'laminat' => [
-		'brand'                     => ['label' => 'Бренд',       'param' => 'brand',   'type' => 'checkbox'],
-		'Класс истираемости'        => ['label' => 'Класс',       'param' => 'class',   'type' => 'checkbox'],
-		'Тип рисунка'               => ['label' => 'Тип рисунка', 'param' => 'pattern', 'type' => 'checkbox'],
-		'Фаска'                     => ['label' => 'Фаска',       'param' => 'bevel',   'type' => 'checkbox'],
-		'Тёплый пол, совместимость' => ['label' => 'Тёплый пол',  'param' => 'warm',    'type' => 'checkbox'],
+		'brand'              => ['label' => 'Бренд',   'param' => 'brand',     'type' => 'checkbox'],
+		'Класс истираемости' => ['label' => 'Класс',   'param' => 'class',     'type' => 'checkbox'],
+		'Толщина, мм'        => ['label' => 'Толщина', 'param' => 'thickness', 'type' => 'checkbox'],
 	],
 	'kvarcvinil' => [
-		'brand'                     => ['label' => 'Бренд',          'param' => 'brand', 'type' => 'checkbox'],
-		'Класс истираемости'        => ['label' => 'Класс',          'param' => 'class', 'type' => 'checkbox'],
-		'Тип соединения'            => ['label' => 'Тип соединения', 'param' => 'joint', 'type' => 'checkbox'],
-		'Тёплый пол, совместимость' => ['label' => 'Тёплый пол',     'param' => 'warm',  'type' => 'checkbox'],
-		'Водостойкость'             => ['label' => 'Водостойкость',  'param' => 'water', 'type' => 'checkbox'],
+		'brand'              => ['label' => 'Бренд',       'param' => 'brand',     'type' => 'checkbox'],
+		'Класс истираемости' => ['label' => 'Класс',       'param' => 'class',     'type' => 'checkbox'],
+		'Толщина, мм'        => ['label' => 'Толщина',     'param' => 'thickness', 'type' => 'checkbox'],
+		'Тип укладки'        => ['label' => 'Тип укладки', 'param' => 'lay',       'type' => 'checkbox'],
 	],
 	'parketnaya-doska' => [
-		'brand'                => ['label' => 'Бренд',         'param' => 'brand',   'type' => 'checkbox'],
-		'Порода дерева'        => ['label' => 'Порода',        'param' => 'wood',    'type' => 'checkbox'],
-		'Тип покрытия'         => ['label' => 'Покрытие',      'param' => 'finish',  'type' => 'checkbox'],
-		'Количество полос'     => ['label' => 'Полосность',    'param' => 'strips',  'type' => 'checkbox'],
-		'Селекция'             => ['label' => 'Селекция',      'param' => 'select',  'type' => 'checkbox'],
+		'brand'       => ['label' => 'Бренд',    'param' => 'brand',     'type' => 'checkbox'],
+		'Порода'      => ['label' => 'Порода',   'param' => 'wood',      'type' => 'checkbox'],
+		'Покрытие'    => ['label' => 'Покрытие', 'param' => 'finish',    'type' => 'checkbox'],
+		'Толщина, мм' => ['label' => 'Толщина',  'param' => 'thickness', 'type' => 'checkbox'],
 	],
 	'inzhenernaya-doska' => [
-		'brand'         => ['label' => 'Бренд',    'param' => 'brand',  'type' => 'checkbox'],
-		'Порода дерева' => ['label' => 'Порода',   'param' => 'wood',   'type' => 'checkbox'],
-		'Тип покрытия'  => ['label' => 'Покрытие', 'param' => 'finish', 'type' => 'checkbox'],
-		'Селекция'      => ['label' => 'Селекция', 'param' => 'select', 'type' => 'checkbox'],
+		'brand'       => ['label' => 'Бренд',       'param' => 'brand',     'type' => 'checkbox'],
+		'Тип укладки' => ['label' => 'Тип укладки', 'param' => 'lay',       'type' => 'checkbox'],
+		'Покрытие'    => ['label' => 'Покрытие',    'param' => 'finish',    'type' => 'checkbox'],
+		'Толщина, мм' => ['label' => 'Толщина',     'param' => 'thickness', 'type' => 'checkbox'],
+		'Порода'      => ['label' => 'Порода',      'param' => 'wood',      'type' => 'checkbox'],
 	],
 ];
 
