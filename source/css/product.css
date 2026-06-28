@@ -70,7 +70,7 @@
 .specs td { color: var(--ink); font-weight: var(--fw-medium); }
 
 /* ===== Поделиться ===== */
-.product-share { display: flex; align-items: center; gap: 10px; margin-top: 32px; flex-wrap: wrap; }
+.product-share { display: flex; align-items: center; gap: 10px; margin-top: 32px; margin-bottom: 32px; flex-wrap: wrap; }
 .product-share > span { font-size: 14px; color: var(--muted); }
 .sh-btn { width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--line); background: var(--bg); display: flex; align-items: center; justify-content: center; color: var(--ink); cursor: pointer; }
 .sh-btn:hover { border-color: var(--accent); color: var(--accent-dark); }

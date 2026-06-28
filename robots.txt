@@ -4,4 +4,4 @@ Disallow: /admin/
 Disallow: /source/php/
 Disallow: /data/
 
-# снять после создания динамик Sitemap: https://vectorpola.ru/sitemap.xml
+Sitemap: https://vectorpola.ru/sitemap.xml

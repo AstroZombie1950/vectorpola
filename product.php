@@ -98,7 +98,7 @@ $pageDesc  = mb_substr(trim($descSrc), 0, 200);
 
 	<link rel="stylesheet" href="/source/css/main.css">
 	<link rel="stylesheet" href="/source/css/inner-pages.css?v=2">
-	<link rel="stylesheet" href="/source/css/product.css?v=2">
+	<link rel="stylesheet" href="/source/css/product.css?v=3">
 
 	<!-- ===== Микроразметка (Product + хлебные крошки) ===== -->
 	<script type="application/ld+json">

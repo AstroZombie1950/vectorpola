@@ -62,4 +62,7 @@ Options -Indexes
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
 	RewriteRule ^cart/?$ cart.php [L,QSA]
+
+	# /sitemap.xml → динамический PHP
+	RewriteRule ^sitemap\.xml$ sitemap.php [L]
 </IfModule>
