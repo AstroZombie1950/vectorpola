@@ -86,22 +86,35 @@ window.VPCart = (function () {
 		if (btn) { btn.disabled = true; btn.dataset.label = btn.textContent; btn.textContent = 'Отправка…'; }
 		setStatus(statusEl, '', '');
 
+		let ok = false;
+		let errMsg = 'Ошибка сети. Попробуйте ещё раз.';
 		try {
 			const fd = new FormData();
 			Object.keys(payload).forEach(k => fd.append(k, payload[k]));
 			const r = await fetch('/source/php/send.php', { method: 'POST', body: fd });
-			const d = await r.json();
-			if (d.ok) {
-				setStatus(statusEl, 'Заявка принята! Менеджер скоро свяжется с вами.', 'ok');
-				if (typeof onSuccess === 'function') onSuccess();
-			} else {
-				const msg = (d.errors && d.errors.join(', ')) || d.error || 'Не удалось отправить';
-				setStatus(statusEl, msg, 'err');
+			// Читаем как текст и парсим вручную — устойчиво к мусору перед JSON (PHP warning и т.п.)
+			const text = await r.text();
+			let d = null;
+			try { d = JSON.parse(text); } catch (e) {}
+			if (d && d.ok) {
+				ok = true;
+			} else if (d) {
+				errMsg = (d.errors && d.errors.join(', ')) || d.error || 'Не удалось отправить';
+			} else if (r.ok && text.indexOf('"ok":true') !== -1) {
+				ok = true; // ответ испорчен, но заявка ушла
 			}
-		} catch {
-			setStatus(statusEl, 'Ошибка сети. Попробуйте ещё раз.', 'err');
+		} catch (e) {
+			// errMsg уже про сеть
 		} finally {
 			if (btn) { btn.disabled = false; btn.textContent = btn.dataset.label || 'Отправить'; }
+		}
+
+		if (ok) {
+			setStatus(statusEl, 'Заявка принята! Менеджер скоро свяжется с вами.', 'ok');
+			// колбэк изолируем — его ошибка не должна превращаться в «Ошибка сети»
+			if (typeof onSuccess === 'function') { try { onSuccess(); } catch (e) {} }
+		} else {
+			setStatus(statusEl, errMsg, 'err');
 		}
 	}
 	function setStatus(el, msg, type) {
@@ -217,9 +230,9 @@ window.VPCart = (function () {
 				items:   lines.join('\n'),
 				total:   money(grand)
 			}, status, btn, () => {
-				clear();
-				renderCartPage();
 				form.reset();
+				// Уведомление об успехе висит 5 секунд, затем корзина очищается
+				setTimeout(() => { clear(); renderCartPage(); }, 5000);
 			});
 		});
 	}

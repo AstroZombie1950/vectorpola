@@ -53,7 +53,7 @@ function vpMarkRebuild(): void {
 /* ===== Список товаров для админки: поиск + пагинация =====
    Читаем из быстрой sqlite (включая скрытые). Если базы нет —
    откатываемся на products.json. Возвращает items/total/page/pages. */
-function productsListPaged(string $q = '', string $cat = '', int $page = 1, int $perPage = 50): array {
+function productsListPaged(string $q = '', string $cat = '', int $page = 1, int $perPage = 50, bool $popularOnly = false): array {
 	$q   = trim($q);
 	$db  = function_exists('vp_db') ? vp_db() : null;
 
@@ -61,6 +61,7 @@ function productsListPaged(string $q = '', string $cat = '', int $page = 1, int 
 		$where = []; $args = [];
 		if ($q !== '')   { $where[] = '(name LIKE ? OR sku LIKE ?)'; $args[] = "%$q%"; $args[] = "%$q%"; }
 		if ($cat !== '') { $where[] = 'category = ?'; $args[] = $cat; }
+		if ($popularOnly) { $where[] = 'popular = 1'; }
 		$wsql = $where ? ('WHERE ' . implode(' AND ', $where)) : '';
 
 		$st = $db->prepare("SELECT COUNT(*) FROM products $wsql");
@@ -90,6 +91,9 @@ function productsListPaged(string $q = '', string $cat = '', int $page = 1, int 
 
 	// Fallback: sqlite недоступна — фильтруем json в памяти
 	$all = productsLoad();
+	if ($popularOnly) {
+		$all = array_values(array_filter($all, fn($p) => !empty($p['popular'])));
+	}
 	if ($q !== '' || $cat !== '') {
 		$ql = mb_strtolower($q, 'UTF-8');
 		$all = array_values(array_filter($all, function ($p) use ($ql, $cat) {

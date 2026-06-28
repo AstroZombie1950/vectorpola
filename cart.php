@@ -59,6 +59,6 @@ $pageTitle = 'Корзина — Вектор пола';
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/source/include/footer.php'; ?>
 
 	<script src="/source/js/main.js?v=2"></script>
-	<script src="/source/js/cart.js?v=2"></script>
+	<script src="/source/js/cart.js?v=3"></script>
 </body>
 </html>

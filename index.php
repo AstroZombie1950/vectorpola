@@ -338,6 +338,6 @@ $popular = vp_popular_products(8);   // помеченные галкой в а�
 
 	<?php include $_SERVER['DOCUMENT_ROOT'] . '/source/include/footer.php'; ?>
 
-	<script src="/source/js/main.js"></script>
+	<script src="/source/js/main.js?v=4"></script>
 </body>
 </html>

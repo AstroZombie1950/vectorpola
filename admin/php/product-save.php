@@ -100,6 +100,7 @@ if ($action === 'save') {
 		'seo_title'       => $_POST['seo_title']       ?? '',
 		'seo_description' => $_POST['seo_description'] ?? '',
 		'active'          => !empty($_POST['active']),
+		'popular'         => !empty($_POST['popular']),
 	], $existing ? $existing['id'] : null);
 
 	if (productUpsert($product)) {

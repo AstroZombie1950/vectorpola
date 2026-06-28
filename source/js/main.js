@@ -266,3 +266,28 @@ document.querySelectorAll('.cta-form').forEach(initCtaForm);
 	document.querySelectorAll('.cart .count, .mob-icon .count').forEach(el => { el.textContent = n; });
 	document.querySelectorAll('.js-cart-link').forEach(el => { el.textContent = 'Корзина (' + n + ')'; });
 })();
+
+/* ===== Карусель «Популярные продукты» (горизонтальный скролл стрелками) ===== */
+(function () {
+	document.querySelectorAll('.products').forEach(track => {
+		const arrows = track.closest('.section')?.querySelector('.arrows');
+		if (!arrows) return;
+		const btns = arrows.querySelectorAll('button');
+		const prev = btns[0], next = btns[1];
+
+		// шаг прокрутки — почти видимая ширина (≈ один "экран" карточек)
+		const step = () => Math.max(track.clientWidth * 0.9, 220);
+		prev?.addEventListener('click', () => track.scrollBy({ left: -step(), behavior: 'smooth' }));
+		next?.addEventListener('click', () => track.scrollBy({ left:  step(), behavior: 'smooth' }));
+
+		// гасим стрелки на краях / когда листать нечего
+		const update = () => {
+			const max = track.scrollWidth - track.clientWidth - 2;
+			if (prev) prev.disabled = track.scrollLeft <= 0;
+			if (next) next.disabled = max <= 0 || track.scrollLeft >= max;
+		};
+		track.addEventListener('scroll', update, { passive: true });
+		window.addEventListener('resize', update);
+		update();
+	});
+})();

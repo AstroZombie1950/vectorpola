@@ -175,13 +175,23 @@ ul { list-style: none; }
 .arrows { display: flex; gap: 8px; }
 .arrows button { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line); background: #fff; color: var(--accent-dark); cursor: pointer; display: flex; align-items: center; justify-content: center; }
 .arrows button:hover { border-color: var(--accent); }
+.arrows button:disabled { opacity: .35; cursor: default; }
+.arrows button:disabled:hover { border-color: var(--line); }
 
 /* ===== Популярные продукты ===== */
-.products { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
-.product { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; transition: .18s; }
+.products {
+	display: flex; gap: 16px;
+	overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth;
+	-webkit-overflow-scrolling: touch;
+	scrollbar-width: none;            /* Firefox */
+	padding-bottom: 4px;
+}
+.products::-webkit-scrollbar { display: none; }   /* WebKit */
+.product { flex: 0 0 100%; scroll-snap-align: start; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; transition: .18s; }
 .product:hover { border-color: var(--accent); }
-.product .img { aspect-ratio: 1 / 1; background: var(--bg-cream); overflow: hidden; }
-.product .img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.product .img { position: relative; aspect-ratio: 1 / 1; background: var(--bg-cream); overflow: hidden; }
+.product .img::before { content: ''; display: block; padding-top: 100%; }
+.product .img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
 .product .body { padding: 14px; }
 .product .name { font-weight: var(--fw-medium); font-size: 14px; min-height: 40px; }
 .product .price { font-weight: var(--fw-bold); margin-top: 8px; font-size: 16px; }
@@ -315,7 +325,7 @@ body.menu-open { position: fixed; width: 100%; overflow: hidden; }
 /* ===== Адаптив: планшет ===== */
 @media (min-width: 768px) {
 	.cat-grid { grid-template-columns: repeat(3, 1fr); }
-	.products { grid-template-columns: repeat(2, 1fr); }
+	.product { flex-basis: calc((100% - 16px) / 2); }   /* планшет: 2 карточки */
 	.scenarios { grid-template-columns: repeat(3, 1fr); }
 	.features { grid-template-columns: repeat(2, 1fr); }
 	.brands { grid-template-columns: repeat(3, 1fr); }
@@ -335,7 +345,7 @@ body.menu-open { position: fixed; width: 100%; overflow: hidden; }
 	.hero-catalog { display: block; }
 	.hero-promo { grid-template-columns: 1.1fr .9fr; }
 	.cat-grid { grid-template-columns: repeat(3, 1fr); }
-	.products { grid-template-columns: repeat(4, 1fr); }
+	.product { flex-basis: calc((100% - 48px) / 4); }   /* десктоп: 4 карточки */
 	.features { grid-template-columns: repeat(3, 1fr); }
 	.brands { grid-template-columns: repeat(3, 1fr); } /* 3×3, как у донора */
 	.news { grid-template-columns: repeat(4, 1fr); }

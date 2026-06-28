@@ -98,7 +98,7 @@ $pageDesc  = mb_substr(trim($descSrc), 0, 200);
 
 	<link rel="stylesheet" href="/source/css/main.css">
 	<link rel="stylesheet" href="/source/css/inner-pages.css?v=2">
-	<link rel="stylesheet" href="/source/css/product.css?v=3">
+	<link rel="stylesheet" href="/source/css/product.css?v=4">
 
 	<!-- ===== Микроразметка (Product + хлебные крошки) ===== -->
 	<script type="application/ld+json">
@@ -311,7 +311,7 @@ $pageDesc  = mb_substr(trim($descSrc), 0, 200);
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/source/include/footer.php'; ?>
 
 	<script src="/source/js/main.js?v=3"></script>
-	<script src="/source/js/cart.js?v=2"></script>
+	<script src="/source/js/cart.js?v=3"></script>
 	<script src="/source/js/product.js?v=2"></script>
 </body>
 </html>

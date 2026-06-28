@@ -20,6 +20,9 @@ $listPages = $listData['pages'];
 $listPage  = $listData['page'];
 $listActive = ($listQ !== '' || $listCat !== '');   // активен ли поиск/фильтр
 
+// Популярные товары (для отдельной вкладки) — их немного, грузим все
+$popularData = productsListPaged('', '', 1, 200, true);
+
 // Редактирование товара
 $editProduct = null;
 if (isset($_GET['edit'])) {
@@ -58,6 +61,7 @@ include __DIR__ . '/php/layout-top.php';
 <!-- Табы -->
 <div class="tabs">
 	<button class="tab-btn <?= $defaultTab === 'list'   ? 'tab-btn--active' : '' ?>" data-tab="tab-list">Список товаров <span class="tab-count"><?= $listTotal ?></span></button>
+	<button class="tab-btn <?= $defaultTab === 'popular' ? 'tab-btn--active' : '' ?>" data-tab="tab-popular">Популярные <span class="tab-count"><?= $popularData['total'] ?></span></button>
 	<button class="tab-btn <?= $defaultTab === 'add'    ? 'tab-btn--active' : '' ?>" data-tab="tab-add"><?= $editProduct ? 'Редактировать товар' : 'Добавить товар' ?></button>
 	<button class="tab-btn <?= $defaultTab === 'import' ? 'tab-btn--active' : '' ?>" data-tab="tab-import">Импорт</button>
 	<button class="tab-btn <?= $defaultTab === 'export' ? 'tab-btn--active' : '' ?>" data-tab="tab-export">Экспорт / шаблон</button>
@@ -158,6 +162,65 @@ include __DIR__ . '/php/layout-top.php';
 		</nav>
 		<?php endif; ?>
 
+	<?php endif; ?>
+</div>
+
+<!-- ============ ПОПУЛЯРНЫЕ ============ -->
+<div class="tab-pane <?= $defaultTab === 'popular' ? 'tab-pane--active' : '' ?>" id="tab-popular">
+	<p class="text-muted" style="margin-bottom:14px">Товары с галкой «Популярный» — показываются в блоке «Популярные продукты» на главной. Чтобы убрать из блока — откройте товар и снимите галку.</p>
+
+	<?php if (empty($popularData['items'])): ?>
+		<div class="empty-state">
+			<p>Пока нет популярных товаров. Откройте любой товар на редактирование и включите «Популярный (на главной)».</p>
+		</div>
+	<?php else: ?>
+		<div class="products-table-wrap">
+			<table class="products-table">
+				<thead>
+					<tr>
+						<th style="width:56px"></th>
+						<th>Название</th>
+						<th>Артикул</th>
+						<th>Категория</th>
+						<th>Цена</th>
+						<th>Статус</th>
+						<th style="width:130px"></th>
+					</tr>
+				</thead>
+				<tbody>
+				<?php foreach ($popularData['items'] as $p): ?>
+					<tr data-id="<?= htmlspecialchars($p['id']) ?>">
+						<td class="td-img">
+							<?php if (!empty($p['images'][0])): ?>
+								<img src="<?= htmlspecialchars($p['images'][0]) ?>" alt="">
+							<?php else: ?>
+								<div class="no-img">нет фото</div>
+							<?php endif; ?>
+						</td>
+						<td><?= htmlspecialchars($p['name']) ?></td>
+						<td class="text-muted"><?= htmlspecialchars($p['sku']) ?></td>
+						<td class="text-muted"><?= htmlspecialchars($categories[$p['category']] ?? $p['category']) ?></td>
+						<td><?= $p['price'] ? number_format($p['price'], 0, '.', ' ') . ' ₽ / ' . htmlspecialchars($p['unit']) : '—' ?></td>
+						<td>
+							<span class="badge <?= $p['active'] ? 'badge--active' : 'badge--hidden' ?>">
+								<?= $p['active'] ? 'Активен' : 'Скрыт' ?>
+							</span>
+						</td>
+						<td>
+							<div class="row-actions">
+								<a href="/admin/products.php?edit=<?= $p['id'] ?>" class="btn-icon" title="Редактировать">
+									<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+								</a>
+								<button class="btn-icon btn-icon--danger js-delete" data-id="<?= $p['id'] ?>" data-name="<?= htmlspecialchars($p['name']) ?>" title="Удалить">
+									<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+								</button>
+							</div>
+						</td>
+					</tr>
+				<?php endforeach; ?>
+				</tbody>
+			</table>
+		</div>
 	<?php endif; ?>
 </div>
 
@@ -618,20 +681,21 @@ document.getElementById('productForm')?.addEventListener('submit', async functio
 
 	if (d.ok) {
 		alertEl.innerHTML = '<div class="alert alert--success">Товар сохранён</div>';
+		// Новый товар — чистим форму под следующий ввод.
+		// Редактирование — остаёмся в карточке (выход вручную), значения не сбрасываем.
 		if (!this.querySelector('[name="id"]').value) {
 			this.reset();
 			document.getElementById('imagesList').innerHTML = '';
 			document.getElementById('specsList').innerHTML = '';
 			document.getElementById('imagesInput').value = '[]';
 			document.getElementById('specsInput').value = '{}';
-		} else {
-			window.location.href = '/admin/products.php';
 		}
 	} else {
 		alertEl.innerHTML = `<div class="alert alert--error">${d.error || 'Ошибка сохранения'}</div>`;
 	}
 
-	alertEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+	// Поднимаем страницу наверх — чтобы было видно уведомление (без выхода из карточки)
+	window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
 /* ===== Импорт XLSX ===== */
