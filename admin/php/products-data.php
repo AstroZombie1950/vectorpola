@@ -200,6 +200,7 @@ function productNormalize(array $raw, ?string $existingId = null): array {
 		'seo_title'       => trim($raw['seo_title'] ?? ''),
 		'seo_description' => trim($raw['seo_description'] ?? ''),
 		'active'          => !empty($raw['active']),
+		'popular'         => !empty($raw['popular']),
 		'updated_at'      => date('Y-m-d H:i:s'),
 	];
 }

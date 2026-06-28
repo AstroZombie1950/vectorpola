@@ -3,5 +3,7 @@ Allow: /
 Disallow: /admin/
 Disallow: /source/php/
 Disallow: /data/
+Disallow: /search/
+Disallow: /cart/
 
 Sitemap: https://vectorpola.ru/sitemap.xml

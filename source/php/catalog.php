@@ -93,6 +93,7 @@ function vp_hydrate(array $r): array {
 	$r['price']     = (float)($r['price'] ?? 0);
 	$r['pack_area'] = (float)($r['pack_area'] ?? 0);
 	$r['old_price'] = ($r['old_price'] ?? null) !== null ? (float)$r['old_price'] : null;
+	$r['popular']   = (int)($r['popular'] ?? 0) === 1;
 	return $r;
 }
 
@@ -253,6 +254,49 @@ function vp_category_query(string $cat, array $get, string $sort, int $page): ar
 	return ['items' => $items, 'total' => $total];
 }
 
+/* Популярные товары для главной (помечены галкой в админке) */
+function vp_popular_products(int $limit = 8): array {
+	$db = vp_db();
+	if (!$db) return [];
+	$st = $db->prepare('SELECT * FROM products WHERE active = 1 AND popular = 1 ORDER BY updated_at DESC LIMIT ?');
+	$st->bindValue(1, $limit, PDO::PARAM_INT);
+	$st->execute();
+	return array_map('vp_hydrate', $st->fetchAll());
+}
+
+/* Поиск по каталогу: каждое слово запроса должно встретиться в названии или бренде.
+   Ищем по нормализованному search_text (lowercase) — корректно для кириллицы. */
+function vp_search_products(string $q, int $page, int $perPage = 24): array {
+	$db = vp_db();
+	if (!$db) return ['items' => [], 'total' => 0];
+
+	$qLower = mb_strtolower(trim($q), 'UTF-8');
+	$words  = preg_split('/\s+/u', $qLower, -1, PREG_SPLIT_NO_EMPTY);
+	if (!$words) return ['items' => [], 'total' => 0];
+
+	$where = ['active = 1'];
+	$args  = [];
+	foreach ($words as $w) {
+		$where[] = 'search_text LIKE ?';
+		$args[]  = '%' . $w . '%';
+	}
+	$wsql = implode(' AND ', $where);
+
+	$st = $db->prepare("SELECT COUNT(*) FROM products WHERE $wsql");
+	$st->execute($args);
+	$total = (int)$st->fetchColumn();
+
+	$offset = max(0, ($page - 1) * $perPage);
+	$st = $db->prepare("SELECT * FROM products WHERE $wsql ORDER BY in_stock DESC, name COLLATE NOCASE ASC LIMIT ? OFFSET ?");
+	$i = 1;
+	foreach ($args as $a) $st->bindValue($i++, $a);
+	$st->bindValue($i++, $perPage, PDO::PARAM_INT);
+	$st->bindValue($i++, $offset, PDO::PARAM_INT);
+	$st->execute();
+
+	return ['items' => array_map('vp_hydrate', $st->fetchAll()), 'total' => $total];
+}
+
 /* Поток активных товаров для sitemap (slug/category/updated_at) */
 function vp_sitemap_rows(): array {
 	$db = vp_db();
@@ -289,11 +333,13 @@ function vp_rebuild_sqlite(): bool {
 				id TEXT PRIMARY KEY, slug TEXT, name TEXT, category TEXT, brand TEXT, sku TEXT,
 				price REAL, old_price REAL, unit TEXT, pack_area REAL,
 				in_stock INTEGER, active INTEGER, image TEXT, images TEXT,
-				description TEXT, specs TEXT, seo_title TEXT, seo_description TEXT, updated_at TEXT
+				description TEXT, specs TEXT, seo_title TEXT, seo_description TEXT, updated_at TEXT,
+				popular INTEGER, search_text TEXT
 			);
 			CREATE INDEX idx_prod_slug  ON products(slug);
 			CREATE INDEX idx_prod_cat   ON products(category, active);
 			CREATE INDEX idx_prod_price ON products(price);
+			CREATE INDEX idx_prod_popular ON products(popular, active);
 
 			CREATE TABLE product_facets(
 				product_id TEXT, category TEXT, active INTEGER, facet_key TEXT, facet_value TEXT
@@ -303,7 +349,7 @@ function vp_rebuild_sqlite(): bool {
 			CREATE INDEX idx_facet_val ON product_facets(facet_key, facet_value);
 		');
 
-		$insP = $db->prepare('INSERT OR REPLACE INTO products VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)');
+		$insP = $db->prepare('INSERT OR REPLACE INTO products VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)');
 		$insF = $db->prepare('INSERT INTO product_facets VALUES (?,?,?,?,?)');
 
 		$db->beginTransaction();
@@ -323,6 +369,8 @@ function vp_rebuild_sqlite(): bool {
 				json_encode($images, JSON_UNESCAPED_UNICODE),
 				$p['description'] ?? '', json_encode($p['specs'] ?? [], JSON_UNESCAPED_UNICODE),
 				$p['seo_title'] ?? '', $p['seo_description'] ?? '', $p['updated_at'] ?? '',
+				!empty($p['popular']) ? 1 : 0,
+				mb_strtolower(trim(($p['name'] ?? '') . ' ' . ($p['brand'] ?? '')), 'UTF-8'),
 			]);
 
 			// Фасеты: бренд (для всех) + сконфигурированные spec-ключи категории

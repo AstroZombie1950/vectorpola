@@ -48,9 +48,9 @@
 		</a>
 
 		<!-- Поиск -->
-		<form class="search" role="search" onsubmit="return false">
-			<input type="search" placeholder="Поиск напольных покрытий" aria-label="Поиск по сайту">
-			<button type="button" aria-label="Найти">
+		<form class="search" role="search" method="get" action="/search/">
+			<input type="search" name="q" placeholder="Поиск напольных покрытий" aria-label="Поиск по сайту">
+			<button type="submit" aria-label="Найти">
 				<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
 			</button>
 		</form>
@@ -96,9 +96,9 @@
 	</div>
 
 	<div class="mm-body">
-		<form class="mm-search" role="search" onsubmit="return false">
-			<input type="search" placeholder="Поиск напольных покрытий" aria-label="Поиск по сайту">
-			<button type="button" class="btn btn--accent" aria-label="Найти">
+		<form class="mm-search" role="search" method="get" action="/search/">
+			<input type="search" name="q" placeholder="Поиск напольных покрытий" aria-label="Поиск по сайту">
+			<button type="submit" class="btn btn--accent" aria-label="Найти">
 				<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
 			</button>
 		</form>

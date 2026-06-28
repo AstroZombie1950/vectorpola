@@ -7,21 +7,23 @@ Options -Indexes
 	Deny from all
 </Files>
 
-# ===== Принудительный HTTPS + склейка www → без-www =====
+# ===== HTTPS + склейка www =====
+# >>> ТЕКУЩАЯ КОНФИГУРАЦИЯ: ТЕСТ-ХОСТ (без SSL) <
 <IfModule mod_rewrite.c>
 	RewriteEngine On
 
-	# На https. Двойное условие: и прямой HTTPS off, и прокси не отдал https —
-	# так не зациклится за прокси/CDN, который терминирует SSL.
-	#RewriteCond %{HTTP:X-Forwarded-Proto} !https
-	#RewriteCond %{HTTPS} off
-	#RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+	# --- ПРОД (vectorpola.ru): раскомментировать этот блок ---
+	# RewriteCond %{HTTP:X-Forwarded-Proto} !https
+	# RewriteCond %{HTTPS} off
+	# RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+	# RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+	# RewriteRule ^ https://%1%{REQUEST_URI} [L,R=301]
 
-	# Убираем www
+	# --- ТЕСТ (без HTTPS): закомментировать на проде ---
 	RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
-	RewriteRule ^ https://%1%{REQUEST_URI} [L,R=301]
+	RewriteRule ^ http://%1%{REQUEST_URI} [L,R=301]
 
-	# Закрываем хранилище данных от прямого доступа (robots не мешает скачать файл)
+	# Закрываем хранилище данных от прямого доступа
 	RewriteRule ^data/ - [F,L]
 </IfModule>
 
@@ -67,6 +69,11 @@ Options -Indexes
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
 	RewriteRule ^cart/?$ cart.php [L,QSA]
+
+	# Поиск: /search/
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteRule ^search/?$ search.php [L,QSA]
 
 	# /sitemap.xml → динамический PHP
 	RewriteRule ^sitemap\.xml$ sitemap.php [L]

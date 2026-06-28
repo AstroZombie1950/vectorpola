@@ -84,7 +84,17 @@ ul { list-style: none; }
 .logo span { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-top: 4px; }
 .logo--badge { flex-direction: row; align-items: center; background: #fff; border-radius: 12px; padding: 6px 12px; }
 .logo--badge svg { height: 46px; width: auto; display: block; }
-.logo--badge img { height: 46px; width: auto; display: block; }
+/* Логотип: жёстко фиксируем размер — Safari в flex иногда игнорит height:auto-width и раздувает картинку */
+.logo--badge img {
+	height: 46px;
+	width: auto;
+	max-height: 46px;
+	max-width: 100%;
+	aspect-ratio: 830 / 440;
+	object-fit: contain;
+	display: block;
+	flex-shrink: 0;
+}
 
 .catalog-btn {
 	display: inline-flex; align-items: center; gap: 10px;

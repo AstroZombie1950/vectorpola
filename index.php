@@ -2,6 +2,12 @@
 $pageTitle = 'Вектор пола — напольные покрытия с подбором под ваш интерьер';
 $pageDesc  = 'Магазин напольных покрытий в Москве и Красногорске. Ламинат, кварцвинил, SPC, инженерная и паркетная доска. Подбор по образцам, расчёт материалов, доставка и укладка.';
 $canonical = 'https://vectorpola.ru/';
+
+require_once $_SERVER['DOCUMENT_ROOT'] . '/source/php/catalog.php';
+if (!function_exists('vp_money')) {
+	function vp_money($n): string { return number_format((float)$n, 0, '.', ' ') . ' ₽'; }
+}
+$popular = vp_popular_products(8);   // помеченные галкой в админке
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -21,7 +27,7 @@ $canonical = 'https://vectorpola.ru/';
 	<meta property="og:url" content="<?= $canonical ?>">
 	<meta property="og:title" content="<?= htmlspecialchars($pageTitle) ?>">
 	<meta property="og:description" content="<?= htmlspecialchars($pageDesc) ?>">
-	<meta property="og:image" content="https://vectorpola.ru/source/img/og-image.jpg">
+	<meta property="og:image" content="https://vectorpola.ru/og-image.jpg">
 	<meta property="og:locale" content="ru_RU">
 	<meta property="og:site_name" content="Вектор пола">
 
@@ -29,7 +35,7 @@ $canonical = 'https://vectorpola.ru/';
 	<meta name="twitter:card" content="summary_large_image">
 	<meta name="twitter:title" content="Вектор пола — напольные покрытия">
 	<meta name="twitter:description" content="<?= htmlspecialchars($pageDesc) ?>">
-	<meta name="twitter:image" content="https://vectorpola.ru/source/img/og-image.jpg">
+	<meta name="twitter:image" content="https://vectorpola.ru/og-image.jpg">
 
 	<!-- ===== Фавикон ===== -->
 	<link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -97,9 +103,9 @@ $canonical = 'https://vectorpola.ru/';
 		<div class="container">
 			<div class="section-head"><h2>Каталог покрытий</h2></div>
 
-			<form class="cat-search" role="search" onsubmit="return false">
-				<input type="search" placeholder="Найти покрытие в каталоге" aria-label="Поиск в каталоге">
-				<button type="button" class="btn btn--accent">Найти</button>
+			<form class="cat-search" role="search" method="get" action="/search/">
+				<input type="search" name="q" placeholder="Найти покрытие в каталоге" aria-label="Поиск в каталоге">
+				<button type="submit" class="btn btn--accent">Найти</button>
 			</form>
 
 			<div class="cat-grid">
@@ -117,6 +123,7 @@ $canonical = 'https://vectorpola.ru/';
 	</section>
 
 	<!-- ============ ПОПУЛЯРНЫЕ ПРОДУКТЫ ============ -->
+	<?php if ($popular): ?>
 	<section class="section section--soft">
 		<div class="container">
 			<div class="head-row">
@@ -127,10 +134,18 @@ $canonical = 'https://vectorpola.ru/';
 				</div>
 			</div>
 			<div class="products">
-				<div class="product"><div class="img"><img src="/source/img/popular.webp" alt="Популярное покрытие" width="800" height="800" loading="lazy"></div><div class="body"><div class="name">Название покрытия — пример карточки</div><div class="price">0 000 ₽ <small>/ м²</small></div></div></div>
-				<div class="product"><div class="img"><img src="/source/img/popular.webp" alt="Популярное покрытие" width="800" height="800" loading="lazy"></div><div class="body"><div class="name">Название покрытия — пример карточки</div><div class="price">0 000 ₽ <small>/ м²</small></div></div></div>
-				<div class="product"><div class="img"><img src="/source/img/popular.webp" alt="Популярное покрытие" width="800" height="800" loading="lazy"></div><div class="body"><div class="name">Название покрытия — пример карточки</div><div class="price">0 000 ₽ <small>/ м²</small></div></div></div>
-				<div class="product"><div class="img"><img src="/source/img/popular.webp" alt="Популярное покрытие" width="800" height="800" loading="lazy"></div><div class="body"><div class="name">Название покрытия — пример карточки</div><div class="price">0 000 ₽ <small>/ м²</small></div></div></div>
+				<?php foreach ($popular as $p):
+					$pImg   = !empty($p['images'][0]) ? $p['images'][0] : '/source/img/popular.webp';
+					$pPrice = (float)($p['price'] ?? 0);
+				?>
+				<a class="product" href="<?= htmlspecialchars(vp_product_url($p)) ?>">
+					<div class="img"><img src="<?= htmlspecialchars($pImg) ?>" alt="<?= htmlspecialchars($p['name']) ?>" width="800" height="800" loading="lazy"></div>
+					<div class="body">
+						<div class="name"><?= htmlspecialchars($p['name']) ?></div>
+						<div class="price"><?= vp_money($pPrice) ?> <small>/ <?= htmlspecialchars($p['unit'] ?? 'м²') ?></small></div>
+					</div>
+				</a>
+				<?php endforeach; ?>
 			</div>
 		</div>
 	</section>
@@ -153,6 +168,7 @@ $canonical = 'https://vectorpola.ru/';
 			<a href="#final" class="btn btn--accent">Получить консультацию</a>
 		</div>
 	</section>
+	<?php endif; ?>
 
 	<!-- ============ ВЫЕЗДНОЙ ШОУРУМ ============ -->
 	<section class="section section--soft" id="showroom">

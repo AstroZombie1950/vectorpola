@@ -76,8 +76,8 @@ include __DIR__ . '/php/layout-top.php';
 			<option value="<?= htmlspecialchars($k) ?>" <?= $listCat === $k ? 'selected' : '' ?>><?= htmlspecialchars($v) ?></option>
 			<?php endforeach; ?>
 		</select>
-		<button type="submit" class="btn btn--accent">Найти</button>
-		<?php if ($listActive): ?><a href="/admin/products.php?tab=list" class="btn btn--outline">Сбросить</a><?php endif; ?>
+		<button type="submit" class="btn-primary">Найти</button>
+		<?php if ($listActive): ?><a href="/admin/products.php?tab=list" class="btn-secondary">Сбросить</a><?php endif; ?>
 	</form>
 
 	<?php if ($listTotal === 0): ?>
@@ -139,21 +139,21 @@ include __DIR__ . '/php/layout-top.php';
 		?>
 		<nav class="admin-pagination" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:16px;align-items:center">
 			<?php if ($listPage > 1): ?>
-				<a class="btn btn--outline" href="?<?= $qsBase ?>&p=<?= $listPage - 1 ?>">← Назад</a>
+				<a class="btn-secondary" href="?<?= $qsBase ?>&p=<?= $listPage - 1 ?>">← Назад</a>
 			<?php endif; ?>
 			<?php for ($i = 1; $i <= $listPages; $i++):
 				if ($i === 1 || $i === $listPages || abs($i - $listPage) <= 2): ?>
 					<?php if ($i === $listPage): ?>
-						<span class="btn btn--accent" style="pointer-events:none"><?= $i ?></span>
+						<span class="btn-primary" style="pointer-events:none"><?= $i ?></span>
 					<?php else: ?>
-						<a class="btn btn--outline" href="?<?= $qsBase ?>&p=<?= $i ?>"><?= $i ?></a>
+						<a class="btn-secondary" href="?<?= $qsBase ?>&p=<?= $i ?>"><?= $i ?></a>
 					<?php endif; ?>
 				<?php elseif ($i === 2 || $i === $listPages - 1): ?>
 					<span style="padding:0 4px">…</span>
 				<?php endif; ?>
 			<?php endfor; ?>
 			<?php if ($listPage < $listPages): ?>
-				<a class="btn btn--outline" href="?<?= $qsBase ?>&p=<?= $listPage + 1 ?>">Вперёд →</a>
+				<a class="btn-secondary" href="?<?= $qsBase ?>&p=<?= $listPage + 1 ?>">Вперёд →</a>
 			<?php endif; ?>
 		</nav>
 		<?php endif; ?>
@@ -245,6 +245,11 @@ include __DIR__ . '/php/layout-top.php';
 						<span class="toggle"></span>
 						В наличии на складе
 					</label>
+					<label class="toggle-label" style="margin-top:10px">
+						<input type="checkbox" name="popular" id="popularCheck" <?= !empty($editProduct['popular']) ? 'checked' : '' ?>>
+						<span class="toggle"></span>
+						Популярный (на главной)
+					</label>
 				</div>
 
 				<!-- SEO -->
@@ -277,7 +282,13 @@ include __DIR__ . '/php/layout-top.php';
 					</div>
 					<div class="field mt-8">
 						<label>Загрузить с компьютера</label>
-						<input type="file" name="new_image" id="newImageFile" accept="image/*">
+						<label class="file-drop" id="dropImage">
+							<input type="file" name="new_image" id="newImageFile" accept="image/*">
+							<span class="file-drop-icon">
+								<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+							</span>
+							<span class="file-drop-text" id="textImage">Нажмите или перетащите фото</span>
+						</label>
 					</div>
 					<p class="text-muted mt-4">Форматы: JPG, PNG, WebP. Фото сожмётся автоматически.</p>
 				</div>
