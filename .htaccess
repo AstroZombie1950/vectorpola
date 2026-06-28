@@ -11,13 +11,18 @@ Options -Indexes
 <IfModule mod_rewrite.c>
 	RewriteEngine On
 
-	# На https (если хостинг за прокси и зациклится — заменить условие на X-Forwarded-Proto, см. заметку)
-	# RewriteCond %{HTTPS} off
-	# RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+	# На https. Двойное условие: и прямой HTTPS off, и прокси не отдал https —
+	# так не зациклится за прокси/CDN, который терминирует SSL.
+	#RewriteCond %{HTTP:X-Forwarded-Proto} !https
+	#RewriteCond %{HTTPS} off
+	#RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
 	# Убираем www
 	RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
 	RewriteRule ^ https://%1%{REQUEST_URI} [L,R=301]
+
+	# Закрываем хранилище данных от прямого доступа (robots не мешает скачать файл)
+	RewriteRule ^data/ - [F,L]
 </IfModule>
 
 # ===== Gzip-сжатие текстовых ресурсов =====

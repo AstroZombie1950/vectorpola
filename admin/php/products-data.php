@@ -26,10 +26,86 @@ function productsLoad(): array {
 function productsSave(array $products): bool {
 	$dir = dirname(PRODUCTS_FILE);
 	if (!is_dir($dir)) mkdir($dir, 0755, true);
-	return (bool) file_put_contents(
+	$ok = (bool) file_put_contents(
 		PRODUCTS_FILE,
 		json_encode(['products' => array_values($products)], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)
 	);
+	if ($ok) vpMarkRebuild(); // sqlite пересоберём один раз в конце запроса
+	return $ok;
+}
+
+/* ===== Пометить, что нужно пересобрать catalog.sqlite =====
+   Пересборка выполняется ОДИН раз на запрос (важно для импорта,
+   который вызывает productsSave в цикле) и после отправки ответа. */
+function vpMarkRebuild(): void {
+	static $registered = false;
+	$GLOBALS['__vp_need_rebuild'] = true;
+	if (!$registered) {
+		$registered = true;
+		register_shutdown_function(function () {
+			if (!empty($GLOBALS['__vp_need_rebuild']) && function_exists('vp_rebuild_sqlite')) {
+				@vp_rebuild_sqlite();
+			}
+		});
+	}
+}
+
+/* ===== Список товаров для админки: поиск + пагинация =====
+   Читаем из быстрой sqlite (включая скрытые). Если базы нет —
+   откатываемся на products.json. Возвращает items/total/page/pages. */
+function productsListPaged(string $q = '', string $cat = '', int $page = 1, int $perPage = 50): array {
+	$q   = trim($q);
+	$db  = function_exists('vp_db') ? vp_db() : null;
+
+	if ($db) {
+		$where = []; $args = [];
+		if ($q !== '')   { $where[] = '(name LIKE ? OR sku LIKE ?)'; $args[] = "%$q%"; $args[] = "%$q%"; }
+		if ($cat !== '') { $where[] = 'category = ?'; $args[] = $cat; }
+		$wsql = $where ? ('WHERE ' . implode(' AND ', $where)) : '';
+
+		$st = $db->prepare("SELECT COUNT(*) FROM products $wsql");
+		$st->execute($args);
+		$total = (int)$st->fetchColumn();
+
+		$pages  = max(1, (int)ceil($total / $perPage));
+		$page   = max(1, min($page, $pages));
+		$offset = ($page - 1) * $perPage;
+
+		$st = $db->prepare("SELECT id, name, sku, category, price, unit, active, image
+			FROM products $wsql ORDER BY updated_at DESC, name COLLATE NOCASE ASC LIMIT ? OFFSET ?");
+		$i = 1;
+		foreach ($args as $a) $st->bindValue($i++, $a);
+		$st->bindValue($i++, $perPage, PDO::PARAM_INT);
+		$st->bindValue($i++, $offset, PDO::PARAM_INT);
+		$st->execute();
+
+		$items = [];
+		foreach ($st->fetchAll() as $r) {
+			$r['images'] = !empty($r['image']) ? [$r['image']] : [];
+			$r['active'] = (int)$r['active'] === 1;
+			$items[] = $r;
+		}
+		return ['items' => $items, 'total' => $total, 'page' => $page, 'pages' => $pages];
+	}
+
+	// Fallback: sqlite недоступна — фильтруем json в памяти
+	$all = productsLoad();
+	if ($q !== '' || $cat !== '') {
+		$ql = mb_strtolower($q, 'UTF-8');
+		$all = array_values(array_filter($all, function ($p) use ($ql, $cat) {
+			if ($cat !== '' && ($p['category'] ?? '') !== $cat) return false;
+			if ($ql !== '') {
+				$hay = mb_strtolower(($p['name'] ?? '') . ' ' . ($p['sku'] ?? ''), 'UTF-8');
+				if (mb_strpos($hay, $ql) === false) return false;
+			}
+			return true;
+		}));
+	}
+	$total  = count($all);
+	$pages  = max(1, (int)ceil($total / $perPage));
+	$page   = max(1, min($page, $pages));
+	$items  = array_slice($all, ($page - 1) * $perPage, $perPage);
+	return ['items' => $items, 'total' => $total, 'page' => $page, 'pages' => $pages];
 }
 
 /* ===== Получить один товар по ID ===== */

@@ -26,33 +26,27 @@ function vp_url_node(string $path, string $lastmod = ''): string {
 	return $out;
 }
 
-$products = vp_load_products();   // уже только активные
+$rows   = vp_sitemap_rows();        // активные: slug, category, updated_at
+$counts = vp_category_counts();     // непустые категории
 
 echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
 echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";
 
 /* Статика */
-foreach (['/', '/catalog/', '/about/', '/contacts/', '/delivery/', '/returns/', '/brands/'] as $p) {
-	echo vp_url_node($p);
+foreach (['/', '/catalog/', '/about/', '/contacts/', '/delivery/', '/returns/', '/brands/'] as $path) {
+	echo vp_url_node($path);
 }
 
-/* Категории — только непустые (есть хотя бы один активный товар) */
-$catSeen = [];
-foreach ($products as $p) {
-	$cat = $p['category'] ?? '';
-	if ($cat !== '' && isset(VP_CATEGORIES[$cat])) {
-		$catSeen[$cat] = true;
-	}
-}
-foreach (array_keys($catSeen) as $cat) {
-	echo vp_url_node(vp_category_url($cat));
+/* Категории — только непустые */
+foreach (array_keys($counts) as $cat) {
+	if (isset(VP_CATEGORIES[$cat])) echo vp_url_node(vp_category_url($cat));
 }
 
-/* Товары — все активные, lastmod из updated_at (формат YYYY-MM-DD) */
-foreach ($products as $p) {
-	if (empty($p['slug']) || empty($p['category'])) continue;
-	$lastmod = (string)($p['updated_at'] ?? '');
-	echo vp_url_node(vp_product_url($p), $lastmod);
+/* Товары — все активные, lastmod из updated_at */
+foreach ($rows as $r) {
+	if (empty($r['slug']) || empty($r['category'])) continue;
+	$lastmod = substr((string)($r['updated_at'] ?? ''), 0, 10); // YYYY-MM-DD
+	echo vp_url_node(vp_product_url($r), $lastmod);
 }
 
 echo '</urlset>';

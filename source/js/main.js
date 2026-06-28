@@ -246,6 +246,16 @@ document.querySelectorAll('.cta-form').forEach(initCtaForm);
 	const sortSelect = document.getElementById('sortSelect');
 	const form = document.getElementById('catalogFilters');
 	sortSelect?.addEventListener('change', () => form?.submit());
+
+	// Авто-сабмит фасетов/наличия: на десктопе — сразу, на моб. шторке — ждём «Показать»
+	const isDesktop = () => window.innerWidth >= 1024;
+	panel.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+		cb.addEventListener('change', () => { if (isDesktop()) form?.submit(); });
+	});
+	// Цена — сабмит по Enter в любом режиме
+	panel.querySelectorAll('input[name="price_min"], input[name="price_max"]').forEach(inp => {
+		inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); form?.submit(); } });
+	});
 })();
 
 

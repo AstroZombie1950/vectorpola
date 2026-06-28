@@ -30,7 +30,7 @@ if (!$cat || !isset(VP_CATEGORIES[$cat])) {
 			</div>
 		</section>
 		<?php include $_SERVER['DOCUMENT_ROOT'] . '/source/include/footer.php'; ?>
-		<script src="/source/js/main.js?v=2"></script>
+		<script src="/source/js/main.js?v=3"></script>
 	</body>
 	</html>
 	<?php
@@ -42,23 +42,24 @@ $catLabel = vp_category_label($cat);
 $catUrl   = vp_category_url($cat);
 $baseUrl  = 'https://vectorpola.ru' . $catUrl;
 
-$allProducts = vp_products_by_category($cat);  // все активные товары категории
-$config      = vp_filter_config($cat);
-$facets      = vp_collect_facets($allProducts, $config);
-[$priceMin, $priceMax] = vp_price_bounds($allProducts);
+$config    = vp_filter_config($cat);
+$catCount  = vp_category_count($cat);          // всего активных в категории (для пустого состояния)
+$facets    = vp_category_facets($cat);
+[$priceMin, $priceMax] = vp_category_price_bounds($cat);
 
 /* ===== GET: фильтры, сортировка, страница ===== */
 $sort = in_array($_GET['sort'] ?? '', ['price_asc', 'price_desc'], true) ? $_GET['sort'] : 'default';
 $page = max(1, (int)($_GET['page'] ?? 1));
 
-$filtered = vp_apply_filters($allProducts, $config, $_GET);
-$filtered = vp_sort_products($filtered, $sort);
-
-$total      = count($filtered);
+/* Первый проход — узнаём total, чтобы поправить выход за последнюю страницу */
+$res        = vp_category_query($cat, $_GET, $sort, $page);
+$total      = $res['total'];
 $totalPages = max(1, (int)ceil($total / VP_PER_PAGE));
-if ($page > $totalPages) $page = $totalPages;
-$offset     = ($page - 1) * VP_PER_PAGE;
-$pageItems  = array_slice($filtered, $offset, VP_PER_PAGE);
+if ($page > $totalPages) {
+	$page = $totalPages;
+	$res  = vp_category_query($cat, $_GET, $sort, $page);
+}
+$pageItems  = $res['items'];
 
 /* Активны ли фильтры/сортировка/страница (для noindex и кнопки сброса) */
 $hasFilters = false;
@@ -68,7 +69,10 @@ foreach ($config as $cfg) {
 if (!$hasFilters && (($_GET['price_min'] ?? '') !== '' || ($_GET['price_max'] ?? '') !== '' || !empty($_GET['in_stock']))) {
 	$hasFilters = true;
 }
-$isFiltered = $hasFilters || $sort !== 'default' || $page > 1;
+$isFiltered = $hasFilters || $sort !== 'default' || $page > 1;   // для кнопки «Сбросить»
+/* Для индексации: фильтры и сортировка дают дубли → noindex.
+   Чистая пагинация (?page=N) остаётся индексируемой с self-canonical. */
+$noindex = $hasFilters || $sort !== 'default';
 
 /* ===== Хелперы ===== */
 /* Текущие GET без cat + переопределения → query string */
@@ -86,7 +90,7 @@ function vp_money($n): string { return number_format((float)$n, 0, '.', ' ') . '
 /* ===== SEO ===== */
 $pageTitle = $catLabel . ' — купить в Москве и Красногорске | Вектор пола';
 $pageDesc  = 'Каталог: ' . mb_strtolower($catLabel) . '. Подбор по образцам, расчёт материалов, доставка и укладка. Цены, наличие, характеристики.';
-$canonical = $baseUrl; // фильтрованные/постраничные версии канонизируем на чистый URL
+$canonical = $noindex ? $baseUrl : ($baseUrl . ($page > 1 ? '?page=' . $page : ''));
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -98,7 +102,9 @@ $canonical = $baseUrl; // фильтрованные/постраничные в
 	<title><?= htmlspecialchars($pageTitle) ?></title>
 	<meta name="description" content="<?= htmlspecialchars($pageDesc) ?>">
 	<link rel="canonical" href="<?= $canonical ?>">
-	<?php if ($isFiltered): ?><meta name="robots" content="noindex,follow"><?php endif; ?>
+	<?php if ($noindex): ?><meta name="robots" content="noindex,follow"><?php endif; ?>
+	<?php if (!$noindex && $page > 1): ?><link rel="prev" href="<?= $baseUrl . ($page - 1 > 1 ? '?page=' . ($page - 1) : '') ?>"><?php endif; ?>
+	<?php if (!$noindex && $page < $totalPages): ?><link rel="next" href="<?= $baseUrl . '?page=' . ($page + 1) ?>"><?php endif; ?>
 
 	<!-- ===== Open Graph ===== -->
 	<meta property="og:type" content="website">
@@ -153,7 +159,7 @@ $canonical = $baseUrl; // фильтрованные/постраничные в
 	<section class="section">
 		<div class="container">
 
-			<?php if (empty($allProducts)): ?>
+			<?php if ($catCount === 0): ?>
 				<!-- Категория пока пуста -->
 				<div class="catalog-empty">
 					<h2>Раздел наполняется</h2>
@@ -319,7 +325,7 @@ $canonical = $baseUrl; // фильтрованные/постраничные в
 
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/source/include/footer.php'; ?>
 
-	<script src="/source/js/main.js?v=2"></script>
+	<script src="/source/js/main.js?v=3"></script>
 </body>
 </html>
 <?php

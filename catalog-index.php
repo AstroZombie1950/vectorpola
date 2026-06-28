@@ -1,13 +1,8 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] . '/source/php/catalog.php';
 
-/* Считаем товары по категориям */
-$all = vp_load_products();
-$counts = [];
-foreach ($all as $p) {
-	$c = $p['category'] ?? '';
-	if ($c !== '') $counts[$c] = ($counts[$c] ?? 0) + 1;
-}
+/* Считаем товары по категориям (быстрый GROUP BY из sqlite) */
+$counts = vp_category_counts();
 
 function vp_plural(int $n, string $one, string $few, string $many): string {
 	$n = abs($n) % 100; $n1 = $n % 10;
@@ -96,6 +91,6 @@ $canonical = 'https://vectorpola.ru/catalog/';
 
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/source/include/footer.php'; ?>
 
-	<script src="/source/js/main.js?v=2"></script>
+	<script src="/source/js/main.js?v=3"></script>
 </body>
 </html>

@@ -6,9 +6,19 @@ requireLogin();
 $pageTitle  = 'Каталог';
 $activePage = 'products';
 
-$products   = productsLoad();
 $categories = productCategories();
 $units      = productUnits();
+
+// Список: поиск + фильтр по категории + пагинация (быстрое чтение из sqlite)
+$listQ     = trim($_GET['q'] ?? '');
+$listCat   = preg_replace('/[^a-z0-9-]/', '', $_GET['cat'] ?? '');
+$listPage  = max(1, (int)($_GET['p'] ?? 1));
+$listData  = productsListPaged($listQ, $listCat, $listPage, 50);
+$products  = $listData['items'];
+$listTotal = $listData['total'];
+$listPages = $listData['pages'];
+$listPage  = $listData['page'];
+$listActive = ($listQ !== '' || $listCat !== '');   // активен ли поиск/фильтр
 
 // Редактирование товара
 $editProduct = null;
@@ -47,7 +57,7 @@ include __DIR__ . '/php/layout-top.php';
 
 <!-- Табы -->
 <div class="tabs">
-	<button class="tab-btn <?= $defaultTab === 'list'   ? 'tab-btn--active' : '' ?>" data-tab="tab-list">Список товаров <span class="tab-count"><?= count($products) ?></span></button>
+	<button class="tab-btn <?= $defaultTab === 'list'   ? 'tab-btn--active' : '' ?>" data-tab="tab-list">Список товаров <span class="tab-count"><?= $listTotal ?></span></button>
 	<button class="tab-btn <?= $defaultTab === 'add'    ? 'tab-btn--active' : '' ?>" data-tab="tab-add"><?= $editProduct ? 'Редактировать товар' : 'Добавить товар' ?></button>
 	<button class="tab-btn <?= $defaultTab === 'import' ? 'tab-btn--active' : '' ?>" data-tab="tab-import">Импорт</button>
 	<button class="tab-btn <?= $defaultTab === 'export' ? 'tab-btn--active' : '' ?>" data-tab="tab-export">Экспорт / шаблон</button>
@@ -56,11 +66,26 @@ include __DIR__ . '/php/layout-top.php';
 <!-- ============ СПИСОК ============ -->
 <div class="tab-pane <?= $defaultTab === 'list' ? 'tab-pane--active' : '' ?>" id="tab-list">
 
-	<?php if (empty($products)): ?>
+	<!-- Поиск и фильтр по категории -->
+	<form method="get" action="/admin/products.php" class="products-search" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:16px">
+		<input type="hidden" name="tab" value="list">
+		<input type="text" name="q" value="<?= htmlspecialchars($listQ) ?>" placeholder="Поиск по названию или артикулу" style="flex:1;min-width:220px;padding:9px 12px;border:1px solid var(--line,#ddd);border-radius:8px">
+		<select name="cat" style="padding:9px 12px;border:1px solid var(--line,#ddd);border-radius:8px">
+			<option value="">Все категории</option>
+			<?php foreach ($categories as $k => $v): ?>
+			<option value="<?= htmlspecialchars($k) ?>" <?= $listCat === $k ? 'selected' : '' ?>><?= htmlspecialchars($v) ?></option>
+			<?php endforeach; ?>
+		</select>
+		<button type="submit" class="btn btn--accent">Найти</button>
+		<?php if ($listActive): ?><a href="/admin/products.php?tab=list" class="btn btn--outline">Сбросить</a><?php endif; ?>
+	</form>
+
+	<?php if ($listTotal === 0): ?>
 		<div class="empty-state">
-			<p>Товаров пока нет. Добавьте первый товар вручную или загрузите через импорт.</p>
+			<p><?= $listActive ? 'По запросу ничего не найдено.' : 'Товаров пока нет. Добавьте первый товар вручную или загрузите через импорт.' ?></p>
 		</div>
 	<?php else: ?>
+		<p class="text-muted" style="margin-bottom:10px">Найдено: <?= $listTotal ?> · страница <?= $listPage ?> из <?= $listPages ?></p>
 		<div class="products-table-wrap">
 			<table class="products-table" id="productsTable">
 				<thead>
@@ -108,6 +133,31 @@ include __DIR__ . '/php/layout-top.php';
 				</tbody>
 			</table>
 		</div>
+
+		<?php if ($listPages > 1):
+			$qsBase = http_build_query(array_filter(['tab' => 'list', 'q' => $listQ, 'cat' => $listCat], fn($v) => $v !== '' && $v !== null));
+		?>
+		<nav class="admin-pagination" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:16px;align-items:center">
+			<?php if ($listPage > 1): ?>
+				<a class="btn btn--outline" href="?<?= $qsBase ?>&p=<?= $listPage - 1 ?>">← Назад</a>
+			<?php endif; ?>
+			<?php for ($i = 1; $i <= $listPages; $i++):
+				if ($i === 1 || $i === $listPages || abs($i - $listPage) <= 2): ?>
+					<?php if ($i === $listPage): ?>
+						<span class="btn btn--accent" style="pointer-events:none"><?= $i ?></span>
+					<?php else: ?>
+						<a class="btn btn--outline" href="?<?= $qsBase ?>&p=<?= $i ?>"><?= $i ?></a>
+					<?php endif; ?>
+				<?php elseif ($i === 2 || $i === $listPages - 1): ?>
+					<span style="padding:0 4px">…</span>
+				<?php endif; ?>
+			<?php endfor; ?>
+			<?php if ($listPage < $listPages): ?>
+				<a class="btn btn--outline" href="?<?= $qsBase ?>&p=<?= $listPage + 1 ?>">Вперёд →</a>
+			<?php endif; ?>
+		</nav>
+		<?php endif; ?>
+
 	<?php endif; ?>
 </div>
 

@@ -2,6 +2,9 @@
 /* ===================================================
    Каталог: категории, фильтры, доступ к товарам.
    Единый источник правды по категориям и фасетам.
+   Данные читаются из data/catalog.sqlite (быстрый read-кеш).
+   Источник истины — data/products.json; sqlite пересобирается
+   из него при любой правке в админке (vp_rebuild_sqlite).
    Подключать через require_once.
    =================================================== */
 
@@ -24,7 +27,7 @@ const VP_CATEGORIES = [
    key   — поле фасета: 'brand' (из product.brand) или имя ключа в specs.
    param — короткое имя GET-параметра (латиница).
    type  — checkbox (мультивыбор). Цена и наличие — отдельно.
-   Финализировано под реальные спарсенные данные (чистые фасеты-корзины из нормализатора). */
+   Порядок ключей = порядок отрисовки фасетов. */
 const VP_FILTERS = [
 	'laminat' => [
 		'brand'              => ['label' => 'Бренд',   'param' => 'brand',     'type' => 'checkbox'],
@@ -55,27 +58,72 @@ const VP_FILTERS = [
 /* Кол-во товаров на странице категории */
 const VP_PER_PAGE = 24;
 
-/* Путь к хранилищу товаров */
-function vp_products_path(): string {
-	return $_SERVER['DOCUMENT_ROOT'] . '/data/products.json';
-}
+/* ===================================================
+   Доступ к данным (SQLite)
+   =================================================== */
 
-/* Все активные товары (массив). Формат файла: {"products":[...]} */
-function vp_load_products(): array {
-	$path = vp_products_path();
-	if (!is_file($path)) return [];
-	$raw  = file_get_contents($path);
-	$data = json_decode($raw, true);
-	$list = $data['products'] ?? [];
-	return array_values(array_filter($list, fn($p) => !empty($p['active'])));
-}
+/* Путь к файлам хранилища */
+function vp_sqlite_path(): string   { return $_SERVER['DOCUMENT_ROOT'] . '/data/catalog.sqlite'; }
+function vp_products_path(): string { return $_SERVER['DOCUMENT_ROOT'] . '/data/products.json'; }
 
-/* Найти товар по слагу (или null) */
-function vp_find_product(string $slug): ?array {
-	foreach (vp_load_products() as $p) {
-		if (($p['slug'] ?? '') === $slug) return $p;
+/* PDO-соединение с базой каталога (синглтон на запрос) */
+function vp_db(): ?PDO {
+	static $db = false;
+	if ($db === false) {
+		$path = vp_sqlite_path();
+		if (!is_file($path)) { $db = null; return null; }
+		try {
+			$db = new PDO('sqlite:' . $path, null, null, [
+				PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+				PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+			]);
+		} catch (Throwable $e) {
+			$db = null;
+		}
 	}
-	return null;
+	return $db;
+}
+
+/* Привести строку БД к форме, которую ждут шаблоны (как в products.json) */
+function vp_hydrate(array $r): array {
+	$r['images']    = !empty($r['images']) ? (json_decode($r['images'], true) ?: []) : [];
+	$r['specs']     = !empty($r['specs'])  ? (json_decode($r['specs'], true)  ?: []) : [];
+	$r['in_stock']  = (int)($r['in_stock'] ?? 0) === 1;
+	$r['active']    = (int)($r['active'] ?? 0) === 1;
+	$r['price']     = (float)($r['price'] ?? 0);
+	$r['pack_area'] = (float)($r['pack_area'] ?? 0);
+	$r['old_price'] = ($r['old_price'] ?? null) !== null ? (float)$r['old_price'] : null;
+	return $r;
+}
+
+/* Найти активный товар по слагу (или null) */
+function vp_find_product(string $slug): ?array {
+	$db = vp_db();
+	if (!$db) return null;
+	$st = $db->prepare('SELECT * FROM products WHERE slug = ? AND active = 1 LIMIT 1');
+	$st->execute([$slug]);
+	$row = $st->fetch();
+	return $row ? vp_hydrate($row) : null;
+}
+
+/* Кол-во активных товаров в категории (без фильтров) */
+function vp_category_count(string $cat): int {
+	$db = vp_db();
+	if (!$db) return 0;
+	$st = $db->prepare('SELECT COUNT(*) FROM products WHERE category = ? AND active = 1');
+	$st->execute([$cat]);
+	return (int)$st->fetchColumn();
+}
+
+/* Кол-во активных товаров по всем категориям: [slug => count] */
+function vp_category_counts(): array {
+	$db = vp_db();
+	if (!$db) return [];
+	$out = [];
+	foreach ($db->query('SELECT category, COUNT(*) c FROM products WHERE active = 1 GROUP BY category') as $r) {
+		$out[$r['category']] = (int)$r['c'];
+	}
+	return $out;
 }
 
 /* Название категории по слагу */
@@ -93,11 +141,6 @@ function vp_category_url(string $cat): string {
 	return '/catalog/' . $cat . '/';
 }
 
-/* Активные товары одной категории */
-function vp_products_by_category(string $cat): array {
-	return array_values(array_filter(vp_load_products(), fn($p) => ($p['category'] ?? '') === $cat));
-}
-
 /* Конфиг фильтров категории (или дефолт — только бренд) */
 function vp_filter_config(string $cat): array {
 	return VP_FILTERS[$cat] ?? [
@@ -105,83 +148,206 @@ function vp_filter_config(string $cat): array {
 	];
 }
 
-/* Значение фасета у товара: brand — из поля, остальное — из specs */
-function vp_facet_value(array $p, string $key): string {
-	if ($key === 'brand') return trim($p['brand'] ?? '');
-	return trim($p['specs'][$key] ?? '');
-}
+/* Опции фасетов категории: [key => ['cfg'=>..., 'options'=>[значение => количество]]].
+   Считаем по всем активным товарам категории — чтобы видеть доступные варианты. */
+function vp_category_facets(string $cat): array {
+	$db = vp_db();
+	if (!$db) return [];
+	$config = vp_filter_config($cat);
+	$keys   = array_keys($config);
+	if (!$keys) return [];
 
-/* Собрать опции фасетов: для каждого ключа — список {значение → количество}.
-   Считаем по всем товарам категории, чтобы пользователь видел доступные варианты. */
-function vp_collect_facets(array $products, array $config): array {
+	$ph = implode(',', array_fill(0, count($keys), '?'));
+	$st = $db->prepare(
+		"SELECT facet_key, facet_value, COUNT(*) c
+		 FROM product_facets
+		 WHERE category = ? AND active = 1 AND facet_key IN ($ph)
+		 GROUP BY facet_key, facet_value"
+	);
+	$st->execute(array_merge([$cat], $keys));
+
+	$byKey = [];
+	foreach ($st as $r) {
+		$byKey[$r['facet_key']][(string)$r['facet_value']] = (int)$r['c'];
+	}
+
+	// Собираем в порядке конфига, значения — натуральной сортировкой
 	$facets = [];
 	foreach ($config as $key => $cfg) {
-		$counts = [];
-		foreach ($products as $p) {
-			$v = vp_facet_value($p, $key);
-			if ($v === '') continue;
-			$counts[$v] = ($counts[$v] ?? 0) + 1;
-		}
-		// сортируем значения по алфавиту/числу
-		uksort($counts, fn($a, $b) => strnatcasecmp($a, $b));
-		if ($counts) $facets[$key] = ['cfg' => $cfg, 'options' => $counts];
+		if (empty($byKey[$key])) continue;
+		$opts = $byKey[$key];
+		uksort($opts, fn($a, $b) => strnatcasecmp($a, $b));
+		$facets[$key] = ['cfg' => $cfg, 'options' => $opts];
 	}
 	return $facets;
 }
 
-/* Применить фильтры из GET к списку товаров категории */
-function vp_apply_filters(array $products, array $config, array $get): array {
+/* Границы цены активных товаров категории (для плейсхолдеров диапазона) */
+function vp_category_price_bounds(string $cat): array {
+	$db = vp_db();
+	if (!$db) return [0, 0];
+	$st = $db->prepare('SELECT MIN(price) mn, MAX(price) mx FROM products WHERE category = ? AND active = 1 AND price > 0');
+	$st->execute([$cat]);
+	$r = $st->fetch();
+	if (!$r || $r['mn'] === null) return [0, 0];
+	return [(int)floor($r['mn']), (int)ceil($r['mx'])];
+}
+
+/* Выборка товаров категории с фильтрами/сортировкой/страницей.
+   Возвращает ['items' => [...], 'total' => N]. */
+function vp_category_query(string $cat, array $get, string $sort, int $page): array {
+	$db = vp_db();
+	if (!$db) return ['items' => [], 'total' => 0];
+
+	$config = vp_filter_config($cat);
+	$where  = ['category = ?', 'active = 1'];
+	$args   = [$cat];
+
 	// Диапазон цены
 	$pmin = isset($get['price_min']) && $get['price_min'] !== '' ? (float)$get['price_min'] : null;
 	$pmax = isset($get['price_max']) && $get['price_max'] !== '' ? (float)$get['price_max'] : null;
+	if ($pmin !== null) { $where[] = 'price >= ?'; $args[] = $pmin; }
+	if ($pmax !== null) { $where[] = 'price <= ?'; $args[] = $pmax; }
+
 	// Только в наличии
-	$onlyStock = !empty($get['in_stock']);
+	if (!empty($get['in_stock'])) { $where[] = 'in_stock = 1'; }
 
-	return array_values(array_filter($products, function ($p) use ($config, $get, $pmin, $pmax, $onlyStock) {
-		$price = (float)($p['price'] ?? 0);
-		if ($pmin !== null && $price < $pmin) return false;
-		if ($pmax !== null && $price > $pmax) return false;
-		if ($onlyStock && empty($p['in_stock'])) return false;
+	// Фасеты-чекбоксы (ИЛИ внутри фасета, И между фасетами)
+	foreach ($config as $key => $cfg) {
+		$sel = $get[$cfg['param']] ?? null;
+		if (empty($sel)) continue;
+		$sel = array_values((array)$sel);
+		$ph  = implode(',', array_fill(0, count($sel), '?'));
+		$where[] = "id IN (SELECT product_id FROM product_facets WHERE facet_key = ? AND facet_value IN ($ph))";
+		$args[]  = $key;
+		foreach ($sel as $v) $args[] = (string)$v;
+	}
 
-		// Фасеты-чекбоксы (мультивыбор → ИЛИ внутри, И между фасетами)
-		foreach ($config as $key => $cfg) {
-			$param = $cfg['param'];
-			$sel   = $get[$param] ?? null;
-			if (empty($sel)) continue;
-			$sel   = (array)$sel;
-			$v     = vp_facet_value($p, $key);
-			if (!in_array($v, $sel, true)) return false;
+	$whereSql = implode(' AND ', $where);
+
+	// Всего под фильтр
+	$st = $db->prepare("SELECT COUNT(*) FROM products WHERE $whereSql");
+	$st->execute($args);
+	$total = (int)$st->fetchColumn();
+
+	// Сортировка (имя — запасной ключ, без натуральной — некритично)
+	if ($sort === 'price_asc') {
+		$order = 'price ASC, name COLLATE NOCASE ASC';
+	} elseif ($sort === 'price_desc') {
+		$order = 'price DESC, name COLLATE NOCASE ASC';
+	} else {
+		$order = 'in_stock DESC, price ASC, name COLLATE NOCASE ASC';
+	}
+
+	$offset = max(0, ($page - 1) * VP_PER_PAGE);
+
+	// Страница: where-параметры + LIMIT/OFFSET (целые — bindValue с типом)
+	$st = $db->prepare("SELECT * FROM products WHERE $whereSql ORDER BY $order LIMIT ? OFFSET ?");
+	$i = 1;
+	foreach ($args as $a) $st->bindValue($i++, $a);
+	$st->bindValue($i++, VP_PER_PAGE, PDO::PARAM_INT);
+	$st->bindValue($i++, $offset, PDO::PARAM_INT);
+	$st->execute();
+
+	$items = array_map('vp_hydrate', $st->fetchAll());
+	return ['items' => $items, 'total' => $total];
+}
+
+/* Поток активных товаров для sitemap (slug/category/updated_at) */
+function vp_sitemap_rows(): array {
+	$db = vp_db();
+	if (!$db) return [];
+	return $db->query(
+		"SELECT slug, category, updated_at FROM products
+		 WHERE active = 1 AND slug <> '' AND category <> ''"
+	)->fetchAll();
+}
+
+/* ===================================================
+   Пересборка catalog.sqlite из products.json.
+   Вызывается из админки после любой правки каталога.
+   Пишем во временный файл и атомарно подменяем — чтобы
+   не ловить полузаписанную базу на живых запросах.
+   =================================================== */
+function vp_rebuild_sqlite(): bool {
+	$jsonPath = vp_products_path();
+	$dbPath   = vp_sqlite_path();
+	$tmpPath  = $dbPath . '.tmp';
+	if (!is_file($jsonPath)) return false;
+
+	$data = json_decode(file_get_contents($jsonPath), true);
+	$list = $data['products'] ?? [];
+
+	if (is_file($tmpPath)) @unlink($tmpPath);
+
+	try {
+		$db = new PDO('sqlite:' . $tmpPath, null, null, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+		$db->exec('PRAGMA journal_mode = MEMORY');
+		$db->exec('PRAGMA synchronous = OFF');
+		$db->exec('
+			CREATE TABLE products(
+				id TEXT PRIMARY KEY, slug TEXT, name TEXT, category TEXT, brand TEXT, sku TEXT,
+				price REAL, old_price REAL, unit TEXT, pack_area REAL,
+				in_stock INTEGER, active INTEGER, image TEXT, images TEXT,
+				description TEXT, specs TEXT, seo_title TEXT, seo_description TEXT, updated_at TEXT
+			);
+			CREATE INDEX idx_prod_slug  ON products(slug);
+			CREATE INDEX idx_prod_cat   ON products(category, active);
+			CREATE INDEX idx_prod_price ON products(price);
+
+			CREATE TABLE product_facets(
+				product_id TEXT, category TEXT, active INTEGER, facet_key TEXT, facet_value TEXT
+			);
+			CREATE INDEX idx_facet_cat ON product_facets(category, facet_key, active);
+			CREATE INDEX idx_facet_pid ON product_facets(product_id);
+			CREATE INDEX idx_facet_val ON product_facets(facet_key, facet_value);
+		');
+
+		$insP = $db->prepare('INSERT OR REPLACE INTO products VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)');
+		$insF = $db->prepare('INSERT INTO product_facets VALUES (?,?,?,?,?)');
+
+		$db->beginTransaction();
+		foreach ($list as $p) {
+			$images = $p['images'] ?? [];
+			$img    = $images[0] ?? '';
+			$op     = $p['old_price'] ?? null;
+			$op     = ($op !== null && $op !== '' && (float)$op > 0) ? (float)$op : null;
+			$cat    = $p['category'] ?? '';
+			$pid    = $p['id'] ?? '';
+			$active = !empty($p['active']) ? 1 : 0;
+
+			$insP->execute([
+				$pid, $p['slug'] ?? '', $p['name'] ?? '', $cat, $p['brand'] ?? '', $p['sku'] ?? '',
+				(float)($p['price'] ?? 0), $op, $p['unit'] ?? 'м²', (float)($p['pack_area'] ?? 0),
+				!empty($p['in_stock']) ? 1 : 0, $active, $img,
+				json_encode($images, JSON_UNESCAPED_UNICODE),
+				$p['description'] ?? '', json_encode($p['specs'] ?? [], JSON_UNESCAPED_UNICODE),
+				$p['seo_title'] ?? '', $p['seo_description'] ?? '', $p['updated_at'] ?? '',
+			]);
+
+			// Фасеты: бренд (для всех) + сконфигурированные spec-ключи категории
+			$brand = trim($p['brand'] ?? '');
+			if ($brand !== '') $insF->execute([$pid, $cat, $active, 'brand', $brand]);
+			foreach (VP_FILTERS[$cat] ?? [] as $key => $cfg) {
+				if ($key === 'brand') continue; // уже записан
+				$v = trim((string)($p['specs'][$key] ?? ''));
+				if ($v !== '') $insF->execute([$pid, $cat, $active, $key, $v]);
+			}
 		}
-		return true;
-	}));
+		$db->commit();
+		$db = null;
+	} catch (Throwable $e) {
+		if (isset($db)) $db = null;
+		@unlink($tmpPath);
+		return false;
+	}
+
+	return @rename($tmpPath, $dbPath);
 }
 
-/* Сортировка: price_asc | price_desc | default (в наличии → цена → имя) */
-function vp_sort_products(array $products, string $sort): array {
-	usort($products, function ($a, $b) use ($sort) {
-		$pa = (float)($a['price'] ?? 0);
-		$pb = (float)($b['price'] ?? 0);
-		if ($sort === 'price_asc')  return $pa <=> $pb;
-		if ($sort === 'price_desc') return $pb <=> $pa;
-		// default: сначала в наличии, потом дешевле, потом по имени
-		$sa = !empty($a['in_stock']) ? 0 : 1;
-		$sb = !empty($b['in_stock']) ? 0 : 1;
-		if ($sa !== $sb) return $sa <=> $sb;
-		if ($pa !== $pb) return $pa <=> $pb;
-		return strnatcasecmp($a['name'] ?? '', $b['name'] ?? '');
-	});
-	return $products;
-}
-
-/* Границы цены по списку (для подсказок в полях диапазона) */
-function vp_price_bounds(array $products): array {
-	$prices = array_map(fn($p) => (float)($p['price'] ?? 0), $products);
-	$prices = array_filter($prices, fn($v) => $v > 0);
-	if (!$prices) return [0, 0];
-	return [(int)floor(min($prices)), (int)ceil(max($prices))];
-}
-
-/* Транслитерация в slug: кириллица → латиница, нижний регистр, дефисы */
+/* ===================================================
+   Транслитерация в slug: кириллица → латиница
+   =================================================== */
 function vp_slugify(string $s): string {
 	$map = [
 		'а'=>'a','б'=>'b','в'=>'v','г'=>'g','д'=>'d','е'=>'e','ё'=>'e','ж'=>'zh',

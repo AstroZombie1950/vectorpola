@@ -21,7 +21,7 @@ $canonical = 'https://vectorpola.ru/';
 	<meta property="og:url" content="<?= $canonical ?>">
 	<meta property="og:title" content="<?= htmlspecialchars($pageTitle) ?>">
 	<meta property="og:description" content="<?= htmlspecialchars($pageDesc) ?>">
-	<meta property="og:image" content="https://vectorpola.ru/og-image.jpg">
+	<meta property="og:image" content="https://vectorpola.ru/source/img/og-image.jpg">
 	<meta property="og:locale" content="ru_RU">
 	<meta property="og:site_name" content="Вектор пола">
 
@@ -29,12 +29,15 @@ $canonical = 'https://vectorpola.ru/';
 	<meta name="twitter:card" content="summary_large_image">
 	<meta name="twitter:title" content="Вектор пола — напольные покрытия">
 	<meta name="twitter:description" content="<?= htmlspecialchars($pageDesc) ?>">
-	<meta name="twitter:image" content="https://vectorpola.ru/og-image.jpg">
+	<meta name="twitter:image" content="https://vectorpola.ru/source/img/og-image.jpg">
 
 	<!-- ===== Фавикон ===== -->
 	<link rel="icon" type="image/svg+xml" href="/favicon.svg">
 	<link rel="alternate icon" href="/favicon.ico">
 	<meta name="theme-color" content="#2B2F38">
+
+	<!-- Предзагрузка LCP-картинки первого экрана -->
+	<link rel="preload" as="image" href="/source/img/hero.webp" fetchpriority="high">
 
 	<link rel="stylesheet" href="/source/css/main.css">
 
@@ -83,7 +86,7 @@ $canonical = 'https://vectorpola.ru/';
 							<span>Два салона</span>
 						</div>
 					</div>
-					<div class="hp-visual"><img src="/source/img/hero.webp" alt="Интерьер с напольным покрытием" width="1200" height="900" loading="eager"></div>
+					<div class="hp-visual"><img src="/source/img/hero.webp" alt="Интерьер с напольным покрытием" width="1200" height="900" loading="eager" decoding="async" fetchpriority="high"></div>
 				</div>
 			</div>
 		</div>

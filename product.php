@@ -114,6 +114,8 @@ $pageDesc  = mb_substr(trim($descSrc), 0, 200);
 			"url": <?= json_encode($canonical, JSON_UNESCAPED_UNICODE) ?>,
 			"priceCurrency": "RUB",
 			"price": "<?= $price ?>",
+			"priceValidUntil": "<?= date('Y-12-31', strtotime('+1 year')) ?>",
+			"itemCondition": "https://schema.org/NewCondition",
 			"availability": "<?= $inStock ? 'https://schema.org/InStock' : 'https://schema.org/PreOrder' ?>"
 		}
 	}
@@ -308,7 +310,7 @@ $pageDesc  = mb_substr(trim($descSrc), 0, 200);
 
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/source/include/footer.php'; ?>
 
-	<script src="/source/js/main.js?v=2"></script>
+	<script src="/source/js/main.js?v=3"></script>
 	<script src="/source/js/cart.js?v=2"></script>
 	<script src="/source/js/product.js?v=2"></script>
 </body>
