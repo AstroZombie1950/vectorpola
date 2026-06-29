@@ -29,8 +29,8 @@ $canonical = 'https://vectorpola.ru/brands/';
 	<link rel="alternate icon" href="/favicon.ico">
 	<meta name="theme-color" content="#2B2F38">
 
-	<link rel="stylesheet" href="/source/css/main.css">
-	<link rel="stylesheet" href="/source/css/inner-pages.css">
+	<link rel="stylesheet" href="/source/css/main.css?v=8">
+	<link rel="stylesheet" href="/source/css/inner-pages.css?v=2">
 
 	<?php include $_SERVER['DOCUMENT_ROOT'] . '/source/include/metrika.html'; ?>
 </head>
@@ -55,15 +55,13 @@ $canonical = 'https://vectorpola.ru/brands/';
 			<p class="lead-text">Все товары в магазине прошли тщательную проверку на качество и подлинность. Мы работаем только с официальным поставщиками стран производителей Германия, Бельгия, Китай/Германия, Франция, Португалия и др. Вся продаваемая нами продукция сертифицирована и отвечает всем санитарным требованиям и полностью безопасна.</p>
 
 			<div class="brands">
-				<div class="brand"><img src="/source/img/brands/bonkeel.webp" alt="BONKEEL" width="320" height="180" loading="lazy"></div>
 				<div class="brand"><img src="/source/img/brands/alpine-floor.webp" alt="Alpine Floor" width="320" height="180" loading="lazy"></div>
-				<div class="brand"><img src="/source/img/brands/tarkett.webp" alt="Tarkett" width="320" height="180" loading="lazy"></div>
-				<div class="brand"><img src="/source/img/brands/tarkett-text.webp" alt="Tarkett" width="320" height="180" loading="lazy"></div>
 				<div class="brand"><img src="/source/img/brands/agt.webp" alt="AGT" width="320" height="180" loading="lazy"></div>
-				<div class="brand"><img src="/source/img/brands/fargo.webp" alt="Fargo" width="320" height="180" loading="lazy"></div>
-				<div class="brand"><img src="/source/img/brands/uhd.webp" alt="UHD Polymer" width="320" height="180" loading="lazy"></div>
-				<div class="brand"><img src="/source/img/brands/luka.webp" alt="Лука" width="320" height="180" loading="lazy"></div>
-				<div class="brand"><img src="/source/img/brands/pedross.webp" alt="Pedross" width="320" height="180" loading="lazy"></div>
+				<div class="brand"><img src="/source/img/brands/aqua-floor.webp" alt="Aqua Floor" width="320" height="180" loading="lazy"></div>
+				<div class="brand"><img src="/source/img/brands/kronotex.webp" alt="KRONOTEX" width="320" height="180" loading="lazy"></div>
+				<div class="brand"><img src="/source/img/brands/my-step.webp" alt="MY Step" width="320" height="180" loading="lazy"></div>
+				<div class="brand"><img src="/source/img/brands/primavera.webp" alt="PRIMAVERA" width="320" height="180" loading="lazy"></div>
+				<div class="brand"><img src="/source/img/brands/eversense.webp" alt="EVERSENSE" width="320" height="180" loading="lazy"></div>
 			</div>
 		</div>
 	</section>
