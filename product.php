@@ -20,7 +20,7 @@ if (!$product || ($product['category'] ?? '') !== $cat) {
 		<title><?= htmlspecialchars($pageTitle) ?></title>
 		<meta name="robots" content="noindex">
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg">
-		<link rel="stylesheet" href="/source/css/main.css">
+		<link rel="stylesheet" href="/source/css/main.css?v=5">
 		<link rel="stylesheet" href="/source/css/inner-pages.css?v=2">
 	</head>
 	<body>
@@ -33,8 +33,8 @@ if (!$product || ($product['category'] ?? '') !== $cat) {
 			</div>
 		</section>
 		<?php include $_SERVER['DOCUMENT_ROOT'] . '/source/include/footer.php'; ?>
-		<script src="/source/js/main.js"></script>
-		<script src="/source/js/product.js"></script>
+		<script src="/source/js/main.js?v=4"></script>
+		<script src="/source/js/product.js?v=2"></script>
 	</body>
 	</html>
 	<?php
@@ -96,7 +96,7 @@ $pageDesc  = mb_substr(trim($descSrc), 0, 200);
 	<link rel="alternate icon" href="/favicon.ico">
 	<meta name="theme-color" content="#2B2F38">
 
-	<link rel="stylesheet" href="/source/css/main.css">
+	<link rel="stylesheet" href="/source/css/main.css?v=5">
 	<link rel="stylesheet" href="/source/css/inner-pages.css?v=2">
 	<link rel="stylesheet" href="/source/css/product.css?v=4">
 
@@ -310,7 +310,7 @@ $pageDesc  = mb_substr(trim($descSrc), 0, 200);
 
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/source/include/footer.php'; ?>
 
-	<script src="/source/js/main.js?v=3"></script>
+	<script src="/source/js/main.js?v=4"></script>
 	<script src="/source/js/cart.js?v=3"></script>
 	<script src="/source/js/product.js?v=2"></script>
 </body>
