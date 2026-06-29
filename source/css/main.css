@@ -163,7 +163,7 @@ ul { list-style: none; }
 .cat-search input { flex: 1; padding: 13px 16px; border: 1px solid var(--line); border-radius: var(--radius); font-size: 15px; outline: none; }
 .cat-search input:focus { border-color: var(--accent); }
 
-.cat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+.cat-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; } /* моб: 1 столбец */
 .cat-tile { display: flex; align-items: center; gap: 12px; padding: 16px; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); transition: .18s; }
 .cat-tile:hover { border-color: var(--accent); transform: translateY(-2px); }
 .cat-tile .ic { width: 44px; height: 44px; border-radius: var(--radius); background: var(--accent-soft); display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--accent-dark); }
@@ -198,7 +198,7 @@ ul { list-style: none; }
 .product .price small { font-weight: var(--fw-body); color: var(--muted); }
 
 /* ===== Подбор покрытия (сценарии) ===== */
-.scenarios { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 28px; }
+.scenarios { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; margin-bottom: 28px; } /* моб: 1 столбец */
 .scenario { padding: 16px; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); font-weight: var(--fw-medium); font-size: 15px; transition: .18s; cursor: pointer; display: flex; align-items: center; gap: 10px; }
 .scenario:hover { background: var(--accent-soft); border-color: var(--accent); }
 .scenario::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
@@ -215,14 +215,33 @@ ul { list-style: none; }
 .showroom .btn { margin-top: 18px; }
 
 /* ===== Почему мы ===== */
-.features { display: grid; grid-template-columns: repeat(1, 1fr); gap: 22px; }
+.features { display: grid; grid-template-columns: repeat(1, minmax(0, 1fr)); gap: 22px; }
 .feature { display: flex; gap: 14px; align-items: center; }
 .feature .ic { width: 48px; height: 48px; border-radius: var(--radius); background: var(--accent-soft); display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--accent-dark); }
 .feature p { font-weight: var(--fw-medium); }
 
 /* ===== Бренды ===== */
 .brands { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; max-width: 1040px; margin: 0 auto; } /* minmax(0,..) — колонки ужимаются ниже ширины картинки, нет горизонт. скролла в Safari; ширина под 4 в ряд */
-.brand { aspect-ratio: 2 / 1; min-width: 0; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); display: flex; align-items: center; justify-content: center; padding: 14px; }
+.brand {
+	position: relative;
+	aspect-ratio: 2 / 1;
+	min-width: 0;
+	background: #fff;
+	border: 1px solid var(--line);
+	border-top: 3px solid var(--accent);   /* акцентная полоса сверху — видна всегда */
+	border-radius: var(--radius);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 14px;
+	transition: border-color .2s ease, transform .2s ease, box-shadow .2s ease;
+}
+.brand:hover {
+	border-color: var(--accent);           /* медовая обводка по всему периметру */
+	transform: translateY(-4px);           /* лёгкий подъём */
+	box-shadow: 0 8px 20px rgba(242, 165, 22, .18);
+	z-index: 1;                            /* приподнятая карточка поверх соседей */
+}
 .brand img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
 
 /* ===== О компании (блок на главной) ===== */
@@ -232,7 +251,7 @@ ul { list-style: none; }
 .about .actions .btn { width: 100%; } /* моб + планшет: равная ширина, прижаты влево */
 
 /* ===== Новости ===== */
-.news { display: grid; grid-template-columns: repeat(1, 1fr); gap: 16px; }
+.news { display: grid; grid-template-columns: repeat(1, minmax(0, 1fr)); gap: 16px; }
 .news-card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; transition: .18s; }
 .news-card:hover { border-color: var(--accent); }
 .news-card .img { aspect-ratio: 4 / 3; background: var(--bg-cream); overflow: hidden; }
@@ -324,18 +343,18 @@ body.menu-open { position: fixed; width: 100%; overflow: hidden; }
 
 /* ===== Адаптив: планшет ===== */
 @media (min-width: 768px) {
-	.cat-grid { grid-template-columns: repeat(3, 1fr); }
+	.cat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } /* планшет: 2 столбца */
 	.product { flex-basis: calc((100% - 16px) / 2); }   /* планшет: 2 карточки */
-	.scenarios { grid-template-columns: repeat(3, 1fr); }
-	.features { grid-template-columns: repeat(2, 1fr); }
+	.scenarios { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+	.features { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 	.brands { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-	.news { grid-template-columns: repeat(2, 1fr); }
+	.news { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 	.showroom .grid { grid-template-columns: 1.2fr 1fr; }
 	.cta-section__grid { grid-template-columns: 1fr 1fr; }
 	.footer .cols { grid-template-columns: 1.4fr 1fr 1fr; }
 
 	/* Кнопки hero на планшете — в ряд, одной ширины (три равные колонки) */
-	.hero-promo .actions { display: grid; grid-template-columns: repeat(3, 1fr); }
+	.hero-promo .actions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
 	.hero-promo .actions .btn { width: auto; }
 }
 
@@ -344,11 +363,11 @@ body.menu-open { position: fixed; width: 100%; overflow: hidden; }
 	.hero-layout { grid-template-columns: 280px 1fr; }
 	.hero-catalog { display: block; }
 	.hero-promo { grid-template-columns: 1.1fr .9fr; }
-	.cat-grid { grid-template-columns: repeat(3, 1fr); }
+	.cat-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } /* десктоп: 3 столбца */
 	.product { flex-basis: calc((100% - 48px) / 4); }   /* десктоп: 4 карточки */
-	.features { grid-template-columns: repeat(3, 1fr); }
+	.features { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 	.brands { grid-template-columns: repeat(4, minmax(0, 1fr)); } /* 4 в ряд: 7 брендов = 4+3, без одинокой карточки */
-	.news { grid-template-columns: repeat(4, 1fr); }
+	.news { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 	.footer .cols { grid-template-columns: 1.6fr 1fr 1fr 1fr; }
 
 	/* «О компании» — на десктопе кнопки снова в ряд */

@@ -29,7 +29,7 @@ $canonical = 'https://vectorpola.ru/contacts/';
 	<link rel="alternate icon" href="/favicon.ico">
 	<meta name="theme-color" content="#2B2F38">
 
-	<link rel="stylesheet" href="/source/css/main.css?v=8">
+	<link rel="stylesheet" href="/source/css/main.css?v=10">
 	<link rel="stylesheet" href="/source/css/inner-pages.css?v=2">
 
 	<?php include $_SERVER['DOCUMENT_ROOT'] . '/source/include/metrika.html'; ?>

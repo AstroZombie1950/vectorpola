@@ -14,7 +14,7 @@ $pageTitle = 'Корзина — Вектор пола';
 	<link rel="alternate icon" href="/favicon.ico">
 	<meta name="theme-color" content="#2B2F38">
 
-	<link rel="stylesheet" href="/source/css/main.css?v=8">
+	<link rel="stylesheet" href="/source/css/main.css?v=10">
 	<link rel="stylesheet" href="/source/css/inner-pages.css?v=2">
 	<link rel="stylesheet" href="/source/css/cart.css?v=2">
 
