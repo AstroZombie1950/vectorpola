@@ -256,7 +256,7 @@ $canonical = $noindex ? $baseUrl : ($baseUrl . ($page > 1 ? '?page=' . $page : '
 							<!-- Сетка карточек -->
 							<div class="catalog-grid">
 								<?php foreach ($pageItems as $p):
-									$pImg   = !empty($p['images'][0]) ? $p['images'][0] : '/source/img/popular.webp';
+									$pImg   = !empty($p['images'][0]) ? $p['images'][0] : '/source/img/no-image.webp';
 									$pPrice = (float)($p['price'] ?? 0);
 									$pOld   = isset($p['old_price']) ? (float)$p['old_price'] : 0;
 									$pPack  = (float)($p['pack_area'] ?? 0);
@@ -264,7 +264,7 @@ $canonical = $noindex ? $baseUrl : ($baseUrl . ($page > 1 ? '?page=' . $page : '
 								?>
 								<a class="cat-card" href="<?= htmlspecialchars(vp_product_url($p)) ?>">
 									<div class="cat-card__img">
-										<img src="<?= htmlspecialchars($pImg) ?>" alt="<?= htmlspecialchars($p['name']) ?>" width="800" height="800" loading="lazy">
+										<img src="<?= htmlspecialchars($pImg) ?>" alt="<?= htmlspecialchars($p['name']) ?>" width="800" height="800" loading="lazy" onerror="this.onerror=null;this.src='/source/img/no-image.webp'">
 										<?php if ($pOld > $pPrice && $pOld > 0): ?><span class="cat-card__badge">−<?= round(($pOld - $pPrice) / $pOld * 100) ?>%</span><?php endif; ?>
 										<?php if (empty($p['in_stock'])): ?><span class="cat-card__stock">под заказ</span><?php endif; ?>
 									</div>

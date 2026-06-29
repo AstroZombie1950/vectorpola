@@ -135,11 +135,11 @@ $popular = vp_popular_products(8);   // помеченные галкой в а�
 			</div>
 			<div class="products">
 				<?php foreach ($popular as $p):
-					$pImg   = !empty($p['images'][0]) ? $p['images'][0] : '/source/img/popular.webp';
+					$pImg   = !empty($p['images'][0]) ? $p['images'][0] : '/source/img/no-image.webp';
 					$pPrice = (float)($p['price'] ?? 0);
 				?>
 				<a class="product" href="<?= htmlspecialchars(vp_product_url($p)) ?>">
-					<div class="img"><img src="<?= htmlspecialchars($pImg) ?>" alt="<?= htmlspecialchars($p['name']) ?>" width="800" height="800" loading="lazy"></div>
+					<div class="img"><img src="<?= htmlspecialchars($pImg) ?>" alt="<?= htmlspecialchars($p['name']) ?>" width="800" height="800" loading="lazy" onerror="this.onerror=null;this.src='/source/img/no-image.webp'"></div>
 					<div class="body">
 						<div class="name"><?= htmlspecialchars($p['name']) ?></div>
 						<div class="price"><?= vp_money($pPrice) ?> <small>/ <?= htmlspecialchars($p['unit'] ?? 'м²') ?></small></div>

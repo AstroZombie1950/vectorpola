@@ -50,7 +50,7 @@ $oldPrice  = isset($product['old_price']) ? (float)$product['old_price'] : 0;
 $packArea  = (float)($product['pack_area'] ?? 0);
 $unit      = $product['unit'] ?? 'м²';
 $inStock   = !empty($product['in_stock']);
-$images    = !empty($product['images']) ? $product['images'] : ['/source/img/popular.webp'];
+$images    = !empty($product['images']) ? $product['images'] : ['/source/img/no-image.webp'];
 $specs     = $product['specs'] ?? [];
 
 /* Форматирование рублей: «2 475 ₽» */
@@ -160,13 +160,13 @@ $pageDesc  = mb_substr(trim($descSrc), 0, 200);
 				<!-- Галерея -->
 				<div class="product-gallery">
 					<div class="pg-main">
-						<img id="pgMain" src="<?= htmlspecialchars($images[0]) ?>" alt="<?= htmlspecialchars($product['name']) ?>" width="800" height="800">
+						<img id="pgMain" src="<?= htmlspecialchars($images[0]) ?>" alt="<?= htmlspecialchars($product['name']) ?>" width="800" height="800" onerror="this.onerror=null;this.src='/source/img/no-image.webp'">
 					</div>
 					<?php if (count($images) > 1): ?>
 					<div class="pg-thumbs">
 						<?php foreach ($images as $i => $img): ?>
 						<button type="button" class="pg-thumb <?= $i === 0 ? 'is-active' : '' ?>" data-img="<?= htmlspecialchars($img) ?>" aria-label="Фото <?= $i + 1 ?>">
-							<img src="<?= htmlspecialchars($img) ?>" alt="" width="120" height="120" loading="lazy">
+							<img src="<?= htmlspecialchars($img) ?>" alt="" width="120" height="120" loading="lazy" onerror="this.onerror=null;this.src='/source/img/no-image.webp'">
 						</button>
 						<?php endforeach; ?>
 					</div>
