@@ -11,10 +11,17 @@ function initProductCalc(box) {
 	const areaTotEl= box.querySelector('#calcTotalArea');
 	const totalEl  = box.querySelector('#calcTotal');
 
-	let area = parseInt(areaEl?.textContent, 10) || 1; // шаг — 1 м²
+	let area = parseInt(areaEl?.value, 10) || 1; // целые м², шаг 1
 
 	const money   = n => Math.round(n).toLocaleString('ru-RU').replace(/\u00A0/g, ' ') + ' ₽';
 	const trimNum = n => parseFloat(n.toFixed(3)).toString();
+
+	// Зафиксировать минимум 1 (после ручного ввода/blur)
+	function commitArea() {
+		if (area < 1) area = 1;
+		if (areaEl) areaEl.value = area;
+		render();
+	}
 
 	// Текущее состояние для корзины/заявки
 	function state() {
@@ -33,11 +40,22 @@ function initProductCalc(box) {
 	}
 
 	box.querySelector('.calc-minus')?.addEventListener('click', () => {
-		if (area > 1) { area--; areaEl.textContent = area; render(); }
+		if (area > 1) { area--; if (areaEl) areaEl.value = area; render(); }
 	});
 	box.querySelector('.calc-plus')?.addEventListener('click', () => {
-		area++; areaEl.textContent = area; render();
+		area++; if (areaEl) areaEl.value = area; render();
 	});
+
+	// Ручной ввод: только цифры, живой пересчёт (пусто → 0 временно)
+	areaEl?.addEventListener('input', () => {
+		const digits = areaEl.value.replace(/\D/g, '');
+		areaEl.value = digits;
+		area = parseInt(digits, 10) || 0;
+		render();
+	});
+	// blur/Enter — фиксируем минимум 1
+	areaEl?.addEventListener('blur', commitArea);
+	areaEl?.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); areaEl.blur(); } });
 
 	// Данные товара для корзины
 	function cartItem() {
@@ -57,13 +75,18 @@ function initProductCalc(box) {
 	const addBtn  = box.querySelector('.calc-add');
 	const addNote = box.querySelector('.calc-added');
 	addBtn?.addEventListener('click', () => {
+		commitArea(); // зафиксировать площадь (минимум 1) перед добавлением
 		if (window.VPCart) window.VPCart.add(cartItem());
 		if (addNote) { addNote.hidden = false; clearTimeout(addNote._t); addNote._t = setTimeout(() => addNote.hidden = true, 4000); }
 	});
 
 	/* ===== Кнопка «Купить в один клик» → попап ===== */
-	const modal   = document.getElementById('quickBuyModal');
-	const quickBtn= box.querySelector('.calc-quick');
+	const modal    = document.getElementById('quickBuyModal');
+	const quickBtn = box.querySelector('.calc-quick');
+	const qbForm   = modal?.querySelector('.qb-form');
+	const qbBtn    = qbForm?.querySelector('button[type="button"]');
+	const qbStatus = qbForm?.querySelector('.form-status');
+	const qbLabel  = qbBtn ? qbBtn.textContent : 'Отправить заявку';
 
 	function syncModal() {
 		if (!modal || modal.hidden) return;
@@ -73,17 +96,27 @@ function initProductCalc(box) {
 		if (q) q.textContent = s.qty;
 		if (t) t.textContent = money(s.total);
 	}
+	// Возврат формы в чистое исходное состояние (.qb-form — это div, не form)
+	function resetQbForm() {
+		if (!qbForm) return;
+		qbForm.querySelectorAll('input, textarea').forEach(el => el.value = '');
+		if (qbBtn)    { qbBtn.disabled = false; qbBtn.textContent = qbLabel; }
+		if (qbStatus) { qbStatus.textContent = ''; qbStatus.className = 'form-status'; }
+	}
 	function openModal() {
 		if (!modal) return;
+		commitArea();   // не открываем попап с пустой/нулевой площадью
+		resetQbForm();  // всегда открываем чистым
 		modal.hidden = false;
 		document.body.style.overflow = 'hidden';
 		syncModal();
-		modal.querySelector('input[name="name"]')?.focus();
+		qbForm?.querySelector('input[name="name"]')?.focus();
 	}
 	function closeModal() {
 		if (!modal) return;
 		modal.hidden = true;
 		document.body.style.overflow = '';
+		resetQbForm();  // чистим форму после закрытия
 	}
 
 	quickBtn?.addEventListener('click', openModal);
@@ -92,24 +125,25 @@ function initProductCalc(box) {
 		modal.querySelectorAll('[data-close]').forEach(el => el.addEventListener('click', closeModal));
 		document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
-		const form = modal.querySelector('.qb-form');
-		if (window.VPCart) window.VPCart.phoneMask(form.querySelector('input[type="tel"]'));
+		if (window.VPCart) window.VPCart.phoneMask(qbForm.querySelector('input[type="tel"]'));
 
-		form?.querySelector('button[type="button"]').addEventListener('click', () => {
+		qbBtn?.addEventListener('click', () => {
 			const s = state();
-			const status = form.querySelector('.form-status');
-			const btn    = form.querySelector('button[type="button"]');
 			window.VPCart.submitOrder({
 				source:   'Купить в один клик',
-				name:     form.querySelector('[name="name"]').value,
-				phone:    form.querySelector('[name="phone"]').value,
-				comment:  form.querySelector('[name="comment"]').value,
+				name:     qbForm.querySelector('[name="name"]').value,
+				phone:    qbForm.querySelector('[name="phone"]').value,
+				comment:  qbForm.querySelector('[name="comment"]').value,
 				product:  box.dataset.name,
 				quantity: s.qty,
 				total:    money(s.total)
-			}, status, btn, () => {
-				form.reset();
-				setTimeout(closeModal, 1600);
+			}, qbStatus, qbBtn, () => {
+				// Успех: блокируем кнопку (повторно не отправить), чистим поля.
+				// Текст «менеджер свяжется» уже стоит в статусе → потом закрываем.
+				qbBtn.disabled = true;
+				qbBtn.textContent = 'Заявка отправлена';
+				qbForm.querySelectorAll('input, textarea').forEach(el => el.value = '');
+				setTimeout(closeModal, 2500);
 			});
 		});
 	}

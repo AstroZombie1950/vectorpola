@@ -31,7 +31,10 @@
 .calc-stepper { display: grid; grid-template-columns: 48px 1fr 48px; gap: 8px; margin: 18px 0; }
 .calc-stepper button { height: 48px; border: 1px solid var(--line); background: var(--bg); border-radius: var(--radius); font-size: 22px; line-height: 1; cursor: pointer; color: var(--ink); }
 .calc-stepper button:hover { border-color: var(--accent); color: var(--accent-dark); }
-.calc-qty { display: flex; align-items: center; justify-content: center; border: 1px solid var(--line); border-radius: var(--radius); background: var(--bg); font-weight: var(--fw-semibold); font-size: 17px; }
+.calc-qty { display: flex; align-items: center; justify-content: center; gap: 4px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--bg); font-weight: var(--fw-semibold); font-size: 17px; }
+/* Поле ручного ввода площади: без рамки/спиннеров, вписано в .calc-qty */
+.calc-area-input { width: 70px; padding: 0; border: 0; background: transparent; text-align: right; font: inherit; color: var(--ink); -moz-appearance: textfield; }
+.calc-area-input:focus { outline: none; }
 
 /* Разбивка */
 .calc-rows { display: flex; flex-direction: column; gap: 16px; }

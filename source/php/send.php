@@ -90,13 +90,25 @@ curl_setopt_array($ch, [
 	CURLOPT_POST           => true,
 	CURLOPT_POSTFIELDS     => http_build_query($payload),
 	CURLOPT_RETURNTRANSFER => true,
-	CURLOPT_TIMEOUT        => 10,
+	CURLOPT_CONNECTTIMEOUT => 5,   // фаза коннекта — валимся быстро
+	CURLOPT_TIMEOUT        => 15,  // вся операция — даём 15с на медленной сети
 ]);
 $result = curl_exec($ch);
 $err    = curl_error($ch);
 curl_close($ch);
 
+/* Лог неудачной отправки + дозапись текста заявки, чтобы лид не потерялся.
+   Папка /data/ закрыта в .htaccess и robots, наружу не светится. */
+function vp_log_failed_lead($reason, $text) {
+	$log   = __DIR__ . '/../../data/leads-failed.log';
+	$stamp = date('Y-m-d H:i:s');
+	$entry = "[{$stamp}] {$reason}\n{$text}\n----------\n";
+	@file_put_contents($log, $entry, FILE_APPEND | LOCK_EX);
+}
+
 if ($err) {
+	error_log('send.php curl error: ' . $err);
+	vp_log_failed_lead('CURL: ' . $err, $text);
 	http_response_code(500);
 	echo json_encode(['ok' => false, 'error' => 'Ошибка отправки']);
 	exit;
@@ -104,6 +116,8 @@ if ($err) {
 
 $tgResponse = json_decode($result, true);
 if (empty($tgResponse['ok'])) {
+	error_log('send.php telegram reject: ' . $result);
+	vp_log_failed_lead('TG reject: ' . $result, $text);
 	http_response_code(500);
 	echo json_encode(['ok' => false, 'error' => 'Telegram отклонил запрос']);
 	exit;

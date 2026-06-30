@@ -34,7 +34,7 @@ if (!$product || ($product['category'] ?? '') !== $cat) {
 		</section>
 		<?php include $_SERVER['DOCUMENT_ROOT'] . '/source/include/footer.php'; ?>
 		<script src="/source/js/main.js?v=4"></script>
-		<script src="/source/js/product.js?v=2"></script>
+		<script src="/source/js/product.js?v=4"></script>
 	</body>
 	</html>
 	<?php
@@ -98,7 +98,7 @@ $pageDesc  = mb_substr(trim($descSrc), 0, 200);
 
 	<link rel="stylesheet" href="/source/css/main.css?v=10">
 	<link rel="stylesheet" href="/source/css/inner-pages.css?v=2">
-	<link rel="stylesheet" href="/source/css/product.css?v=4">
+	<link rel="stylesheet" href="/source/css/product.css?v=5">
 
 	<!-- ===== Микроразметка (Product + хлебные крошки) ===== -->
 	<script type="application/ld+json">
@@ -154,7 +154,7 @@ $pageDesc  = mb_substr(trim($descSrc), 0, 200);
 
 	<!-- ============ КАРТОЧКА ============ -->
 	<section class="section">
-		<div class="container product">
+		<div class="container product-page">
 			<div class="product-grid">
 
 				<!-- Галерея -->
@@ -192,7 +192,7 @@ $pageDesc  = mb_substr(trim($descSrc), 0, 200);
 					<!-- Степпер: количество м² -->
 					<div class="calc-stepper">
 						<button type="button" class="calc-minus" aria-label="Меньше">−</button>
-						<div class="calc-qty"><span id="calcArea"><?= $startArea ?></span> м²</div>
+						<div class="calc-qty"><input type="text" id="calcArea" class="calc-area-input" value="<?= $startArea ?>" inputmode="numeric" pattern="[0-9]*" aria-label="Количество квадратных метров"> м²</div>
 						<button type="button" class="calc-plus" aria-label="Больше">+</button>
 					</div>
 
@@ -311,7 +311,7 @@ $pageDesc  = mb_substr(trim($descSrc), 0, 200);
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/source/include/footer.php'; ?>
 
 	<script src="/source/js/main.js?v=4"></script>
-	<script src="/source/js/cart.js?v=3"></script>
-	<script src="/source/js/product.js?v=2"></script>
+	<script src="/source/js/cart.js?v=4"></script>
+	<script src="/source/js/product.js?v=4"></script>
 </body>
 </html>

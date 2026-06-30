@@ -208,7 +208,18 @@ window.VPCart = (function () {
 		if (!form) return;
 		phoneMask(form.querySelector('input[type="tel"]'));
 
-		form.querySelector('button[type="button"]').addEventListener('click', () => {
+		const btn      = form.querySelector('button[type="button"]');
+		const statusEl = form.querySelector('.form-status');
+		const btnLabel = btn ? btn.textContent : 'Отправить заявку';
+
+		// Сброс формы в исходное состояние (cartForm — div, не form, .reset() нет)
+		function resetForm() {
+			form.querySelectorAll('input, textarea').forEach(el => el.value = '');
+			if (btn)      { btn.disabled = false; btn.textContent = btnLabel; }
+			if (statusEl) { statusEl.textContent = ''; statusEl.className = 'form-status'; }
+		}
+
+		btn.addEventListener('click', () => {
 			const items = read();
 			if (!items.length) return;
 
@@ -220,8 +231,6 @@ window.VPCart = (function () {
 				return (idx + 1) + '. ' + item.name + ' — ' + c.qtyText + ' — ' + money(c.total);
 			});
 
-			const status = form.querySelector('.form-status');
-			const btn    = form.querySelector('button[type="button"]');
 			submitOrder({
 				source:  'Корзина',
 				name:    form.querySelector('[name="name"]').value,
@@ -229,10 +238,14 @@ window.VPCart = (function () {
 				comment: form.querySelector('[name="comment"]').value,
 				items:   lines.join('\n'),
 				total:   money(grand)
-			}, status, btn, () => {
-				form.reset();
-				// Уведомление об успехе висит 5 секунд, затем корзина очищается
-				setTimeout(() => { clear(); renderCartPage(); }, 5000);
+			}, statusEl, btn, () => {
+				// Успех: блокируем кнопку (повторно не отправить), чистим поля.
+				// Сообщение «менеджер свяжется» уже в статусе.
+				btn.disabled = true;
+				btn.textContent = 'Заявка отправлена';
+				form.querySelectorAll('input, textarea').forEach(el => el.value = '');
+				// Через 5с чистим корзину и возвращаем форму в исходное (на след. заказ)
+				setTimeout(() => { clear(); renderCartPage(); resetForm(); }, 5000);
 			});
 		});
 	}
