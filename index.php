@@ -245,6 +245,7 @@ $popular = vp_popular_products(8);   // помеченные галкой в а�
 				<div class="brand"><img src="/source/img/brands/my-step.webp" alt="MY Step" width="320" height="180" loading="lazy"></div>
 				<div class="brand"><img src="/source/img/brands/primavera.webp" alt="PRIMAVERA" width="320" height="180" loading="lazy"></div>
 				<div class="brand"><img src="/source/img/brands/eversense.webp" alt="EVERSENSE" width="320" height="180" loading="lazy"></div>
+				<div class="brand"><img src="/source/img/brands/geometrika.webp" alt="Geometrika" width="320" height="180" loading="lazy"></div>
 			</div>
 		</div>
 	</section>

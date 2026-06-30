@@ -97,7 +97,7 @@ $canonical = 'https://vectorpola.ru/contacts/';
 				<div class="salon-card">
 					<div class="salon-card__badge">Адрес 2</div>
 					<h2>Красногорск</h2>
-					<p>Ильинское шоссе, дом 1А, пом. 6</p>
+					<p>Ильинское шоссе, дом 1А, пом. 6. БЦ «Красногорск Плаза»</p>
 					<a href="https://yandex.ru/maps/?pt=37.352983,55.815200&z=17&l=map" target="_blank" rel="noopener" class="btn btn--outline">Построить маршрут</a>
 				</div>
 			</div>
