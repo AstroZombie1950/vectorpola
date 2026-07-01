@@ -250,15 +250,52 @@ ul { list-style: none; }
 .about .actions { display: flex; flex-direction: column; gap: 12px; margin-top: 22px; }
 .about .actions .btn { width: 100%; } /* моб + планшет: равная ширина, прижаты влево */
 
-/* ===== Новости ===== */
-.news { display: grid; grid-template-columns: repeat(1, minmax(0, 1fr)); gap: 16px; }
-.news-card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; transition: .18s; }
-.news-card:hover { border-color: var(--accent); }
-.news-card .img { aspect-ratio: 4 / 3; background: var(--bg-cream); overflow: hidden; }
-.news-card .img img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.news-card .body { padding: 16px; }
-.news-card .title { font-weight: var(--fw-medium); }
-.news-card .date { color: var(--muted); font-size: 13px; margin-top: 8px; }
+/* ===== Акционные товары: интро-карточка ===== */
+.head-row--end { justify-content: flex-end; margin-bottom: 20px; }
+
+.promo-intro {
+	display: flex; align-items: center; gap: 20px;
+	background: #fff; border: 1px solid var(--line);
+	border-radius: var(--radius-lg); padding: 24px 26px;
+	border-top: 3px solid var(--accent);   /* акцентная полоса — как в блоке брендов */
+	margin-bottom: 24px;
+}
+.promo-intro__text h2 { font-size: clamp(22px, 3vw, 30px); font-weight: var(--fw-h2); }
+.promo-intro__text p  { color: var(--muted); margin-top: 10px; max-width: 640px; }
+.promo-intro__icon    { margin-left: auto; color: var(--accent); flex-shrink: 0; }
+
+/* Старая цена (перечёркнута) в карточке акции */
+.product .price .price-old {
+	margin-left: 6px; color: var(--muted);
+	text-decoration: line-through; font-weight: var(--fw-body); font-size: 14px;
+}
+
+/* ===== Подписка на акции ===== */
+.subscribe {
+	display: grid; grid-template-columns: 1fr; gap: 26px;
+	background: #fff; border: 1px solid var(--line);
+	border-left: 3px solid var(--accent);
+	border-radius: var(--radius-lg); padding: 28px;
+}
+.subscribe__text h2 { font-size: clamp(22px, 3vw, 30px); font-weight: var(--fw-h2); }
+.subscribe__lead    { color: var(--muted); margin-top: 12px; }
+.subscribe__consent { color: var(--muted); font-size: 12px; margin-top: 16px; line-height: 1.6; }
+
+.subscribe-form { display: grid; gap: 12px; align-content: start; }
+.subscribe-form input {
+	width: 100%; padding: 13px 15px;
+	border: 1px solid var(--line); border-radius: var(--radius);
+	background: #fff; color: var(--ink); font-size: 15px;
+	outline: none; font-family: inherit; transition: border-color .18s;
+}
+.subscribe-form input::placeholder { color: var(--muted); }
+.subscribe-form input:focus { border-color: var(--accent); }
+.subscribe-form input.error { border-color: #e05454; }
+.subscribe-form .field-error { font-size: 13px; color: #e05454; margin-top: 4px; display: block; }
+.subscribe-form .form-status { font-size: 14px; min-height: 20px; }
+.subscribe-form .form-status.ok  { color: #2e9e5b; }
+.subscribe-form .form-status.err { color: #e05454; }
+.subscribe-form .btn[disabled] { opacity: .6; cursor: not-allowed; }
 
 /* ===== FAQ ===== */
 .faq details { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); margin-bottom: 10px; }
@@ -348,7 +385,7 @@ body.menu-open { position: fixed; width: 100%; overflow: hidden; }
 	.scenarios { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 	.features { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 	.brands { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-	.news { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+	.subscribe { grid-template-columns: 1.1fr .9fr; align-items: center; }   /* подписка: текст | форма */
 	.showroom .grid { grid-template-columns: 1.2fr 1fr; }
 	.cta-section__grid { grid-template-columns: 1fr 1fr; }
 	.footer .cols { grid-template-columns: 1.4fr 1fr 1fr; }
@@ -366,8 +403,7 @@ body.menu-open { position: fixed; width: 100%; overflow: hidden; }
 	.cat-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } /* десктоп: 3 столбца */
 	.product { flex-basis: calc((100% - 48px) / 4); }   /* десктоп: 4 карточки */
 	.features { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-	.brands { grid-template-columns: repeat(4, minmax(0, 1fr)); } /* 4 в ряд: 7 брендов = 4+3, без одинокой карточки */
-	.news { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+	.brands { grid-template-columns: repeat(4, minmax(0, 1fr)); } /* 4 в ряд: 8 брендов = 4+4 */
 	.footer .cols { grid-template-columns: 1.6fr 1fr 1fr 1fr; }
 
 	/* «О компании» — на десктопе кнопки снова в ряд */

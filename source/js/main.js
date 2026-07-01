@@ -174,6 +174,11 @@ function validateField(input) {
 function initCtaForm(formEl) {
 	if (!formEl) return;
 
+	/* Эндпоинт и текст успеха можно переопределить data-атрибутами
+	   (форма подписки шлёт на subscribe.php со своим сообщением). */
+	const endpoint = formEl.dataset.endpoint || '/source/php/send.php';
+	const okMsg    = formEl.dataset.success  || 'Заявка отправлена! Мы перезвоним вам.';
+
 	const phoneInput = formEl.querySelector('input[type="tel"]');
 	if (phoneInput) applyPhoneMask(phoneInput);
 
@@ -196,10 +201,10 @@ function initCtaForm(formEl) {
 		if (status) { status.textContent = ''; status.className = 'form-status'; }
 
 		try {
-			const res  = await fetch('/source/php/send.php', { method: 'POST', body: new FormData(formEl) });
+			const res  = await fetch(endpoint, { method: 'POST', body: new FormData(formEl) });
 			const json = await res.json();
 			if (json.ok) {
-				if (status) { status.textContent = 'Заявка отправлена! Мы перезвоним вам.'; status.classList.add('ok'); }
+				if (status) { status.textContent = okMsg; status.classList.add('ok'); }
 				formEl.reset();
 			} else {
 				const msg = json.errors ? json.errors.join(', ') : 'Ошибка. Попробуйте ещё раз.';
@@ -214,7 +219,7 @@ function initCtaForm(formEl) {
 	});
 }
 
-document.querySelectorAll('.cta-form').forEach(initCtaForm);
+document.querySelectorAll('.cta-form, .subscribe-form').forEach(initCtaForm);
 
 /* ===== Каталог категории: фильтры (моб. шторка) + сортировка ===== */
 (function () {

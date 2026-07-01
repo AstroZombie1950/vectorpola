@@ -94,6 +94,7 @@ function vp_hydrate(array $r): array {
 	$r['pack_area'] = (float)($r['pack_area'] ?? 0);
 	$r['old_price'] = ($r['old_price'] ?? null) !== null ? (float)$r['old_price'] : null;
 	$r['popular']   = (int)($r['popular'] ?? 0) === 1;
+	$r['promo']     = (int)($r['promo'] ?? 0) === 1;   // акционный товар
 	return $r;
 }
 
@@ -264,6 +265,21 @@ function vp_popular_products(int $limit = 8): array {
 	return array_map('vp_hydrate', $st->fetchAll());
 }
 
+/* Акционные товары для главной (помечены галкой «Акционный» в админке) */
+function vp_promo_products(int $limit = 8): array {
+	$db = vp_db();
+	if (!$db) return [];
+	try {
+		$st = $db->prepare('SELECT * FROM products WHERE active = 1 AND promo = 1 ORDER BY updated_at DESC LIMIT ?');
+		$st->bindValue(1, $limit, PDO::PARAM_INT);
+		$st->execute();
+		return array_map('vp_hydrate', $st->fetchAll());
+	} catch (Throwable $e) {
+		// Старая база без колонки promo (PHP залит раньше пересборки) — не роняем витрину
+		return [];
+	}
+}
+
 /* Поиск по каталогу: каждое слово запроса должно встретиться в названии или бренде.
    Ищем по нормализованному search_text (lowercase) — корректно для кириллицы. */
 function vp_search_products(string $q, int $page, int $perPage = 24): array {
@@ -334,12 +350,13 @@ function vp_rebuild_sqlite(): bool {
 				price REAL, old_price REAL, unit TEXT, pack_area REAL,
 				in_stock INTEGER, active INTEGER, image TEXT, images TEXT,
 				description TEXT, specs TEXT, seo_title TEXT, seo_description TEXT, updated_at TEXT,
-				popular INTEGER, search_text TEXT
+				popular INTEGER, promo INTEGER, search_text TEXT
 			);
 			CREATE INDEX idx_prod_slug  ON products(slug);
 			CREATE INDEX idx_prod_cat   ON products(category, active);
 			CREATE INDEX idx_prod_price ON products(price);
 			CREATE INDEX idx_prod_popular ON products(popular, active);
+			CREATE INDEX idx_prod_promo   ON products(promo, active);
 
 			CREATE TABLE product_facets(
 				product_id TEXT, category TEXT, active INTEGER, facet_key TEXT, facet_value TEXT
@@ -349,7 +366,7 @@ function vp_rebuild_sqlite(): bool {
 			CREATE INDEX idx_facet_val ON product_facets(facet_key, facet_value);
 		');
 
-		$insP = $db->prepare('INSERT OR REPLACE INTO products VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)');
+		$insP = $db->prepare('INSERT OR REPLACE INTO products VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)');
 		$insF = $db->prepare('INSERT INTO product_facets VALUES (?,?,?,?,?)');
 
 		$db->beginTransaction();
@@ -370,6 +387,7 @@ function vp_rebuild_sqlite(): bool {
 				$p['description'] ?? '', json_encode($p['specs'] ?? [], JSON_UNESCAPED_UNICODE),
 				$p['seo_title'] ?? '', $p['seo_description'] ?? '', $p['updated_at'] ?? '',
 				!empty($p['popular']) ? 1 : 0,
+				!empty($p['promo']) ? 1 : 0,
 				mb_strtolower(trim(($p['name'] ?? '') . ' ' . ($p['brand'] ?? '')), 'UTF-8'),
 			]);
 

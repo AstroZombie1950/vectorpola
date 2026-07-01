@@ -53,46 +53,56 @@ function vpMarkRebuild(): void {
 /* ===== Список товаров для админки: поиск + пагинация =====
    Читаем из быстрой sqlite (включая скрытые). Если базы нет —
    откатываемся на products.json. Возвращает items/total/page/pages. */
-function productsListPaged(string $q = '', string $cat = '', int $page = 1, int $perPage = 50, bool $popularOnly = false): array {
+function productsListPaged(string $q = '', string $cat = '', int $page = 1, int $perPage = 50, bool $popularOnly = false, bool $promoOnly = false): array {
 	$q   = trim($q);
 	$db  = function_exists('vp_db') ? vp_db() : null;
 
 	if ($db) {
-		$where = []; $args = [];
-		if ($q !== '')   { $where[] = '(name LIKE ? OR sku LIKE ?)'; $args[] = "%$q%"; $args[] = "%$q%"; }
-		if ($cat !== '') { $where[] = 'category = ?'; $args[] = $cat; }
-		if ($popularOnly) { $where[] = 'popular = 1'; }
-		$wsql = $where ? ('WHERE ' . implode(' AND ', $where)) : '';
+		try {
+			$where = []; $args = [];
+			if ($q !== '')   { $where[] = '(name LIKE ? OR sku LIKE ?)'; $args[] = "%$q%"; $args[] = "%$q%"; }
+			if ($cat !== '') { $where[] = 'category = ?'; $args[] = $cat; }
+			if ($popularOnly) { $where[] = 'popular = 1'; }
+			if ($promoOnly)   { $where[] = 'promo = 1'; }
+			$wsql = $where ? ('WHERE ' . implode(' AND ', $where)) : '';
 
-		$st = $db->prepare("SELECT COUNT(*) FROM products $wsql");
-		$st->execute($args);
-		$total = (int)$st->fetchColumn();
+			$st = $db->prepare("SELECT COUNT(*) FROM products $wsql");
+			$st->execute($args);
+			$total = (int)$st->fetchColumn();
 
-		$pages  = max(1, (int)ceil($total / $perPage));
-		$page   = max(1, min($page, $pages));
-		$offset = ($page - 1) * $perPage;
+			$pages  = max(1, (int)ceil($total / $perPage));
+			$page   = max(1, min($page, $pages));
+			$offset = ($page - 1) * $perPage;
 
-		$st = $db->prepare("SELECT id, name, sku, category, price, unit, active, image
-			FROM products $wsql ORDER BY updated_at DESC, name COLLATE NOCASE ASC LIMIT ? OFFSET ?");
-		$i = 1;
-		foreach ($args as $a) $st->bindValue($i++, $a);
-		$st->bindValue($i++, $perPage, PDO::PARAM_INT);
-		$st->bindValue($i++, $offset, PDO::PARAM_INT);
-		$st->execute();
+			$st = $db->prepare("SELECT id, name, sku, category, price, unit, active, image
+				FROM products $wsql ORDER BY updated_at DESC, name COLLATE NOCASE ASC LIMIT ? OFFSET ?");
+			$i = 1;
+			foreach ($args as $a) $st->bindValue($i++, $a);
+			$st->bindValue($i++, $perPage, PDO::PARAM_INT);
+			$st->bindValue($i++, $offset, PDO::PARAM_INT);
+			$st->execute();
 
-		$items = [];
-		foreach ($st->fetchAll() as $r) {
-			$r['images'] = !empty($r['image']) ? [$r['image']] : [];
-			$r['active'] = (int)$r['active'] === 1;
-			$items[] = $r;
+			$items = [];
+			foreach ($st->fetchAll() as $r) {
+				$r['images'] = !empty($r['image']) ? [$r['image']] : [];
+				$r['active'] = (int)$r['active'] === 1;
+				$items[] = $r;
+			}
+			return ['items' => $items, 'total' => $total, 'page' => $page, 'pages' => $pages];
+		} catch (Throwable $e) {
+			// Старая база без колонки promo (PHP залит раньше пересборки) —
+			// не роняем админку в 500, уходим на json-фолбэк ниже.
+			error_log('productsListPaged sqlite fallback: ' . $e->getMessage());
 		}
-		return ['items' => $items, 'total' => $total, 'page' => $page, 'pages' => $pages];
 	}
 
 	// Fallback: sqlite недоступна — фильтруем json в памяти
 	$all = productsLoad();
 	if ($popularOnly) {
 		$all = array_values(array_filter($all, fn($p) => !empty($p['popular'])));
+	}
+	if ($promoOnly) {
+		$all = array_values(array_filter($all, fn($p) => !empty($p['promo'])));
 	}
 	if ($q !== '' || $cat !== '') {
 		$ql = mb_strtolower($q, 'UTF-8');
@@ -205,6 +215,7 @@ function productNormalize(array $raw, ?string $existingId = null): array {
 		'seo_description' => trim($raw['seo_description'] ?? ''),
 		'active'          => !empty($raw['active']),
 		'popular'         => !empty($raw['popular']),
+		'promo'           => !empty($raw['promo']),
 		'updated_at'      => date('Y-m-d H:i:s'),
 	];
 }
