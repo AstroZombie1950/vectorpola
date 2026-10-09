@@ -262,3 +262,9 @@ Shared-хостинг Beget, заливка по SSH/rsync (порт 22). Реа
 ---
 
 *Проект коммерческий, ведётся соло*
+
+## Автор
+
+**Иван Сафронов** — веб-разработчик.
+Другие интернет-магазины: [ivansafronov.site/shop/](https://ivansafronov.site/shop/)
+Портфолио и контакты: [ivansafronov.site](https://ivansafronov.site/)
